@@ -20,6 +20,10 @@
             android:name="com.view.ListNotes"
             android:label="@string/title_activity_list_notes" >
         </activity>
+        <activity
+            android:name="com.view.OpenNote"
+            android:label="@string/title_activity_open_note" >
+        </activity>
     </application>
 
 </manifest>
