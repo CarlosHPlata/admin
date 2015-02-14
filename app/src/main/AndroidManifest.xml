@@ -19,10 +19,24 @@
         <activity
             android:name="com.view.ListNotes"
             android:label="@string/title_activity_list_notes" >
+            <intent-filter>
+                <action android:name="com.view.ListNotes" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.view.OpenNote"
             android:label="@string/title_activity_open_note" >
+            <intent-filter>
+                <action android:name="com.view.OpenNote" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.test.ListNotesTest"
+            android:label="@string/title_activity_list_notes_test" >
         </activity>
     </application>
 

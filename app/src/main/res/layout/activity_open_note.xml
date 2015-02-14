@@ -14,7 +14,7 @@
         android:layout_alignParentEnd="true" />
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_below="@+id/searchView2"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Note title"
-        android:id="@+id/textView"
+        android:id="@+id/txtTitle"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="58dp" />
@@ -35,36 +35,25 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/txtContent"
         android:text="Note content"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/txtTitle"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Link to grandson"
-        android:id="@+id/textView2"
-        android:layout_centerVertical="true"
+        android:id="@+id/txtLinks"
+        android:layout_below="@+id/txtContent"
         android:layout_centerHorizontal="true" />
 
-    <Button
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Note title"
-        android:id="@+id/button5"
-        android:layout_marginTop="70dp"
-        android:layout_below="@+id/textView2"
+        android:id="@+id/listIncrustedNotes"
+        android:layout_below="@+id/txtLinks"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Note title"
-        android:id="@+id/button6"
-        android:layout_alignTop="@+id/button5"
-        android:layout_alignRight="@+id/searchView2"
-        android:layout_alignEnd="@+id/searchView2" />
 
 </RelativeLayout>
