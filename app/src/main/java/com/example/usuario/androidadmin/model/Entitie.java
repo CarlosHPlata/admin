@@ -78,7 +78,7 @@ public abstract class Entitie implements Cloneable{
     * public class Nota extends Entitie
     *
     * el metodo retornara:
-    * return new Nota(tableName);
+    * return new Nota();
      */
     public abstract Entitie getNewInstance();
 
