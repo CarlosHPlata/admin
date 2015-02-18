@@ -50,6 +50,9 @@ public abstract class Entitie{
     *   values.put(String ColumnName, Obj Value);
     *
     *   Debe crearse con el String[] columnNames y las diferentes variables privadas de la entidad
+    *
+    *   EL CONTENT VALUES NO DEBE CONTENER EL ID, NI EL NOMBRE DE LA COLUMNA NI SU VALOR
+    *   ya que Android se encarga de darle el valor.
      */
     public abstract ContentValues getContentValues();
 
