@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * @version 1.50, 17/02/2015
  *
  */
-public abstract class Entitie implements Cloneable{
+public abstract class Entitie{
     private String tableName; // se define el nombre de la tabla a la que la entidad hace referencia
     private String[] columnNames; //Se escribe un arreglo de los nombres de las columnas en la base de datos incluyendo la columna id {"id", "name", "desc"},
                                   // ademas cada clase extendida debe tener variables privadas correspondientes a las columnas, exceptuando la variable id que ya esta declarada en esta clase (Entitie)
