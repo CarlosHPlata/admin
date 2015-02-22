@@ -16,6 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="note.androidadmin.index"
+            android:label="@string/title_activity_index" >
+        </activity>
+        <activity
+            android:name="androidadmin.note.Index"
+            android:label="@string/title_activity_index" >
+        </activity>
+        <activity
+            android:name="androidadmin.note.New"
+            android:label="@string/title_activity_new" >
+        </activity>
+        <activity
+            android:name="androidadmin.note.Edit"
+            android:label="@string/title_activity_edit" >
+        </activity>
     </application>
 
 </manifest>
