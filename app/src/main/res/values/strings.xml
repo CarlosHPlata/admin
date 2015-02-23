@@ -1,11 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">AndroidAdmin</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
     <string name="title_activity_list_notes">ListNotes</string>
     <string name="title_activity_open_note">OpenNote</string>
     <string name="title_activity_list_notes_test">ListNotesTest</string>
+    <string name="title_activity_index_note">indexNote</string>
+
+    <!-- Activity main -->
+    <string name="lb_hello">Bienvenido al App Ideon</string>
+    <string name="bt_login">Login</string>
+    <string name="ht_user_name">Nombre de usuario</string>
+    <string name="ht_password">Contraseña</string>
+
+    <!-- end Activity main -->
+
+    <string name="bt_back">Regresar</string>
+    <!-- Index activity note -->
+    <string name="lb_index_note">Lista de notas</string>
+    <string name="lb_index_total">Total de notas:</string>
+    <string name="bt_new_note">Crear nota</string>
+    <!-- end activity note -->
+
+
+    <!-- Activity new note -->
+    <string name="lb_new_note">Nueva nota</string>
+    <string name="bt_new">Guardar</string>
+    <string name="lb_title">Titulo:</string>
+    <string name="ht_title">Titulo</string>
+    <string name="lb_body">Cuerpo de nota:</string>
+    <string name="ht_body">Cuerpo de nota</string>
+
+    <!-- end activity new note -->
+
+    <!-- Activity edit note -->
+    <string name="lb_edit_note">Editar nota</string>
+    <string name="bt_update">Actualizar</string>
+    <!-- end activity edit note -->
+
+    <string name="title_activity_index">index</string>
+    <string name="title_activity_new">New</string>
+    <string name="title_activity_edit">Edit</string>
 
 </resources>

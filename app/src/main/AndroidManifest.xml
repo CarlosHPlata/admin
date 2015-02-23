@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity
+
             android:name="com.view.ListNotes"
             android:label="@string/title_activity_list_notes" >
             <intent-filter>
@@ -37,6 +38,24 @@
         <activity
             android:name="com.test.ListNotesTest"
             android:label="@string/title_activity_list_notes_test" >
+	</activity>
+
+	<activity
+            android:name="note.androidadmin.index"
+            android:label="@string/title_activity_index" >
+        </activity>
+        <activity
+            android:name="androidadmin.note.Index"
+            android:label="@string/title_activity_index" >
+        </activity>
+        <activity
+            android:name="androidadmin.note.New"
+            android:label="@string/title_activity_new" >
+        </activity>
+        <activity
+            android:name="androidadmin.note.Edit"
+            android:label="@string/title_activity_edit" >
+
         </activity>
     </application>
 
