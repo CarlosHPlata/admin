@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.usuario.androidadmin.R;
+import com.example.usuario.androidadmin.model.dataBase.NoteManager;
 import com.model.Note;
 import com.view.ListNotes;
 
@@ -46,7 +47,7 @@ public class ListNotesTest extends ActionBarActivity {
 
     private void passNotes() {
         Intent intent = new Intent(ListNotes.class.getName());
-        ArrayList<Note> notes = generateNotes();
+        ArrayList<Note> notes = getNotesFromDB();
         intent.putExtra("notes", notes);
         startActivity(intent);
     }
@@ -57,12 +58,18 @@ public class ListNotesTest extends ActionBarActivity {
             ArrayList<String> links = new ArrayList<>();
             links.add("link 1."+i);
             links.add("link 2."+i);
-            notes.add(new Note(i, "NoteTitle"+i, "NoteContent"+i, links));
+            notes.add(new Note("NoteTitle"+i, "NoteContent"+i));
         }
         ArrayList<Note> incrustedNotes = new ArrayList<>();
         incrustedNotes.add(notes.get(1));
         incrustedNotes.add(notes.get(2));
         notes.get(0).setIncrustedNotes(incrustedNotes);
+        notes.get(0).setSons(incrustedNotes);
         return notes;
+    }
+
+    private ArrayList<Note> getNotesFromDB(){
+        NoteManager nm = new NoteManager(this);
+        return nm.getAllNotes();
     }
 }

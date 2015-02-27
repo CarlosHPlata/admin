@@ -32,7 +32,7 @@ public class DBManager {
 
         getWritableDb();
 
-        if (entitie.getId() != NO_INSERTED_ENTITIE){
+        if (entitie.getId() == NO_INSERTED_ENTITIE){
            id = db.insert(entitie.getTableName(), null, entitie.getContentValues());
            entitie.setId( (int) id );
         }

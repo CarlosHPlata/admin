@@ -44,5 +44,6 @@
     <string name="title_activity_index">index</string>
     <string name="title_activity_new">New</string>
     <string name="title_activity_edit">Edit</string>
+    <string name="title_activity_note_manager_test">NoteManagerTest</string>
 
 </resources>

@@ -36,7 +36,7 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/txtContent"
-        android:text="Note content"
+        android:text="Note body"
         android:layout_below="@+id/txtTitle"
         android:layout_centerHorizontal="true" />
 

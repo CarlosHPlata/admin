@@ -70,7 +70,7 @@ public class OpenNote extends ActionBarActivity {
 
     private void showContent() {
         EditText txtContent = (EditText) findViewById(R.id.txtContent);
-        txtContent.setText(note.getContent());
+        txtContent.setText(note.getBody());
     }
 
     private void showTitle() {
@@ -81,9 +81,9 @@ public class OpenNote extends ActionBarActivity {
     private void showLinks() {
         TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
         txtLinks.setText("");
-        for (String link : note.getLinks()){
+        /*for (String link : note.getSons()){
             txtLinks.setText(txtLinks.getText()+"\n"+link);
-        }
+        }*/
     }
 
 

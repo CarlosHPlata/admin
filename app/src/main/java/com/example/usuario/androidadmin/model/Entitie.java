@@ -30,6 +30,10 @@ public abstract class Entitie{
                                   // ademas cada clase extendida debe tener variables privadas correspondientes a las columnas, exceptuando la variable id que ya esta declarada en esta clase (Entitie)
     private int id; // el id de la entidad, si la entidad es nueva y no ha sido insertada a la base de datos, su valor debe ser -1
 
+    public Entitie(){
+
+    }
+
     protected Entitie(int id, String tableName, String[] columnNames) {
         this.id = id;
         this.tableName = tableName;
