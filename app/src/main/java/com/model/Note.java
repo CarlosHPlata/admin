@@ -17,36 +17,14 @@ public class Note extends Entitie implements Serializable {
         setTableName(tableName);
         setColumnNames(columNames);
     }
-    /*
-    public Note(int id, String title, String body, ArrayList<Note> sons, ArrayList<Note> incrustedNotes){
-        setId(id);
-        this.title = title;
-        this.body = body;
-        this.sons = sons;
-        this.incrustedNotes = incrustedNotes;
-    }
-
-    public Note(int id, String title, String body, ArrayList<Note> sons){
-        setId(id);
-        this.title = title;
-        this.body = body;
-        this.sons = sons;
-    }*/
 
     public Note(String title, String body){
         super(tableName, columNames);
+        sons = new ArrayList<>();
         this.title = title;
         this.body = body;
         setDate();
     }
-
-    /*public Note(int id, String title, String body, ArrayList<Note> sons, ArrayList<Note> incrustedNotes, String tableName, String[] columNames){
-        super(id, tableName, columNames);
-        this.title = title;
-        this.body = body;
-        this.sons = sons;
-        this.incrustedNotes = incrustedNotes;
-    }*/
 
     public boolean hasChilds(){
         return incrustedNotes!=null;
@@ -58,35 +36,33 @@ public class Note extends Entitie implements Serializable {
 
     @Override
     public ContentValues getContentValues() {
-       // {"id", "title", "body", "favorite", "status", "created_at", "updated_at", "id_father", "ext_id", "label", "sync_flag"};
         ContentValues content = new ContentValues();
-        content.put(columNames[1], title);
-        content.put(columNames[2], body);
-        content.put(columNames[3], favorite);
-        content.put(columNames[4], status);
-        content.put(columNames[5], createdAt.getTime());
-        content.put(columNames[6], updatedAt.getTime());
-        content.put(columNames[7], idFather);
-        content.put(columNames[8], extId);
-        content.put(columNames[9], label);
-        content.put(columNames[10], syncFlag);
+        content.put(columNames[TITLE_POSITION], title);
+        content.put(columNames[BODY_POSITION], body);
+        content.put(columNames[FAVORITE_POSITION], favorite);
+        content.put(columNames[STATUS_POSITION], status);
+        content.put(columNames[CREATED_AT_POSITION], createdAt.getTime());
+        content.put(columNames[UPDATED_POSITION], updatedAt.getTime());
+        content.put(columNames[ID_FATHER_POSITION], idFather);
+        content.put(columNames[EXT_ID_POSITION], extId);
+        content.put(columNames[LABEL_POSITION], label);
+        content.put(columNames[SYNC_FLAG_POSITION], syncFlag);
         return content;
     }
 
     @Override
     public void setContentValues(Cursor cursor) {
-        setId(cursor.getInt(0));
-        title = cursor.getString(1);
-        body = cursor.getString(2);
-        favorite = Boolean.parseBoolean(cursor.getString(3));
-        status = Boolean.parseBoolean(cursor.getString(4));
-        createdAt = new Date(cursor.getLong(5));
-        updatedAt = new Date(cursor.getLong(6));
-        idFather = cursor.getInt(7);
-        extId = cursor.getInt(8);
-        label = cursor.getString(9);
-        syncFlag = Boolean.parseBoolean(cursor.getString(10));
-        //cursor.close(); al parecer no se puede cerrar el cursor
+        setId(cursor.getInt(ID_POSITION));
+        title = cursor.getString(TITLE_POSITION);
+        body = cursor.getString(BODY_POSITION);
+        favorite = Boolean.parseBoolean(cursor.getString(FAVORITE_POSITION));
+        status = Boolean.parseBoolean(cursor.getString(STATUS_POSITION));
+        createdAt = new Date(cursor.getLong(CREATED_AT_POSITION));
+        updatedAt = new Date(cursor.getLong(UPDATED_POSITION));
+        idFather = cursor.getInt(ID_FATHER_POSITION);
+        extId = cursor.getInt(EXT_ID_POSITION);
+        label = cursor.getString(LABEL_POSITION);
+        syncFlag = Boolean.parseBoolean(cursor.getString(SYNC_FLAG_POSITION));
     }
 
     @Override
@@ -133,6 +109,69 @@ public class Note extends Entitie implements Serializable {
         }
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public int getIdFather() {
+        return idFather;
+    }
+
+    public void setIdFather(int idFather) {
+        this.idFather = idFather;
+    }
+
+    public int getExtId() {
+        return extId;
+    }
+
+    public void setExtId(int extId) {
+        this.extId = extId;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public boolean isSyncFlag() {
+        return syncFlag;
+    }
+
+    public void setSyncFlag(boolean syncFlag) {
+        this.syncFlag = syncFlag;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     private int idFather;
     private int extId;
@@ -144,8 +183,19 @@ public class Note extends Entitie implements Serializable {
     private boolean status;
     private Date createdAt;
     private Date updatedAt;
-    private ArrayList<Note> sons;//Hay que cambiar todas las vistas donde se mostraban los links a los hijos
+    private ArrayList<Note> sons;
     private ArrayList<Note> incrustedNotes;
     private static final String tableName = "notes";
     private static final String[] columNames = {"id", "title", "body", "favorite", "status", "created_at", "updated_at", "id_father", "ext_id", "label", "sync_flag"};
+    private static final int ID_POSITION = 0;
+    private static final int TITLE_POSITION = 1;
+    private static final int BODY_POSITION = 2;
+    private static final int FAVORITE_POSITION = 3;
+    private static final int STATUS_POSITION = 4;
+    private static final int CREATED_AT_POSITION = 5;
+    private static final int UPDATED_POSITION = 6;
+    private static final int ID_FATHER_POSITION = 7;
+    private static final int EXT_ID_POSITION = 8;
+    private static final int LABEL_POSITION = 9;
+    private static final int SYNC_FLAG_POSITION = 10;
 }
