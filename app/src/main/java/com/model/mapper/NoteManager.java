@@ -41,6 +41,16 @@ public class NoteManager {
         return loadSons(notes);
     }
 
+    public ArrayList getUndeletedNotes(){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 0", null);
+        return loadSons(getNotesFromCursor(cursor));
+    }
+
+    public ArrayList getDeletedNotes(){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1", null);
+        return loadSons(getNotesFromCursor(cursor));
+    }
+
     public ArrayList<Note> getNotesByDate(Date date){
         Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE created_at = " + date.getTime(), null);
         return  loadSons(getNotesFromCursor(cursor));
@@ -61,21 +71,18 @@ public class NoteManager {
             return getNotesFromCursor(cursor);
     }
 
+    public void delteNote(Note note){
+        db.rawQuery("UPDATE notes SET status = 1 WHERE id = " + note.getId(), null);
+    }
+
     //Aqui se deben agregar los hijos y las notas incrustadas
-    //Al parecer la recursividad arruina el proceso de insertar los hijos
     private ArrayList<Note> getNotesFromCursor(Cursor cursor) {
         ArrayList<Note> notes = new ArrayList<>();
         while(cursor.moveToNext()){
             Note note = new Note();
             note.setContentValues(cursor);
-            //System.out.println("========================"+note.getId());
-
-
-
             notes.add(note);
         }
-        //cursor.close();
-
         return notes;
     }
 
