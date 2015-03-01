@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.example.usuario.androidadmin.R;
 import com.model.Note;
 import com.model.StableArrayAdapter;
+import com.model.mapper.NoteManager;
 
 import java.util.ArrayList;
 
@@ -81,11 +82,10 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void loadNotes() {
-        Intent intent = getIntent();
-        notes = (ArrayList<Note>) intent.getSerializableExtra(NOTES);
+        NoteManager noteManager = new NoteManager(this);
+        notes = noteManager.getUndeletedNotes();
     }
 
-    private static final String NOTES = "notes";
     private static final String NOTE = "note";
     private ArrayList<Note> notes;
 }
