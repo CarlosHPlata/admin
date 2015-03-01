@@ -3,8 +3,6 @@ package com.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.example.usuario.androidadmin.model.Entitie;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;

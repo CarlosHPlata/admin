@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.controller.ListNoteController;
 import com.example.usuario.androidadmin.R;
 import com.model.Note;
 import com.model.StableArrayAdapter;
@@ -21,8 +22,9 @@ public class ListNotes extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
-        loadNotes();
-        showNotes();
+        controller = new ListNoteController(getApplicationContext());
+       // loadNotes();
+       // showNotes();
     }
 
     private void showNotes() {
@@ -58,6 +60,15 @@ public class ListNotes extends ActionBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        if(!this.controller.isUserLogIn()){
+            super.onBackPressed();
+            this.finish();
+        }
+        super.onResume();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -67,6 +78,10 @@ public class ListNotes extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if (id == R.id.action_logOut) {
+           controller.logOut();
         }
 
         return super.onOptionsItemSelected(item);
@@ -86,4 +101,5 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private ArrayList<Note> notes;
+    private ListNoteController controller;
 }

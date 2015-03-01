@@ -1,19 +1,13 @@
-package com.example.usuario.androidadmin.model.dataBase;
+package com.model.mapper;
 
-import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.model.Note;
-import com.test.ListNotesTest;
-import com.view.ListNotes;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
-
-import androidadmin.note.New;
 
 /**
  * Created by José Ramón Díaz on 25/02/2015.

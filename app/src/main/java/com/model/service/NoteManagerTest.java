@@ -1,35 +1,27 @@
-package com.example.usuario.androidadmin;
+package com.model.service;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import androidadmin.note.Index;
-import androidadmin.note.New;
-import androidadmin.note.NoteSQLHelper;
+import com.example.usuario.androidadmin.R;
+import com.model.mapper.NoteManager;
+import com.model.Note;
 
-
-public class MainActivity extends ActionBarActivity {
+public class NoteManagerTest extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_note_manager_test);
+        noteManagerTest();
     }
-
-    public void login(View v){
-        Intent i = new Intent(this, Index.class);
-        startActivity(i);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_note_manager_test, menu);
         return true;
     }
 
@@ -47,4 +39,13 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void noteManagerTest() {
+        NoteManager nm = new NoteManager(this);
+        Note note = new Note("MiNota", "Esta es mi nota");
+        System.out.println("Nota creada long: ");
+        System.out.println(nm.insertNote(note)+"");
+
+    }
+
 }

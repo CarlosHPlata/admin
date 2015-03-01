@@ -1,9 +1,7 @@
-package com.example.usuario.androidadmin.model;
+package com.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-
-import java.util.ArrayList;
 
 /**
  * Esta clase es una clase abstracta encargada de la estructura de todos los objetos del modelo que hacen referencia a una tabla de la base de datos.

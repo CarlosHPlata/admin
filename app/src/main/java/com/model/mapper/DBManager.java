@@ -1,10 +1,10 @@
-package com.example.usuario.androidadmin.model.dataBase;
+package com.model.mapper;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.usuario.androidadmin.model.Entitie;
+import com.model.Entitie;
 
 import java.util.ArrayList;
 

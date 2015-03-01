@@ -1,4 +1,4 @@
-package com.test;
+package com.model.service;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.usuario.androidadmin.R;
-import com.example.usuario.androidadmin.model.dataBase.NoteManager;
+import com.model.mapper.NoteManager;
 import com.model.Note;
 import com.view.ListNotes;
 
