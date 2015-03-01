@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.controller.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.model.Note;
 import com.model.StableArrayAdapter;
@@ -21,8 +22,9 @@ public class ListNotes extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
-        loadNotes();
-        showNotes();
+        //loadNotes();
+        //showNotes();
+        controller = new NoteController(getApplicationContext());
     }
 
     private void showNotes() {
@@ -68,6 +70,14 @@ public class ListNotes extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_logOut) {
+            controller.logOut();
+            this.finish();
+        }
+        if (id == R.id.action_newNote) {
+            Intent i = new Intent(this,NewNote.class);
+            startActivity(i);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -88,4 +98,5 @@ public class ListNotes extends ActionBarActivity {
     private static final String NOTES = "notes";
     private static final String NOTE = "note";
     private ArrayList<Note> notes;
+    private NoteController controller;
 }

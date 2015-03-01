@@ -109,6 +109,16 @@ public class LoginService {
         return true;
     }
 
+    public User getUserOfSession(){
+        User user = new User();
+        user.setId(pref.getInt(this.KEY_ID, 0));
+        user.setEmail(pref.getString(this.KEY_EMAIL,null));
+        user.setPassword(pref.getString(this.KEY_PASSWORD, null));
+        user.setToken(pref.getString(this.KEY_TOKEN, null));
+
+        return user;
+    }
+
     private UserMapper userMAnager;
 
 
