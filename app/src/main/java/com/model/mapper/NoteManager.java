@@ -31,36 +31,58 @@ public class NoteManager {
     }
 
     public Note getById(Note note){
-        return (Note)dbManager.getById(note);
+        Note wNote = (Note)dbManager.getById(note);
+        wNote.setSons(getSonsFromDB(wNote.getId()));
+        return wNote;
     }
 
     public ArrayList getAllNotes(){
-        return dbManager.getAll(new Note());
+        ArrayList  notes = dbManager.getAll(new Note());
+        return loadSons(notes);
     }
 
     public ArrayList<Note> getNotesByDate(Date date){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE created_at = '" + date.toString() + "'", null);
-        return  getNotesFromCursor(cursor);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE created_at = " + date.getTime(), null);
+        return  loadSons(getNotesFromCursor(cursor));
     }
 
     public ArrayList<Note> getFavoriteNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE favorit = 1", null);
-        return getNotesFromCursor(cursor);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE favorite = 1", null);
+        return loadSons(getNotesFromCursor(cursor));
     }
 
     public ArrayList<Note> getFatherNotes(){
         Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father IS NOT NULL", null);
-        return getNotesFromCursor(cursor);
+        return loadSons(getNotesFromCursor(cursor));
     }
 
+    public ArrayList<Note> getSonsFromDB(int id){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = " + id, null);
+            return getNotesFromCursor(cursor);
+    }
+
+    //Aqui se deben agregar los hijos y las notas incrustadas
+    //Al parecer la recursividad arruina el proceso de insertar los hijos
     private ArrayList<Note> getNotesFromCursor(Cursor cursor) {
         ArrayList<Note> notes = new ArrayList<>();
         while(cursor.moveToNext()){
             Note note = new Note();
             note.setContentValues(cursor);
+            //System.out.println("========================"+note.getId());
+
+
+
             notes.add(note);
         }
-        cursor.close();
+        //cursor.close();
+
+        return notes;
+    }
+
+    private ArrayList loadSons(ArrayList notes){
+        for (Note note:(ArrayList<Note>) notes){
+            note.setSons(getSonsFromDB(note.getId()));
+        }
         return notes;
     }
 

@@ -30,7 +30,7 @@ public class OpenNote extends ActionBarActivity {
 
     private void loadNote() {
         Intent intent = getIntent();
-        note = (Note) intent.getSerializableExtra("note");
+        note = (Note) intent.getSerializableExtra(NOTE_NAME);
         notes = note.getIncrustedNotes();
     }
 
@@ -81,9 +81,11 @@ public class OpenNote extends ActionBarActivity {
     private void showLinks() {
         TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
         txtLinks.setText("");
-        /*for (String link : note.getSons()){
-            txtLinks.setText(txtLinks.getText()+"\n"+link);
-        }*/
+        if(note.getSons() != null) {
+            for (Note sonNote : note.getSons()) {
+                txtLinks.setText(txtLinks.getText() + "\n" + sonNote.getTitle());
+            }
+        }
     }
 
 
@@ -113,8 +115,8 @@ public class OpenNote extends ActionBarActivity {
         // 1. create an intent pass class name or intnet action name
         Intent intent = new Intent(OpenNote.class.getName());
 
-        // 3. put person in intent data
-        intent.putExtra("note", note);
+        // 3. put note in intent data
+        intent.putExtra(NOTE_NAME, note);
         // 4. start the activity
         startActivity(intent);
     }
@@ -128,5 +130,6 @@ public class OpenNote extends ActionBarActivity {
     }
 
     private ArrayList<Note> notes;
+    private static final String NOTE_NAME = "note";
     private Note note;
 }
