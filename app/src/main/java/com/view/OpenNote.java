@@ -58,14 +58,14 @@ public class OpenNote extends ActionBarActivity {
     private void showNoteData() {
         showTitle();
         showContent();
-        showLinks();
+        showSons();
         showImg();
-        showChilds();
+        showIncrustedNotes();
 
     }
 
-    private void showChilds() {
-        if(!note.hasChilds())
+    private void showIncrustedNotes() {
+        if(!note.hasIncrustedNotes())
             return;
         final ListView listview = (ListView) findViewById(R.id.listIncrustedNotes);
         final ArrayList<String> list = getNotesTitles(notes);
@@ -99,7 +99,7 @@ public class OpenNote extends ActionBarActivity {
         txtTitle.setText(note.getTitle());
     }
 
-    private void showLinks() {
+    private void showSons() {
         /*TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
         txtLinks.setText("");
         if(note.getSons() != null) {
@@ -107,7 +107,7 @@ public class OpenNote extends ActionBarActivity {
                 txtLinks.setText(txtLinks.getText() + "\n" + sonNote.getTitle());
             }
         }*/
-        if(note.getSons()== null)
+        if(!note.hasSons())
             return;
         final ListView listview = (ListView) findViewById(R.id.listSonsNotes);
         final ArrayList<String> list = getNotesTitles(note.getSons());

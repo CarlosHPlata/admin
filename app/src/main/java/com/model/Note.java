@@ -26,11 +26,11 @@ public class Note extends Entitie implements Serializable {
         setDate();
     }
 
-    public boolean hasChilds(){
+    public boolean hasIncrustedNotes(){
         return incrustedNotes!=null;
     }
 
-    public boolean hasLinks(){
+    public boolean hasSons(){
         return sons != null;
     }
 
