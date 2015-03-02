@@ -19,6 +19,27 @@ import com.model.StableArrayAdapter;
 import java.util.ArrayList;
 
 public class OpenNote extends ActionBarActivity {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_open_note, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +68,7 @@ public class OpenNote extends ActionBarActivity {
         if(!note.hasChilds())
             return;
         final ListView listview = (ListView) findViewById(R.id.listIncrustedNotes);
-        final ArrayList<String> list = getNotesTitles();
+        final ArrayList<String> list = getNotesTitles(notes);
         final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
@@ -79,36 +100,29 @@ public class OpenNote extends ActionBarActivity {
     }
 
     private void showLinks() {
-        TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
+        /*TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
         txtLinks.setText("");
         if(note.getSons() != null) {
             for (Note sonNote : note.getSons()) {
                 txtLinks.setText(txtLinks.getText() + "\n" + sonNote.getTitle());
             }
-        }
-    }
+        }*/
+        if(note.getSons()== null)
+            return;
+        final ListView listview = (ListView) findViewById(R.id.listSonsNotes);
+        final ArrayList<String> list = getNotesTitles(note.getSons());
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_open_note, menu);
-        return true;
-    }
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                passNote(note.getSons().get(position));
+            }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        });
     }
 
     private void passNote(Note note) {
@@ -121,7 +135,7 @@ public class OpenNote extends ActionBarActivity {
         startActivity(intent);
     }
 
-    private ArrayList<String> getNotesTitles(){
+    private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
         ArrayList<String> titles = new ArrayList<>();
         for(Note note: notes){
             titles.add(note.getTitle());

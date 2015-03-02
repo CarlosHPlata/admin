@@ -11,8 +11,6 @@ import java.util.List;
  */
 public class StableArrayAdapter extends ArrayAdapter<String> {
 
-    HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
     public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects) {
         super(context, textViewResourceId, objects);
         for (int i = 0; i < objects.size(); ++i) {
@@ -31,4 +29,5 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
         return true;
     }
 
+    private HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 }

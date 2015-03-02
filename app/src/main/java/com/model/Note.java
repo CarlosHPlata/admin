@@ -102,13 +102,6 @@ public class Note extends Entitie implements Serializable {
         this.incrustedNotes = incrustedNotes;
     }
 
-    private void setDate() {
-        if(getId() == NO_INSERTED_NOTE){
-            createdAt = new Date();
-            updatedAt = new Date();
-        }
-    }
-
     public boolean isFavorite() {
         return favorite;
     }
@@ -171,6 +164,13 @@ public class Note extends Entitie implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    private void setDate() {
+        if(getId() == NO_INSERTED_NOTE){
+            createdAt = new Date();
+            updatedAt = new Date();
+        }
     }
 
     private int idFather;

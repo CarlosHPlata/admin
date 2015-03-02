@@ -54,6 +54,14 @@
             android:name="com.model.service.NoteManagerTest"
             android:label="@string/title_activity_note_manager_test" >
         </activity>
+        <activity
+            android:name="com.test.ListNotesTest"
+            android:label="@string/title_activity_note_manager_test" >
+        </activity>
+        <activity
+            android:name="com.test.NoteManagerTest"
+            android:label="@string/title_activity_note_manager_test" >
+        </activity>
      <!--
         <activity
             android:name="com.view.Login"
