@@ -29,6 +29,7 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("CREATE TABLE IF NOT EXISTS notes ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, favorite INTEGER, status INTEGER, created_at REAL, updated_at REAL, id_father INTEGER, ext_id INTEGER, label TEXT, sync_flag INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, token INTEGER)");
         db.execSQL("INSERT INTO users(email, password,token) values ('usuario','usuario',1)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS labels ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
     }
 
     @Override
