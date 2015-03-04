@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * Created by José Ramón Díaz on 03/03/2015.
+ * Permite a las vistas realizar las operaciones que el usuario solicite con los objetos Notas
  */
 public class NoteController {
     public NoteController(Context context){

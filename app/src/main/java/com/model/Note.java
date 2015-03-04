@@ -9,6 +9,7 @@ import java.util.Date;
 
 /**
  * Created by José Ramón Díaz on 13/02/2015.
+ * Abstracción del objeto Nota
  */
 public class Note extends Entitie implements Serializable {
     public static final int NO_INSERTED_NOTE = -1;

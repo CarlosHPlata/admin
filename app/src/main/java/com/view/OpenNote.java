@@ -18,22 +18,22 @@ import com.model.StableArrayAdapter;
 
 import java.util.ArrayList;
 
+/**
+ *  Created by José Ramón Díaz on 13/02/2015.
+ *  Vista que permite mostrar el contenido de una nota
+ */
+
 public class OpenNote extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_open_note, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -100,13 +100,6 @@ public class OpenNote extends ActionBarActivity {
     }
 
     private void showSons() {
-        /*TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
-        txtLinks.setText("");
-        if(note.getSons() != null) {
-            for (Note sonNote : note.getSons()) {
-                txtLinks.setText(txtLinks.getText() + "\n" + sonNote.getTitle());
-            }
-        }*/
         if(!note.hasSons())
             return;
         final ListView listview = (ListView) findViewById(R.id.listSonsNotes);
@@ -126,12 +119,11 @@ public class OpenNote extends ActionBarActivity {
     }
 
     private void passNote(Note note) {
-        // 1. create an intent pass class name or intnet action name
+        //Se crea un intent y se pasa el nombre de la clase
         Intent intent = new Intent(OpenNote.class.getName());
-
-        // 3. put note in intent data
+        //Se pone la nota en el intent
         intent.putExtra(NOTE_NAME, note);
-        // 4. start the activity
+        //Se inicia la actividad
         startActivity(intent);
     }
 

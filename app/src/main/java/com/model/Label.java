@@ -5,6 +5,8 @@ import android.database.Cursor;
 
 /**
  * Created by José Ramón Díaz on 28/02/2015.
+ * Esta clase es la abstracción del objeto Label
+ * Los label son etiquetas que se pueden agregar a las notas
  */
 public class Label extends Entitie {
 

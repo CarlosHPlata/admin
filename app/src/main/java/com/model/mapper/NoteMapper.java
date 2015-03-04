@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * Created by José Ramón Díaz on 25/02/2015.
+ * Esta clase se encarga de realizar las operaciones referentes a las notas en la base de datos
  */
 public class NoteMapper {
     public NoteMapper(Context context){

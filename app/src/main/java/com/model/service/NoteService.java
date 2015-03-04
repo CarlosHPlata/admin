@@ -10,6 +10,7 @@ import java.util.Date;
 
 /**
  * Created by José Ramón Díaz on 03/03/2015.
+ * Permite recuperar información de las notas
  */
 public class NoteService {
     public NoteService(Context context){

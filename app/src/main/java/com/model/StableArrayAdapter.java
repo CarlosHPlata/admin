@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by José Ramón Díaz on 13/02/2015.
+ * Adaptador para que se puedan presentar las notas en una lista
  */
 public class StableArrayAdapter extends ArrayAdapter<String> {
 
