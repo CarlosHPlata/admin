@@ -1,12 +1,18 @@
-package com.controller;
+package com.controllers;
 
 import android.content.Context;
 
-import com.model.service.LoginService;
+import com.models.services.LoginService;
 
-/**
- * Created by Edgar on 28/02/2015.
- */
+/** *
+ *
+ * Esta clase se encarga de administrar las peticiones de la vista Login.
+ *
+ * @author Edgar
+ *
+ * @version 0.1, 28/02/2015
+ *
+ * */
 public class LogInController {
 
 
@@ -14,12 +20,6 @@ public class LogInController {
         service = new LoginService(context);
     }
 
-    /**
-     * Se verifica que los datos existan en la BD y abre una nueva sesion
-     * @param email
-     * @param password
-     * @return boolean
-     */
     public boolean logIn(String email, String password){
         if(service.logIn(email, password)){
             service.addUserToSession(email, password);
@@ -29,27 +29,14 @@ public class LogInController {
         }
     }
 
-    /**
-     * Elimina datos de usuario de session y manda a la vista de login
-     * @return boolean
-     */
     public boolean logOut(){
         return service.logOut();
     }
 
-    /**
-     * Valida si existe un usuario en session, en caso contrario manda a la vista
-     * de login
-     * @return boolean
-     */
     public boolean validateLogIn(){
         return service.checkLogin();
     }
 
-    /**
-     * verifica si existe un session abierta
-     * @return boolean
-     */
     public boolean isUserLogIn(){
         return service.isUserLoggedIn();
     }

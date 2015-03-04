@@ -1,10 +1,11 @@
-package com.model.mapper;
+package com.models.mappers;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.model.Entitie;
+import com.models.Entitie;
+import com.models.Note;
 
 import java.util.ArrayList;
 
@@ -59,7 +60,6 @@ public class DBManager {
 
         db.update(entitie.getTableName(),entitie.getContentValues(), "id = ?", new String[]{String.valueOf(entitie.getId())});
     }
-
 
     public Entitie getById (Entitie dummyEntitie) {
         getReadableDb();

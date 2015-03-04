@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.controller.NoteController;
+import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
-import com.model.Note;
-import com.model.StableArrayAdapter;
-import com.model.mapper.NoteManager;
+import com.models.Note;
+import com.models.StableArrayAdapter;
+import com.models.mappers.NoteMapper;
 
 import java.util.ArrayList;
 
@@ -23,8 +23,8 @@ public class ListNotes extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
-        //loadNotes();
-        //showNotes();
+        loadNotes();
+        showNotes();
         controller = new NoteController(getApplicationContext());
     }
 
@@ -47,11 +47,17 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void passNote(Note note) {
-        Intent intent = new Intent(OpenNote.class.getName());
-        intent.putExtra(NOTE, note);
+        Intent intent = new Intent(this,ViewNote.class);
+        intent.putExtra("id", note.getId());
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotes();
+        showNotes();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,6 +86,7 @@ public class ListNotes extends ActionBarActivity {
             startActivity(i);
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -92,8 +99,8 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void loadNotes() {
-        NoteManager noteManager = new NoteManager(this);
-        notes = noteManager.getUndeletedNotes();
+        NoteMapper noteMapper = new NoteMapper(this);
+        notes = noteMapper.getUndeletedNotes();
     }
 
     private static final String NOTE = "note";

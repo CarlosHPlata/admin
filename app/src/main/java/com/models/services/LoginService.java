@@ -1,17 +1,24 @@
-package com.model.service;
+package com.models.services;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.model.mapper.UserMapper;
-import com.model.User;
+import com.models.mappers.UserMapper;
+import com.models.User;
 import com.view.Login;
 
-/**
- * Created by Edgar on 28/02/2015.
- */
+/** *
+ *
+ * Esta clase contiene la logica de negocio del login y las sesiones, se encarga de realizar la conección
+ * con los mapper y modelos.
+ *
+ * @author Edgar
+ *
+ * @version 0.1, 28/02/2015.
+ *
+ * */
 public class LoginService {
 
     SharedPreferences pref;
@@ -92,19 +99,14 @@ public class LoginService {
 
     public boolean logOut(){
 
+        Intent i = new Intent(context, Login.class);
+
         editor.clear();
         editor.commit();
 
-        // After logout redirect user to Login Activity
-        Intent i = new Intent(context, Login.class);
-
-        // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // Add new Flag to start new Activity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        // Staring Login Activity
         context.startActivity(i);
         return true;
     }

@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.usuario.androidadmin.R;
-import com.model.Note;
-import com.model.StableArrayAdapter;
+import com.models.Note;
+import com.models.StableArrayAdapter;
 
 import java.util.ArrayList;
 

@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.controller.LogInController;
-import com.model.service.AlertDialogService;
+import com.controllers.LogInController;
+import com.models.services.AlertDialogService;
 import com.example.usuario.androidadmin.R;
 
 public class Login extends ActionBarActivity {

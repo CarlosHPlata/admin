@@ -1,10 +1,10 @@
-package com.model.mapper;
+package com.models.mappers;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.model.User;
+import com.models.User;
 
 /**
  * Created by Edgar on 28/02/2015.

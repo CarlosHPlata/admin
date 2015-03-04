@@ -1,4 +1,4 @@
-package com.model;
+package com.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;

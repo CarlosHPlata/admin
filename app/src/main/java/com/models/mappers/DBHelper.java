@@ -1,4 +1,4 @@
-package com.model.mapper;
+package com.models.mappers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

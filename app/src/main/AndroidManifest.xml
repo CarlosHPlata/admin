@@ -9,9 +9,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.view.Login"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,37 +34,31 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.model.service.ListNotesTest"
-            android:label="@string/title_activity_list_notes_test" >
-        </activity>
-        <activity
-            android:name="androidadmin.note.Index"
-            android:label="@string/title_activity_index" >
-        </activity>
-        <activity
-            android:name="androidadmin.note.New"
-            android:label="@string/title_activity_new" >
-        </activity>
-        <activity
-            android:name="androidadmin.note.Edit"
-            android:label="@string/title_activity_edit" >
-        </activity>
-        <activity
-            android:name="com.model.service.NoteManagerTest"
-            android:label="@string/title_activity_note_manager_test" >
-        </activity>
+
         <!--
         <activity
             android:name="com.view.Login"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login" > splitActionBarWhenNarrow  android:screenOrientation="portrait"
         </activity>
         -->
 
         <activity
             android:name="com.view.NewNote"
-            android:label="@string/title_activity_new_note" >
+            android:label="@string/title_activity_new_note"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
+        <activity
+            android:name="com.view.EditNote"
+            android:label="@string/title_activity_edit_note" >
+        </activity>
+        <activity
+            android:name="com.view.ViewNote"
+            android:label="@string/title_activity_view_note" >
+        </activity>
+
     </application>
 
 </manifest>

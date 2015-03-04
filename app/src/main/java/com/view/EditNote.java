@@ -6,37 +6,52 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
+import com.models.Note;
 
-public class NewNote extends ActionBarActivity {
+public class EditNote extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_note);
+        setContentView(R.layout.activity_edit_note);
         controller = new NoteController(getApplicationContext());
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-            this.ID_FATHER = bundle.getInt("idFather");
+            this.ID_NOTE = bundle.getInt("id");
+            initViewEditNote();
         }
     }
 
-    public void addNote(View v){
-        EditText textTitle = (EditText) findViewById(R.id.titleEdit);
-        EditText textBody = (EditText) findViewById(R.id.body);
-        String body = textBody.getText().toString();
-        String title = textTitle.getText().toString();
+    public void initViewEditNote(){
+        findNoteById();
+        generateViewEditNote();
+    }
 
-        if(controller.addNote(title, body, this.ID_FATHER)){
-            Toast.makeText(this, "Nota creada", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(this, "Error!!", Toast.LENGTH_LONG).show();
-        }
+    public void findNoteById(){
+        this.note = controller.findOneById(this.ID_NOTE);
+    }
+
+    public void generateViewEditNote(){
+      EditText titleEdit = (EditText) findViewById(R.id.titleEdit);
+      EditText bodyEdit = (EditText) findViewById(R.id.bodyEdit);
+
+        titleEdit.setText(this.note.getTitle());
+        bodyEdit.setText(this.note.getBody());
+    }
+
+    public void updateNote(View v){
+        EditText titleEdit = (EditText) findViewById(R.id.titleEdit);
+        EditText bodyEdit = (EditText) findViewById(R.id.bodyEdit);
+
+        Note noteUpdate = new Note();
+        noteUpdate.setId(this.ID_NOTE);
+        this.note.setTitle(titleEdit.getText().toString());
+        this.note.setBody(bodyEdit.getText().toString());
+        controller.updateNote(this.note);
         backView();
-
     }
 
     public void backView(){
@@ -44,12 +59,11 @@ public class NewNote extends ActionBarActivity {
         this.finish();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_new_note, menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_edit_note, menu);
+        return true;
     }
 
     @Override
@@ -67,6 +81,7 @@ public class NewNote extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private int ID_NOTE;
     private NoteController controller;
-    private int ID_FATHER = 0;
+    private Note note;
 }

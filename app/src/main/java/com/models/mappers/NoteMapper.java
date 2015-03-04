@@ -1,10 +1,10 @@
-package com.model.mapper;
+package com.models.mappers;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.model.Note;
+import com.models.Note;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * Created by José Ramón Díaz on 25/02/2015.
  */
-public class NoteManager {
-    public NoteManager(Context context){
+public class NoteMapper {
+    public NoteMapper(Context context){
         dbManager = new DBManager(context);
         db = dbManager.getWritableDb();
     }
@@ -72,7 +72,8 @@ public class NoteManager {
     }
 
     public void delteNote(Note note){
-        db.rawQuery("UPDATE notes SET status = 1 WHERE id = " + note.getId(), null);
+        dbManager.update(note);
+
     }
 
     //Aqui se deben agregar los hijos y las notas incrustadas

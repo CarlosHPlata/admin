@@ -1,7 +1,4 @@
-package com.model;
-
-import android.content.ContentValues;
-import android.database.Cursor;
+package com.models;
 
 /**
  * Created by José Ramón Díaz on 28/02/2015.
