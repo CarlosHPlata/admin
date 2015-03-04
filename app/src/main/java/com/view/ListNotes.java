@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.controller.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.model.Note;
 import com.model.StableArrayAdapter;
-import com.model.mapper.NoteManager;
 
 import java.util.ArrayList;
 
@@ -80,8 +80,8 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void loadNotes() {
-        NoteManager noteManager = new NoteManager(this);
-        notes = noteManager.getUndeletedNotes();
+        NoteController noteController = new NoteController(this);
+        notes = noteController.getNotDeletedNotes();
     }
 
     private static final String NOTE = "note";

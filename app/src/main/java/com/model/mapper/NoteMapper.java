@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * Created by José Ramón Díaz on 25/02/2015.
  */
-public class NoteManager {
-    public NoteManager(Context context){
+public class NoteMapper {
+    public NoteMapper(Context context){
         dbManager = new DBManager(context);
         db = dbManager.getWritableDb();
     }
@@ -41,7 +41,7 @@ public class NoteManager {
         return loadSons(notes);
     }
 
-    public ArrayList getUndeletedNotes(){
+    public ArrayList getNotDeletedNotes(){
         Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 0", null);
         return loadSons(getNotesFromCursor(cursor));
     }
@@ -71,7 +71,7 @@ public class NoteManager {
             return getNotesFromCursor(cursor);
     }
 
-    public void delteNote(Note note){
+    public void deleteNote(Note note){
         db.rawQuery("UPDATE notes SET status = 1 WHERE id = " + note.getId(), null);
     }
 
