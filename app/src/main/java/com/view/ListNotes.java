@@ -9,13 +9,35 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.controller.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.model.Note;
 import com.model.StableArrayAdapter;
 
 import java.util.ArrayList;
 
+/**
+ *  Created by José Ramón Díaz on 13/02/2015.
+ *  Vista que permite mostrar una lista de notas
+ */
+
 public class ListNotes extends ActionBarActivity {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list_notes, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,31 +67,8 @@ public class ListNotes extends ActionBarActivity {
 
     private void passNote(Note note) {
         Intent intent = new Intent(OpenNote.class.getName());
-        intent.putExtra("note", note);
+        intent.putExtra(NOTE, note);
         startActivity(intent);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_notes, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private ArrayList<String> getNotesTitles(){
@@ -81,9 +80,10 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void loadNotes() {
-        Intent intent = getIntent();
-        notes = (ArrayList<Note>) intent.getSerializableExtra("notes");
+        NoteController noteController = new NoteController(this);
+        notes = noteController.getNotDeletedNotes();
     }
 
+    private static final String NOTE = "note";
     private ArrayList<Note> notes;
 }

@@ -36,15 +36,14 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/txtContent"
-        android:text="Note content"
+        android:text="Note body"
         android:layout_below="@+id/txtTitle"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Link to grandson"
-        android:id="@+id/txtLinks"
+        android:id="@+id/listSonsNotes"
         android:layout_below="@+id/txtContent"
         android:layout_centerHorizontal="true" />
 
@@ -52,8 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listIncrustedNotes"
-        android:layout_below="@+id/txtLinks"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/listSonsNotes"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

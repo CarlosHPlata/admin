@@ -1,9 +1,7 @@
-package com.example.usuario.androidadmin.model;
+package com.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-
-import java.util.ArrayList;
 
 /**
  * Esta clase es una clase abstracta encargada de la estructura de todos los objetos del modelo que hacen referencia a una tabla de la base de datos.
@@ -29,6 +27,10 @@ public abstract class Entitie{
     private String[] columnNames; //Se escribe un arreglo de los nombres de las columnas en la base de datos incluyendo la columna id {"id", "name", "desc"},
                                   // ademas cada clase extendida debe tener variables privadas correspondientes a las columnas, exceptuando la variable id que ya esta declarada en esta clase (Entitie)
     private int id; // el id de la entidad, si la entidad es nueva y no ha sido insertada a la base de datos, su valor debe ser -1
+
+    public Entitie(){
+
+    }
 
     protected Entitie(int id, String tableName, String[] columnNames) {
         this.id = id;

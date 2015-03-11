@@ -8,10 +8,9 @@ import java.util.List;
 
 /**
  * Created by José Ramón Díaz on 13/02/2015.
+ * Adaptador para que se puedan presentar las notas en una lista
  */
 public class StableArrayAdapter extends ArrayAdapter<String> {
-
-    HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 
     public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects) {
         super(context, textViewResourceId, objects);
@@ -31,4 +30,5 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
         return true;
     }
 
+    private HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 }

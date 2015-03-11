@@ -1,10 +1,10 @@
-package com.example.usuario.androidadmin.model.dataBase;
+package com.model.mapper;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.usuario.androidadmin.model.Entitie;
+import com.model.Entitie;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class DBManager {
 
         getWritableDb();
 
-        if (entitie.getId() != NO_INSERTED_ENTITIE){
+        if (entitie.getId() == NO_INSERTED_ENTITIE){
            id = db.insert(entitie.getTableName(), null, entitie.getContentValues());
            entitie.setId( (int) id );
         }

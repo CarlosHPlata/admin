@@ -18,7 +18,28 @@ import com.model.StableArrayAdapter;
 
 import java.util.ArrayList;
 
+/**
+ *  Created by José Ramón Díaz on 13/02/2015.
+ *  Vista que permite mostrar el contenido de una nota
+ */
+
 public class OpenNote extends ActionBarActivity {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_open_note, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,24 +51,24 @@ public class OpenNote extends ActionBarActivity {
 
     private void loadNote() {
         Intent intent = getIntent();
-        note = (Note) intent.getSerializableExtra("note");
+        note = (Note) intent.getSerializableExtra(NOTE_NAME);
         notes = note.getIncrustedNotes();
     }
 
     private void showNoteData() {
         showTitle();
         showContent();
-        showLinks();
+        showSons();
         showImg();
-        showChilds();
+        showIncrustedNotes();
 
     }
 
-    private void showChilds() {
-        if(!note.hasChilds())
+    private void showIncrustedNotes() {
+        if(!note.hasIncrustedNotes())
             return;
         final ListView listview = (ListView) findViewById(R.id.listIncrustedNotes);
-        final ArrayList<String> list = getNotesTitles();
+        final ArrayList<String> list = getNotesTitles(notes);
         final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
@@ -70,7 +91,7 @@ public class OpenNote extends ActionBarActivity {
 
     private void showContent() {
         EditText txtContent = (EditText) findViewById(R.id.txtContent);
-        txtContent.setText(note.getContent());
+        txtContent.setText(note.getBody());
     }
 
     private void showTitle() {
@@ -78,48 +99,35 @@ public class OpenNote extends ActionBarActivity {
         txtTitle.setText(note.getTitle());
     }
 
-    private void showLinks() {
-        TextView txtLinks = (TextView) findViewById(R.id.txtLinks);
-        txtLinks.setText("");
-        for (String link : note.getLinks()){
-            txtLinks.setText(txtLinks.getText()+"\n"+link);
-        }
-    }
+    private void showSons() {
+        if(!note.hasSons())
+            return;
+        final ListView listview = (ListView) findViewById(R.id.listSonsNotes);
+        final ArrayList<String> list = getNotesTitles(note.getSons());
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_open_note, menu);
-        return true;
-    }
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                passNote(note.getSons().get(position));
+            }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        });
     }
 
     private void passNote(Note note) {
-        // 1. create an intent pass class name or intnet action name
+        //Se crea un intent y se pasa el nombre de la clase
         Intent intent = new Intent(OpenNote.class.getName());
-
-        // 3. put person in intent data
-        intent.putExtra("note", note);
-        // 4. start the activity
+        //Se pone la nota en el intent
+        intent.putExtra(NOTE_NAME, note);
+        //Se inicia la actividad
         startActivity(intent);
     }
 
-    private ArrayList<String> getNotesTitles(){
+    private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
         ArrayList<String> titles = new ArrayList<>();
         for(Note note: notes){
             titles.add(note.getTitle());
@@ -128,5 +136,6 @@ public class OpenNote extends ActionBarActivity {
     }
 
     private ArrayList<Note> notes;
+    private static final String NOTE_NAME = "note";
     private Note note;
 }
