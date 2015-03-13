@@ -77,8 +77,8 @@ public class NoteMapper {
     }
 
     public void delteNote(Note note){
+        note.setStatus(false);
         dbManager.update(note);
-
     }
 
     //Aqui se deben agregar los hijos y las notas incrustadas

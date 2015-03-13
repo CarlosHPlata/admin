@@ -74,5 +74,14 @@
                     android:label="@string/title_activity_note_manager_test" >
                 </activity>
         -->
+        <activity
+            android:name="com.test.CreateSonNote"
+            android:label="@string/title_activity_create_son_note" >
+        </activity>
+        <activity
+            android:name="com.view.ListDeletedNotes"
+            android:label="@string/title_activity_list_deleted_notes" >
+        </activity>
     </application>
+
 </manifest>

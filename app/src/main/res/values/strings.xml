@@ -61,5 +61,7 @@
     <string name="title_activity_edit_note">EditNote</string>
     <string name="title_activity_view_note">ViewNote</string>
     <string name="title_activity_test">test</string>
+    <string name="title_activity_create_son_note">CreateSonNote</string>
+    <string name="title_activity_list_deleted_notes">ListDeletedNotes</string>
 
 </resources>

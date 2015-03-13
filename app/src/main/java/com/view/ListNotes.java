@@ -103,7 +103,7 @@ public class ListNotes extends ActionBarActivity {
         return titles;
     }
 
-    private void loadNotes() {
+    protected void loadNotes() {
 
         NoteController noteController = new NoteController(this);
         notes = noteController.getNotDeletedNotes();
@@ -111,6 +111,6 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private static final String NOTE = "note";
-    private ArrayList<Note> notes;
+    protected ArrayList<Note> notes;
     private NoteController controller;
 }

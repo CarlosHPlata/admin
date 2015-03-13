@@ -45,7 +45,7 @@ public class NoteController {
         note.setIdFather(idFather);
         note.setExtId(0);
         note.setFavorite(false);
-        note.setStatus(false);
+        note.setStatus(true);
         note.setSyncFlag(false);
         note.setLabel("label");
 
