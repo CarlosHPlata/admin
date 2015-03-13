@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context="com.view.NewNote">
+    <item
+        android:id="@+id/action_add_file"
+        android:title="@string/lb_add_file"
+        android:icon="@drawable/ic_add_file"
+        app:showAsAction="ifRoom"
+        />
+</menu>

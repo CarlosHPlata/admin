@@ -9,10 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.controller.NoteController;
+import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
-import com.model.Note;
-import com.model.StableArrayAdapter;
+import com.models.Note;
+import com.models.StableArrayAdapter;
+import com.models.mappers.NoteMapper;
 
 import java.util.ArrayList;
 
@@ -29,22 +30,12 @@ public class ListNotes extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
         loadNotes();
         showNotes();
+        controller = new NoteController(getApplicationContext());
     }
 
     private void showNotes() {
@@ -66,9 +57,42 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void passNote(Note note) {
-        Intent intent = new Intent(OpenNote.class.getName());
-        intent.putExtra(NOTE, note);
+        Intent intent = new Intent(this,ViewNote.class);
+        intent.putExtra("id", note.getId());
         startActivity(intent);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotes();
+        showNotes();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_logOut) {
+            controller.logOut();
+            this.finish();
+        }
+        if (id == R.id.action_newNote) {
+            Intent i = new Intent(this,NewNote.class);
+            startActivity(i);
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     private ArrayList<String> getNotesTitles(){
@@ -80,10 +104,13 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void loadNotes() {
+
         NoteController noteController = new NoteController(this);
         notes = noteController.getNotDeletedNotes();
+
     }
 
     private static final String NOTE = "note";
     private ArrayList<Note> notes;
+    private NoteController controller;
 }

@@ -26,6 +26,16 @@
     <!-- end activity note -->
 
 
+    <!-- menu de nota -->
+    <string name="lb_test">Test ver nota</string>
+    <string name="lb_favotire">Favoritos</string>
+    <string name="lb_delete">Borrar</string>
+    <string name="lb_add_file">Agregar archivo</string>
+    <string name="lb_edit_note">Editar nota</string>
+    <string name="lb_note_son">Crear nota hija</string>
+    <!-- Fin de menu de nota -->
+
+
     <!-- Activity new note -->
     <string name="lb_new_note">Nueva nota</string>
     <string name="bt_new">Guardar</string>
@@ -38,7 +48,7 @@
 
 
     <!-- Activity edit note -->
-    <string name="lb_edit_note">Editar nota</string>
+
     <string name="bt_update">Actualizar</string>
     <!-- end activity edit note -->
 
@@ -47,5 +57,9 @@
     <string name="title_activity_edit">Edit</string>
     <string name="title_activity_note_manager_test">NoteManagerTest</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_new_note">NewNote</string>
+    <string name="title_activity_edit_note">EditNote</string>
+    <string name="title_activity_view_note">ViewNote</string>
+    <string name="title_activity_test">test</string>
 
 </resources>

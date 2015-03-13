@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context="com.view.ViewNote">
+
+    <item android:id="@+id/action_editNote"
+        android:title="@string/lb_edit_note"
+        android:icon="@drawable/ic_edit_note"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item android:id="@+id/action_favorite"
+        android:title="@string/lb_favotire"
+        android:icon="@drawable/ic_favorite"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item android:id="@+id/action_delete"
+        android:title="@string/lb_delete"
+        android:icon="@drawable/ic_trash"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item android:id="@+id/action_newNoteSon"
+        android:title="@string/lb_new_note"
+        android:icon="@drawable/ic_new_note"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+</menu>
