@@ -42,17 +42,17 @@ public class NoteMapper {
     }
 
     public ArrayList getUndeletedNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 0", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1", null);
         return loadSons(getNotesFromCursor(cursor));
     }
 
     public ArrayList getNotDeletedNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 0", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1", null);
         return loadSons(getNotesFromCursor(cursor));
     }
 
     public ArrayList getDeletedNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 0", null);
         return loadSons(getNotesFromCursor(cursor));
     }
 
@@ -72,7 +72,7 @@ public class NoteMapper {
     }
 
     public ArrayList<Note> getSonsFromDB(int id){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = " + id, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = " + id +" AND status = 1", null);
         return getNotesFromCursor(cursor);
     }
 
