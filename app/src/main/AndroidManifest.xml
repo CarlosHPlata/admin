@@ -57,6 +57,11 @@
         <activity
             android:name="com.view.ViewNote"
             android:label="@string/title_activity_view_note" >
+            <intent-filter>
+                <action android:name="com.view.ViewNote" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <!--

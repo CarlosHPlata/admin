@@ -155,7 +155,7 @@ public class ViewNote extends ActionBarActivity {
     }
 
     public void generateListViewNotesSon(){
-        ArrayList<String> titles = new ArrayList<>();
+        /*ArrayList<String> titles = new ArrayList<>();
         for(Note note: notesSon){
             titles.add(note.getTitle());
         }
@@ -172,13 +172,30 @@ public class ViewNote extends ActionBarActivity {
                 viewNoteSon(notesSon.get(position));
             }
 
+        });*/
+        if(!noteFhater.hasSons())
+            return;
+        final ListView listview = (ListView) findViewById(R.id.listViewnoteSon);
+        final ArrayList<String> list = getNotesTitles(noteFhater.getSons());
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                viewNoteSon(noteFhater.getSons().get(position));
+            }
+
         });
+
     }
 
     public void viewNoteSon(Note note){
-        /*Intent intent = new Intent(OpenNote.class.getName());
+        Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
-        startActivity(intent); */
+        startActivity(intent);
 
     }
 
@@ -231,6 +248,14 @@ public class ViewNote extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
+        ArrayList<String> titles = new ArrayList<>();
+        for(Note note: notes){
+            titles.add(note.getTitle());
+        }
+        return titles;
     }
 
     private int ID_NOTE;
