@@ -35,6 +35,10 @@
     <string name="lb_note_son">Crear nota hija</string>
     <!-- Fin de menu de nota -->
 
+    <!-- menu de nota borrada -->
+    <string name="lb_restore">Restaurar nota</string>
+    <!-- Fin de menu de nota borrada -->
+
 
     <!-- Activity new note -->
     <string name="lb_new_note">Nueva nota</string>
@@ -63,5 +67,6 @@
     <string name="title_activity_test">test</string>
     <string name="title_activity_create_son_note">CreateSonNote</string>
     <string name="title_activity_list_deleted_notes">ListDeletedNotes</string>
+    <string name="title_activity_view_deleted_note">ViewDeletedNote</string>
 
 </resources>

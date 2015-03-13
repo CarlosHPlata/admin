@@ -56,7 +56,7 @@ public class ListNotes extends ActionBarActivity {
         });
     }
 
-    private void passNote(Note note) {
+    protected void passNote(Note note) {
         Intent intent = new Intent(this,ViewNote.class);
         intent.putExtra("id", note.getId());
         startActivity(intent);

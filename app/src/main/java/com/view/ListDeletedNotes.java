@@ -1,5 +1,6 @@
 package com.view;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
+import com.models.Note;
 
 public class ListDeletedNotes extends ListNotes {
 
@@ -43,5 +45,11 @@ public class ListDeletedNotes extends ListNotes {
     protected void loadNotes() {
         NoteController noteController = new NoteController(this);
         notes = noteController.getDeletedNotes();
+    }
+    @Override
+    protected void passNote(Note note) {
+        Intent intent = new Intent(this,ViewDeletedNote.class);
+        intent.putExtra("id", note.getId());
+        startActivity(intent);
     }
 }

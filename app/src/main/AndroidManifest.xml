@@ -82,6 +82,10 @@
             android:name="com.view.ListDeletedNotes"
             android:label="@string/title_activity_list_deleted_notes" >
         </activity>
+        <activity
+            android:name="com.view.ViewDeletedNote"
+            android:label="@string/title_activity_view_deleted_note" >
+        </activity>
     </application>
 
 </manifest>

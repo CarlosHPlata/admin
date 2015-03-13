@@ -25,6 +25,10 @@ public class NoteController {
         noteService = new NoteService(context);
     }
 
+    public void restore(Note note){
+        noteService.restore(note);
+    }
+
     public boolean logOut(){
         return loginService.logOut();
     }

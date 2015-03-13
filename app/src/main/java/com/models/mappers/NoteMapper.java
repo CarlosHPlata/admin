@@ -18,6 +18,11 @@ public class NoteMapper {
         db = dbManager.getWritableDb();
     }
 
+    public void restore(Note note){
+        note.setStatus(true);
+        updateNote(note);
+    }
+
     public long insertNote(Note note){
         return dbManager.insert(note);
     }
