@@ -31,22 +31,22 @@ public class ViewNote extends ActionBarActivity {
     }
 
     public void findNoteById(){
-        this.noteFhater = controller.findOneById(this.ID_NOTE);
+        this.noteFather = controller.findOneById(this.ID_NOTE);
     }
 
     public void generateNoteFather(){
         TextView titleView = (TextView) findViewById(R.id.titleView);
-        titleView.setText(this.noteFhater.getTitle());
+        titleView.setText(this.noteFather.getTitle());
 
         TextView bodyView = (TextView) findViewById(R.id.bodyView);
-        bodyView.setText(this.noteFhater.getBody());
+        bodyView.setText(this.noteFather.getBody());
     }
 
     public void generateListViewNotesSon(){
-        if(!noteFhater.hasSons())
+        if(!noteFather.hasSons())
             return;
         final ListView listview = (ListView) findViewById(R.id.listViewnoteSon);
-        final ArrayList<String> list = getNotesTitles(noteFhater.getSons());
+        final ArrayList<String> list = getNotesTitles(noteFather.getSons());
         final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
@@ -55,7 +55,7 @@ public class ViewNote extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
-                viewNoteSon(noteFhater.getSons().get(position));
+                viewNoteSon(noteFather.getSons().get(position));
             }
 
         });
@@ -100,8 +100,8 @@ public class ViewNote extends ActionBarActivity {
             startActivity(i);
         }
         if (id == R.id.action_delete) {
-            this.noteFhater.setStatus(true);
-            controller.deleteNote(this.noteFhater);
+            this.noteFather.setStatus(true);
+            controller.deleteNote(this.noteFather);
             Intent i = new Intent(this,ListNotes.class);
             startActivity(i);
             this.finish();
@@ -212,6 +212,6 @@ public class ViewNote extends ActionBarActivity {
     private NoteController controller;
     private ListView listNoteSon;
     private ArrayList<Note> notesSon;
-    private Note noteFhater;
+    private Note noteFather;
 
 }
