@@ -33,6 +33,7 @@
     <string name="lb_add_file">Agregar archivo</string>
     <string name="lb_edit_note">Editar nota</string>
     <string name="lb_note_son">Crear nota hija</string>
+    <string name="lb_new_tags">Agregar tags</string>
     <!-- Fin de menu de nota -->
 
     <!-- menu de nota borrada -->
@@ -47,7 +48,7 @@
     <string name="ht_title">Titulo</string>
     <string name="lb_body">Cuerpo de nota:</string>
     <string name="ht_body">Cuerpo de nota</string>
-
+    <string name="lb_tags">Tags:</string>
     <!-- end activity new note -->
 
 

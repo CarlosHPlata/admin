@@ -1,5 +1,7 @@
 package com.view;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,13 +9,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.controllers.NoteController;
+import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
 import com.models.StableArrayAdapter;
+import com.models.Tag;
 
 import java.util.ArrayList;
 
@@ -24,6 +30,19 @@ public class ViewNote extends ActionBarActivity {
         findNotesSon();
         generateListViewNotesSon();
         generateNoteFather();
+        generateTagSelected();
+    }
+
+    public void generateTagSelected(){
+        TextView viewTags = (TextView) findViewById(R.id.viewTags);
+        ArrayList<Tag> tagsSelect = noteFather.getTags();
+
+        String nameTags = "Tags:\n";
+        for (int y=0; y<tagsSelect.size();y++) {
+            Tag tagAux = tagsSelect.get(y);
+            nameTags += tagAux.getName() + ", ";
+        }
+        viewTags.setText(nameTags);
     }
 
     public void findNotesSon(){
@@ -66,7 +85,6 @@ public class ViewNote extends ActionBarActivity {
         Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
         startActivity(intent);
-
     }
 
     @Override
@@ -120,13 +138,10 @@ public class ViewNote extends ActionBarActivity {
         //Toast.makeText(this, "Entro en ViewNote", Toast.LENGTH_LONG).show();
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
         }
     }
-
-
 
     /*
      Métodos de Ramón
@@ -198,6 +213,7 @@ public class ViewNote extends ActionBarActivity {
         findNotesSon();
         generateListViewNotesSon();
         generateNoteFather();
+        generateTagSelected();
     }
 
     private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
@@ -207,6 +223,7 @@ public class ViewNote extends ActionBarActivity {
         }
         return titles;
     }
+
 
     private int ID_NOTE;
     private NoteController controller;

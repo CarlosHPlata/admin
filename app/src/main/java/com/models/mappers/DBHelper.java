@@ -26,16 +26,22 @@ public class DBHelper extends SQLiteOpenHelper{
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS notes ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, favorite INTEGER, status INTEGER, created_at REAL, updated_at REAL, id_father INTEGER, ext_id INTEGER, label TEXT, sync_flag INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS notes ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, favorite INTEGER, status INTEGER, created_at REAL, updated_at REAL, id_father INTEGER, ext_id INTEGER, tag TEXT, sync_flag INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, token INTEGER)");
         db.execSQL("INSERT INTO users(email, password,token) values ('usuario','usuario',1)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS labels ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS tags ( id INTEGER PRIMARY KEY AUTOINCREMENT, ext_id INTEGER, name TEXT, sync_flag INTEGER)");
+        db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Java',0)");
+        db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'C++',0)");
+        db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Php',0)");
+        db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Ruby',0)");
+        db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Objective c',0)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXIST users");
         db.execSQL("CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, token INTEGER)");
-
+        db.execSQL("DROP TABLE IF EXIST tags");
+        db.execSQL("CREATE TABLE IF NOT EXISTS tags ( id INTEGER PRIMARY KEY AUTOINCREMENT, ext_id INTEGER, name TEXT, sync_flag INTEGER)");
     }
 }

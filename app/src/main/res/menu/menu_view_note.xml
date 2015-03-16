@@ -22,4 +22,5 @@
         android:icon="@drawable/ic_new_note"
         android:orderInCategory="100"
         app:showAsAction="always" />
+
 </menu>

@@ -3,6 +3,8 @@ package com.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.models.services.TagService;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,12 +17,14 @@ public class Note extends Entitie implements Serializable {
     public static final int NO_INSERTED_NOTE = -1;
 
     public Note(){
+        tagService = new TagService();
         setTableName(tableName);
         setColumnNames(columNames);
     }
 
     public Note(String title, String body){
         super(tableName, columNames);
+        tagService = new TagService();
         sons = new ArrayList<>();
         this.title = title;
         this.body = body;
@@ -46,7 +50,7 @@ public class Note extends Entitie implements Serializable {
         content.put(columNames[UPDATED_POSITION], updatedAt.getTime());
         content.put(columNames[ID_FATHER_POSITION], idFather);
         content.put(columNames[EXT_ID_POSITION], extId);
-        content.put(columNames[LABEL_POSITION], label);
+        content.put(columNames[TAG_POSITION], tagService.convertArrayTagToJson(getTags()));
         content.put(columNames[SYNC_FLAG_POSITION], syncFlag);
         return content;
     }
@@ -57,12 +61,12 @@ public class Note extends Entitie implements Serializable {
         title = cursor.getString(TITLE_POSITION);
         body = cursor.getString(BODY_POSITION);
         favorite = Boolean.parseBoolean(cursor.getString(FAVORITE_POSITION));
-        status = Boolean.parseBoolean(cursor.getString(STATUS_POSITION));
+        status = ((cursor.getInt(STATUS_POSITION)== 0)? false: true);
         createdAt = new Date(cursor.getLong(CREATED_AT_POSITION));
         updatedAt = new Date(cursor.getLong(UPDATED_POSITION));
         idFather = cursor.getInt(ID_FATHER_POSITION);
         extId = cursor.getInt(EXT_ID_POSITION);
-        label = cursor.getString(LABEL_POSITION);
+        tags = tagService.convertJsonToObjTags(cursor.getString(TAG_POSITION));
         syncFlag = Boolean.parseBoolean(cursor.getString(SYNC_FLAG_POSITION));
     }
 
@@ -127,12 +131,12 @@ public class Note extends Entitie implements Serializable {
         this.extId = extId;
     }
 
-    public String getLabel() {
-        return label;
+    public ArrayList<Tag> getTags() {
+        return tags;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setTags(ArrayList<Tag> tags) {
+        this.tags = tags;
     }
 
     public boolean isSyncFlag() {
@@ -176,7 +180,7 @@ public class Note extends Entitie implements Serializable {
 
     private int idFather;
     private int extId;
-    private String label;
+    private ArrayList<Tag> tags;
     private boolean syncFlag;
     private String title;
     private String body;
@@ -186,8 +190,9 @@ public class Note extends Entitie implements Serializable {
     private Date updatedAt;
     private ArrayList<Note> sons;
     private ArrayList<Note> incrustedNotes;
+    private TagService tagService;
     private static final String tableName = "notes";
-    private static final String[] columNames = {"id", "title", "body", "favorite", "status", "created_at", "updated_at", "id_father", "ext_id", "label", "sync_flag"};
+    private static final String[] columNames = {"id", "title", "body", "favorite", "status", "created_at", "updated_at", "id_father", "ext_id", "tag", "sync_flag"};
     private static final int ID_POSITION = 0;
     private static final int TITLE_POSITION = 1;
     private static final int BODY_POSITION = 2;
@@ -197,6 +202,6 @@ public class Note extends Entitie implements Serializable {
     private static final int UPDATED_POSITION = 6;
     private static final int ID_FATHER_POSITION = 7;
     private static final int EXT_ID_POSITION = 8;
-    private static final int LABEL_POSITION = 9;
+    private static final int TAG_POSITION = 9;
     private static final int SYNC_FLAG_POSITION = 10;
 }
