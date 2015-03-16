@@ -17,8 +17,15 @@ import com.models.StableArrayAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * Clase que se encarga de mostrar los datos de una nota que ha sido borrada
+ * @author Ramón Díaz
+ * @version 0.1 13/03/2015.
+ *
+ */
+
 public class ViewDeletedNote extends ActionBarActivity {
-    /*Metrodos originales
+    /*Metrodos originales, no los borre por si mas adelante los necesito
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,11 +125,8 @@ public class ViewDeletedNote extends ActionBarActivity {
         }
         if (id == R.id.action_restore_note) {
             Intent i = new Intent(this,ListNotes.class);
-            //i.putExtra("id",this.ID_NOTE);
-            //i.putExtra("isFather",false);
             controller.restore(noteFather);
             startActivity(i);
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -144,70 +148,6 @@ public class ViewDeletedNote extends ActionBarActivity {
         }
     }
 
-
-
-    /*
-     Métodos de Ramón
-
-      private void loadNote() {
-        Intent intent = getIntent();
-        note = (Note) intent.getSerializableExtra(NOTE_NAME);
-        notes = note.getIncrustedNotes();
-    }
-
-     private void showNoteData() {
-        showTitle();
-        showContent();
-        showSons();
-        showImg();
-        showIncrustedNotes();
-
-    }
-
-     private void showIncrustedNotes() {
-        if(!note.hasIncrustedNotes())
-            return;
-        final ListView listview = (ListView) findViewById(R.id.listIncrustedNotes);
-        final ArrayList<String> list = getNotesTitles(notes);
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
-        listview.setAdapter(adapter);
-
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
-            }
-
-        });
-    }
-
-    private void showImg() {
-    ImageView imgView = (ImageView) findViewById(R.id.imageView);
-
-    imgView.setImageResource(R.drawable.ic_launcher);
-    }
-
-    private void showContent() {
-        EditText txtContent = (EditText) findViewById(R.id.txtContent);
-        txtContent.setText(note.getBody());
-    }
-
-    private void showTitle() {
-        TextView txtTitle = (TextView) findViewById(R.id.txtTitle);
-        txtTitle.setText(note.getTitle());
-    }
-
-    private void passNote(Note note) {
-    //Se crea un intent y se pasa el nombre de la clase
-    Intent intent = new Intent(OpenNote.class.getName());
-    //Se pone la nota en el intent
-    intent.putExtra(NOTE_NAME, note);
-    //Se inicia la actividad
-    startActivity(intent);
-    }
-     */
 
     @Override
     protected void onResume() {

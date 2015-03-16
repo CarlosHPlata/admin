@@ -10,6 +10,13 @@ import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
 
+/**
+ * Clase que se encarga de listar las notas borradas
+ * @author Ramón Díaz
+ * @version 0.1 13/03/2015.
+ *
+ */
+
 public class ListDeletedNotes extends ListNotes {
 
     @Override
