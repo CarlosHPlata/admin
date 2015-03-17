@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 
@@ -35,26 +36,26 @@ public class SyncController {
 
     public User registUser(String mail, String pass) throws UnsupportedEncodingException {
         final User user = new User();
-        String bodyAsJson = "{\"user\":{\"email\":\""+mail+"\",\"password\":\""+pass+"\"}}";
+        Log.i("ESTOOOOOOOO","PASO POR AQUI");
+        String bodyAsJson = "e6bc9f7c1e74cb3dd8ccde07e6edbc32";
 
         StringEntity entity  = new StringEntity(bodyAsJson);
         Header[] headers = {
-                new BasicHeader("Content-type", "application/json")
+                new BasicHeader("Authorization","e6bc9f7c1e74cb3dd8ccde07e6edbc32")
         };
 
-        client.post(this.context, "http://104.131.189.224/api/user", headers , entity, "application/json",  new AsyncHttpResponseHandler() {
+
+        client.get(this.context, "http://104.131.189.224/api/notes", headers, null, new JsonHttpResponseHandler() {
 
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                Log.i("ESTOOOOOOOO","EJEJE");
                 try {
-                    json = json.getJSONObject("user");
-                    user.setId(json.getInt("id"));
-                    user.setEmail(json.getString("email"));
-                    user.setPassword("123456");
-                    user.setToken(json.getString("auth_token"));
-                } catch ( JSONException e) {
-                    user.setToken("error y te jodes");
-                } catch (Exception e) {
+                    user.setToken(json.toString());
+                    Log.i("ESTOOOOOOOO",json.toString());
+                    Log.i("ESTOOOOOOOO",user.getToken());
+                    status = 1;
+                }  catch (Exception e) {
                     user.setToken("error de quien sabe que mierda");
                 }
 
@@ -62,42 +63,27 @@ public class SyncController {
 
 
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.i("ESTOOOOOOOO","SUCCES DIFERENTE");
                 user.setToken("llega de otro pedo");
             }
 
 
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("ESTOOOOOOOO","SUCCESS STRING");
                 user.setToken(responseString);
             }
 
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("ESTOOOOOOOO","FAILURE");
                 user.setToken("errorsini");
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                user.setToken("u.u");
-            }
-
-            @Override
-            public void onFinish() {
-                user.setToken("al menos entro aqui");
-            }
-
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                user.setToken("es un response raro");
-            }
-
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                user.setToken("ubo un failure");
             }
         });
 
 
+        Log.i("ESTOOOOOOOO","final: "+user.getToken());
 
+        Log.i("ESTOOOOOOOO"," final 2:  "+user.getToken());
         return user;
     }
 
@@ -110,4 +96,5 @@ public class SyncController {
 
     private static AsyncHttpClient client = new AsyncHttpClient();
     private Context context;
+    private int status = 0;
 }

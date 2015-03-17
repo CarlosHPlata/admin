@@ -36,6 +36,7 @@
     <string name="lb_new_tags">Agregar tags</string>
     <!-- Fin de menu de nota -->
 
+
     <!-- menu de nota borrada -->
     <string name="lb_restore">Restaurar nota</string>
     <!-- Fin de menu de nota borrada -->
@@ -69,5 +70,6 @@
     <string name="title_activity_create_son_note">CreateSonNote</string>
     <string name="title_activity_list_deleted_notes">ListDeletedNotes</string>
     <string name="title_activity_view_deleted_note">ViewDeletedNote</string>
+    <string name="title_activity_register">register</string>
 
 </resources>

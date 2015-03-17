@@ -3,6 +3,7 @@ package com.view;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.EditText;
 
 import com.controllers.RegisterController;
 import com.controllers.SyncController;
+import com.controllers.sync.SyncNotesHandler;
 import com.example.usuario.androidadmin.R;
+import com.models.Note;
 import com.models.User;
 import com.models.services.AlertDialogService;
 
@@ -65,14 +68,13 @@ public class Register extends ActionBarActivity {
 
                 if (!controller.isUserRegistered(email, password)){
                     //controller.registUser(email, password);
-                    User userResp = null;
-                    try {
-                        userResp = sync.registUser(email, password);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                    SyncNotesHandler s = new SyncNotesHandler(getApplicationContext());
+                    s.start();
+                    s.getNotesFromuser("e6bc9f7c1e74cb3dd8ccde07e6edbc32");
+                    Note note = s.getNoteResponse();
+                    s.end();
 
-                    alert.showAlertDialog(Register.this, "Error", "Token: "+userResp.getToken()+" - Email: "+ userResp.getEmail(), false);
+                    alert.showAlertDialog(Register.this, "Error", "Token: "+note.getTitle(), false);
                     //Intent i = new Intent(this,Login.class);
                     //startActivity(i);
                     //this.finish();
