@@ -56,4 +56,14 @@
         android:layout_alignEnd="@+id/email"
         android:hint="@string/ht_password" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:id="@+id/registerButton"
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/button7"
+        android:layout_centerHorizontal="true"
+        android:onClick="register" />
+
 </RelativeLayout>

@@ -55,6 +55,12 @@ public class Login extends ActionBarActivity {
         }
     }
 
+    public void register(View view) {
+        Intent i = new Intent(this, Register.class);
+        startActivity(i);
+        this.finish();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
