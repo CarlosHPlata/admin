@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.controllers.RegisterController;
 import com.controllers.SyncController;
 import com.controllers.sync.SyncNotesHandler;
+import com.controllers.sync.SyncNotesInterface;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
 import com.models.User;
@@ -19,7 +20,9 @@ import com.models.services.AlertDialogService;
 
 import java.io.UnsupportedEncodingException;
 
-public class Register extends ActionBarActivity {
+public class Register extends ActionBarActivity implements SyncNotesInterface {
+
+    SyncNotesHandler s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +71,13 @@ public class Register extends ActionBarActivity {
 
                 if (!controller.isUserRegistered(email, password)){
                     //controller.registUser(email, password);
-                    SyncNotesHandler s = new SyncNotesHandler(getApplicationContext());
-                    s.start();
+                    s = new SyncNotesHandler(getApplicationContext());
+                    s.setListener(Register.this); // Set The listener for callback
                     s.getNotesFromuser("e6bc9f7c1e74cb3dd8ccde07e6edbc32");
-                    Note note = s.getNoteResponse();
-                    s.end();
+                    //Note note = s.getNoteResponse();
+                    //s.end();
 
-                    alert.showAlertDialog(Register.this, "Error", "Token: "+note.getTitle(), false);
+                    //alert.showAlertDialog(Register.this, "Error", "Token: "+note.getTitle(), false);
                     //Intent i = new Intent(this,Login.class);
                     //startActivity(i);
                     //this.finish();
@@ -98,4 +101,26 @@ public class Register extends ActionBarActivity {
 
     private RegisterController controller;
     private SyncController sync;
+
+    /**
+     *  SycnNotesInterface Section
+     */
+
+    @Override
+    public void onNoteReceived(Note thisNote) {
+        Note note = thisNote; //Better this way!
+        s.destroy(); // this is useless if you use the class constructor (New SyncNotesHandler)
+        s = null; //Destroy all.
+
+        //TODO HERE
+        Log.i("And the title is....: ",thisNote.getTitle());
+
+    }
+
+    @Override
+    public void onErrorReceived(int StatusCode, String error) {
+        //TODO HERE
+        Log.e("There was an error ",error);
+    }
+
 }
