@@ -71,10 +71,10 @@ public class Tag extends Entitie {
     public JSONObject toJSON(){
         JSONObject jsonObject= new JSONObject();
         try {
-            jsonObject.put("id", getId());
-            jsonObject.put("extId", getExtId());
-            jsonObject.put("name", getName());
-            jsonObject.put("syncFlag",isSyncFlag());
+            jsonObject.put(columNames[ID_POSITION], getId());
+            jsonObject.put(columNames[EXT_ID_POSITION], getExtId());
+            jsonObject.put(columNames[NAME_POSITION], getName());
+            jsonObject.put(columNames[SYNC_FLAG_POSITION],isSyncFlag());
 
             return jsonObject;
         } catch (org.json.JSONException e) {
