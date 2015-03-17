@@ -9,6 +9,8 @@ import com.models.services.TagService;
 import java.util.ArrayList;
 
 /**
+ * Esta clase se encarga de administrar las peticiones de la vista principal, ver, crear y editar tags.
+ *
  * Created by Edgar on 15/03/2015.
  */
 public class TagController {
@@ -24,7 +26,6 @@ public class TagController {
 
 
     public boolean addTag(String name){
-        Log.e("Controller: ", "Si entro");
         Tag tag = new Tag(name);
         tag.setExtId(1);
         tag.setSyncFlag(false);

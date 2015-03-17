@@ -8,6 +8,7 @@ import com.models.Tag;
 import java.util.ArrayList;
 
 /**
+ * Clase que se encarga de guardar y obtener las notas de la base de datos
  * Created by Edgar on 15/03/2015.
  */
 public class TagMapper {
