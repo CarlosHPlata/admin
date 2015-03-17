@@ -9,8 +9,12 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.controllers.RegisterController;
+import com.controllers.SyncController;
 import com.example.usuario.androidadmin.R;
+import com.models.User;
 import com.models.services.AlertDialogService;
+
+import java.io.UnsupportedEncodingException;
 
 public class Register extends ActionBarActivity {
 
@@ -19,6 +23,7 @@ public class Register extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         this.controller = new RegisterController(getApplicationContext());
+        this.sync = new SyncController(getApplicationContext());
     }
 
 
@@ -59,10 +64,18 @@ public class Register extends ActionBarActivity {
             if (isPasswordCorrect(password, password2)){
 
                 if (!controller.isUserRegistered(email, password)){
-                    controller.registUser(email, password);
-                    Intent i = new Intent(this,Login.class);
-                    startActivity(i);
-                    this.finish();
+                    //controller.registUser(email, password);
+                    User userResp = null;
+                    try {
+                        userResp = sync.registUser(email, password);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    alert.showAlertDialog(Register.this, "Error", "Token: "+userResp.getToken()+" - Email: "+ userResp.getEmail(), false);
+                    //Intent i = new Intent(this,Login.class);
+                    //startActivity(i);
+                    //this.finish();
                 } else alert.showAlertDialog(Register.this, "Error", "Ya existe", false);
 
             } else alert.showAlertDialog(Register.this, "Error", "Contraseñas no coinciden", false);
@@ -82,4 +95,5 @@ public class Register extends ActionBarActivity {
     }
 
     private RegisterController controller;
+    private SyncController sync;
 }
