@@ -41,13 +41,13 @@ public class TagService {
         ArrayList<Tag> tags = new ArrayList<>();
         try {
             JSONArray jsonA = new JSONArray(jsonArray);
-            if(jsonArray != null){
+            if(jsonA != null){
                 for (int i=0; i<jsonA.length(); i++){
                     JSONObject tagAux = (JSONObject) jsonA.get(i);
                     Tag tag = new Tag();
                     tag.setId((Integer) tagAux.get("id"));
-                    tag.setExtId((Integer)tagAux.get("extId"));
-                    if(Boolean.getBoolean(tagAux.get("syncFlag").toString())){
+                    tag.setExtId((Integer)tagAux.get("ext_id"));
+                    if(Boolean.getBoolean(tagAux.get("sync_flag").toString())){
                         tag.setSyncFlag(false);
                     }else{
                         tag.setSyncFlag(true);
