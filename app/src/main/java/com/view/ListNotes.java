@@ -3,6 +3,8 @@ package com.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,16 +96,27 @@ public class ListNotes extends ActionBarActivity {
     private void showNotes() {
         final ListView listview = (ListView) findViewById(R.id.listView);
         final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_multiple_choice, list);
         listview.setAdapter(adapter);
+        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                passNote(notes.get(position));
+                Log.d("ListNotes","Item clickeado largo");
+                return true;
+            }
+        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+            SparseBooleanArray selected = listview.getCheckedItemPositions();
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
+                //final String item = (String) parent.getItemAtPosition(position);
+                //passNote(notes.get(position));
+                Log.v("Mi debug","Notas seleccionadas: " + selected.toString());
             }
 
         });
