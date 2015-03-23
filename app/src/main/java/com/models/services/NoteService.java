@@ -24,6 +24,10 @@ public class NoteService {
         noteMapper = new NoteMapper(context);
     }
 
+    public void deleteNotes(ArrayList notes){
+        noteMapper.deleteNotes(notes);
+    }
+
     public void restore(Note note){
         noteMapper.restore(note);
     }

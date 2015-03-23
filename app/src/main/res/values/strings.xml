@@ -34,6 +34,7 @@
     <string name="lb_edit_note">Editar nota</string>
     <string name="lb_note_son">Crear nota hija</string>
     <string name="lb_new_tags">Agregar tags</string>
+    <string name="lb_move_note">Mover nota</string>
     <!-- Fin de menu de nota -->
 
 

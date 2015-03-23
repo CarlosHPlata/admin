@@ -26,6 +26,10 @@ public class NoteController {
         noteService = new NoteService(context);
     }
 
+    public void deleteNotes(ArrayList<Note> notes){
+        noteService.deleteNotes(notes);
+    }
+
     public void restore(Note note){
         noteService.restore(note);
     }

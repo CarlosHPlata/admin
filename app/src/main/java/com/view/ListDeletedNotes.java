@@ -29,7 +29,7 @@ public class ListDeletedNotes extends ListNotes {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_notes, menu);
+        getMenuInflater().inflate(R.menu.menu_list_deleted_notes, menu);
         return true;
     }
 

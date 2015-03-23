@@ -50,6 +50,12 @@ public class ListNotes extends ActionBarActivity {
             Intent i = new Intent(this,NewNote.class);
             startActivity(i);
         }
+        if(id == R.id.action_move_note){
+            //Aqui se manejaria el mover las notas
+        }
+        if(id == R.id.action_delete){
+            deleteSelectedNotes();
+        }
 
 
         return super.onOptionsItemSelected(item);
@@ -81,7 +87,7 @@ public class ListNotes extends ActionBarActivity {
     protected void loadNotes() {
 
         NoteController noteController = new NoteController(this);
-        notes = noteController.getNotDeletedNotes();
+        notes = noteController.getFatherNotes();
 
     }
 
@@ -120,6 +126,24 @@ public class ListNotes extends ActionBarActivity {
             }
 
         });
+    }
+
+    private void deleteSelectedNotes(){
+
+        final ListView listview = (ListView) findViewById(R.id.listView);
+        SparseBooleanArray selected = listview.getCheckedItemPositions();
+        if(selected != null && selected.size() > 0) {
+            ArrayList<Note> notesToDelete = new ArrayList<>();
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.valueAt(i)) {
+                    notesToDelete.add(notes.get(i));
+                }
+            }
+            controller.deleteNotes(notesToDelete);
+            Intent i = new Intent(this, ListNotes.class);
+            startActivity(i);
+            this.finish();
+        }
     }
 
     private static final String NOTE = "note";

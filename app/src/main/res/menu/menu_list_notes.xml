@@ -11,6 +11,16 @@
         android:icon="@drawable/ic_new_note"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item android:id="@+id/action_move_note"
+        android:title="@string/lb_move_note"
+        android:icon="@drawable/ic_move"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item android:id="@+id/action_delete"
+        android:title="@string/lb_delete"
+        android:icon="@drawable/ic_trash"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
         <!-- -->
 
 </menu>
