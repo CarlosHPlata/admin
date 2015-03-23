@@ -80,4 +80,42 @@ public class syncUserHandler extends SyncHandler{
             }
         });
     }
+
+
+
+    //curl -X PUT -H "Authorization: dc45800fddee07cf9b300d2765283cb2" -H "Content-Type: application/json" -d '{"user":{"email":"plata@google.com","password":"asdfasdf"}}' http://localhost:3000/api/user
+    //response:
+    //{"user":{"id":3,"email":"plata@google.com","auth_token":"dc45800fddee07cf9b300d2765283cb2"}}
+    public void updateUser(User user){
+        Header[] headers = {
+                new BasicHeader("Authorization",user.getToken())
+        };
+
+        StringEntity entity  = null;
+        String bodyAsJson = "{\"user\":{\"email\":\""+user.getEmail()+"\",\"password\":\""+user.getPassword()+"\"}}";
+        try {
+            entity = new StringEntity(bodyAsJson);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        client.put(this.context, "http://localhost:3000/api/user", headers, entity,"application/json",new JsonHttpResponseHandler(){
+            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                Log.i("DEBUG:", json.toString());
+            }
+
+
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("DEBUG:", "error");
+            }
+
+            public void onFailure(int i, Header[] header, Throwable e, JSONObject json){
+                Log.i("DEBUG:", json.toString());
+            }
+        });
+    }
+
+    public void deleteUser(User user){
+
+    }
 }
