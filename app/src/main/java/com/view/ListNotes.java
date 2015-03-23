@@ -110,19 +110,14 @@ public class ListNotes extends ActionBarActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
                 passNote(notes.get(position));
-                Log.d("ListNotes","Item clickeado largo");
                 return true;
             }
         });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            SparseBooleanArray selected = listview.getCheckedItemPositions();
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                //final String item = (String) parent.getItemAtPosition(position);
-                //passNote(notes.get(position));
-                Log.v("Mi debug","Notas seleccionadas: " + selected.toString());
             }
 
         });
