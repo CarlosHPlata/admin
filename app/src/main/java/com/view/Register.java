@@ -1,6 +1,5 @@
 package com.view;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,24 +11,21 @@ import android.widget.EditText;
 import com.controllers.RegisterController;
 import com.controllers.SyncController;
 import com.controllers.sync.SyncNotesHandler;
-import com.controllers.sync.SyncNotesInterface;
+import com.controllers.sync.interfaces.SyncInterface;
+import com.controllers.sync.syncUserHandler;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
 import com.models.User;
 import com.models.services.AlertDialogService;
 
-import java.io.UnsupportedEncodingException;
-
-public class Register extends ActionBarActivity implements SyncNotesInterface {
-
-    SyncNotesHandler s;
+public class Register extends ActionBarActivity implements SyncInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         this.controller = new RegisterController(getApplicationContext());
-        this.sync = new SyncController(getApplicationContext());
+        this.sync = new syncUserHandler(getApplicationContext(), Register.this);
     }
 
 
@@ -68,23 +64,15 @@ public class Register extends ActionBarActivity implements SyncNotesInterface {
 
         if (isEmailValid(email)){
             if (isPasswordCorrect(password, password2)){
-
                 if (!controller.isUserRegistered(email, password)){
-                    //controller.registUser(email, password);
-                    s = new SyncNotesHandler(getApplicationContext());
-                    s.setListener(Register.this); // Set The listener for callback
-                    s.getNotesFromuser("e6bc9f7c1e74cb3dd8ccde07e6edbc32");
-                    //Note note = s.getNoteResponse();
-                    //s.end();
-
-                    //alert.showAlertDialog(Register.this, "Error", "Token: "+note.getTitle(), false);
-                    //Intent i = new Intent(this,Login.class);
-                    //startActivity(i);
-                    //this.finish();
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setPassword(password);
+                    this.sync.getToken(user);
                 } else alert.showAlertDialog(Register.this, "Error", "Ya existe", false);
 
             } else alert.showAlertDialog(Register.this, "Error", "Contraseñas no coinciden", false);
-        } else alert.showAlertDialog(Register.this, "Error", "Email no es correcto", false);
+        }
 
 
     }
@@ -100,27 +88,17 @@ public class Register extends ActionBarActivity implements SyncNotesInterface {
     }
 
     private RegisterController controller;
-    private SyncController sync;
-
-    /**
-     *  SycnNotesInterface Section
-     */
+    private syncUserHandler sync;
 
     @Override
-    public void onNoteReceived(Note thisNote) {
-        Note note = thisNote; //Better this way!
-        s.destroy(); // this is useless if you use the class constructor (New SyncNotesHandler)
-        s = null; //Destroy all.
-
-        //TODO HERE
-        Log.i("And the title is....: ",thisNote.getTitle());
-
+    public void onResponse(Object thisNote) {
+        AlertDialogService alert = new AlertDialogService();
+        alert.showAlertDialog(Register.this, "REGISTRO:", "Se registro correctamente", false);
     }
 
     @Override
-    public void onErrorReceived(int StatusCode, String error) {
+    public void onError(int StatusCode, String error) {
         //TODO HERE
-        Log.e("There was an error ",error);
     }
 
 }

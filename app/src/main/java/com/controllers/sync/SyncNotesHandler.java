@@ -1,17 +1,15 @@
     package com.controllers.sync;
 
     import android.content.Context;
-    import android.util.Log;
 
+    import com.controllers.sync.interfaces.SyncHandler;
+    import com.controllers.sync.interfaces.SyncInterface;
     import com.loopj.android.http.AsyncHttpClient;
     import com.loopj.android.http.JsonHttpResponseHandler;
     import com.models.Note;
-    import com.models.User;
 
     import org.apache.http.Header;
-    import org.apache.http.entity.StringEntity;
     import org.apache.http.message.BasicHeader;
-    import org.json.JSONArray;
     import org.json.JSONObject;
 
     import java.util.ArrayList;
@@ -19,23 +17,19 @@
     /**
      * Created by Usuario on 17/03/2015.
      * Contributors
-     * CmM dev.cmedina@gmail.com
      */
 
 
-    public class SyncNotesHandler {
+    public class SyncNotesHandler extends SyncHandler {
 
-        public SyncNotesHandler(Context context){
-
-            this.context = context;
+        public SyncNotesHandler(Context context,  SyncInterface listener){
+            super(context, listener, new AsyncHttpClient());
             this.note = new Note();
             this.notes = new ArrayList<Note>();
-            this.client = new AsyncHttpClient();
             this.status = 0;
         }
 
         public void getNotesFromuser(String token){
-            Log.i("Debuggin", "comes around here");
 
             Header[] headers = {
                     new BasicHeader("Authorization",token)
@@ -46,24 +40,23 @@
 
 
                 public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                    Log.i("Debuggin","getting response");
                     try {
-                        Log.i("Debuggin", "Response: "+json.toString());
                         note.setTitle(json.toString());
-                        if(listener != null) listener.onNoteReceived(note);
-                    }  catch (Exception e) {
-                        Log.i("Debuggin","error");
+                        if (listener != null) listener.onResponse(note);
+                    } catch (Exception e) {
                     }
 
                 }
 
 
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Log.i("Debuggin","FAILURE");
-                    if(listener != null) listener.onErrorReceived(statusCode, responseString);
+                    if (listener != null) listener.onError(statusCode, responseString);
                 }
             });
-            Log.i("Debuggin","pre-final :"+note.getTitle());
+        }
+
+        public void createNote(String token, Note note){
+
         }
 
 
@@ -84,14 +77,11 @@
             return this.status;
         }
 
-        public void setListener(SyncNotesInterface _listener){
+        public void setListener(SyncInterface _listener){
             this.listener = _listener;
         }
 
-        private static AsyncHttpClient client;
         private Note note;
         private ArrayList<Note> notes;
-        private Context context;
         private int status;
-        private SyncNotesInterface listener;
     }
