@@ -1,13 +1,24 @@
 package com.view;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
@@ -19,14 +30,37 @@ import java.util.ArrayList;
 
 /**
  *  Created by José Ramón Díaz on 13/02/2015.
- *  Vista que permite mostrar una lista de notas
+ *  Vista que permite mostrar una lista de notas ActionBarActivity
  */
 
-public class ListNotes extends ActionBarActivity {
+public class ListNotes extends Fragment {
+    public ListView listview;
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list_notes, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+       // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
+        inflater.inflate(R.menu.menu_list_notes, menu);
+       // return true;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
+        //rootView.findViewById();
+        listview = (ListView) rootView.findViewById(R.id.listView);
+
+        controller = new NoteController(getActivity().getApplicationContext());
+        //  setContentView(R.layout.activity_list_notes);
+        loadNotes();
+        showNotes();
+        return rootView;
     }
 
     @Override
@@ -40,46 +74,43 @@ public class ListNotes extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_logOut) {
-            controller.logOut();
-            this.finish();
-        }
         if (id == R.id.action_newNote) {
-            Intent i = new Intent(this,NewNote.class);
-            startActivity(i);
+            Fragment fragment = new NewNote();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_notes);
-        loadNotes();
-        showNotes();
-        controller = new NoteController(getApplicationContext());
     }
 
     protected void passNote(Note note) {
-        Intent intent = new Intent(this,ViewNote.class);
+        Bundle arguments = new Bundle();
+        arguments.putInt("id",note.getId());
+        Fragment fragment = ViewNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
+     /*   Intent intent = new Intent(this,ViewNote.class);
         intent.putExtra("id", note.getId());
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
-
+/*
     @Override
     protected void onResume() {
         super.onResume();
         loadNotes();
         showNotes();
     }
-
+*/
     protected void loadNotes() {
-
-        NoteController noteController = new NoteController(this);
-        notes = noteController.getNotDeletedNotes();
+       // NoteController noteController = new NoteController(this);
+        notes = controller.getNotDeletedNotes();
 
     }
 
@@ -92,9 +123,14 @@ public class ListNotes extends ActionBarActivity {
     }
 
     private void showNotes() {
-        final ListView listview = (ListView) findViewById(R.id.listView);
+
+        //final ListView listview = (ListView) findViewById(R.id.listView);
+      //  final ListView listview = (ListView)  getActivity().findViewById(R.id.listView);
+
         final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        Log.e("ListNotes","Tamaño de list: "+list.get(0));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
+      //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

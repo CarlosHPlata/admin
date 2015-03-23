@@ -1,9 +1,12 @@
 package com.view;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.controllers.NoteController;
@@ -20,17 +23,19 @@ import com.models.Note;
 public class ListDeletedNotes extends ListNotes {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_notes);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
+    }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_notes, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list_deleted_notes, menu);
     }
 
     @Override
@@ -50,13 +55,17 @@ public class ListDeletedNotes extends ListNotes {
 
     @Override
     protected void loadNotes() {
-        NoteController noteController = new NoteController(this);
+        NoteController noteController = new NoteController(getActivity().getApplicationContext());
         notes = noteController.getDeletedNotes();
     }
     @Override
     protected void passNote(Note note) {
-        Intent intent = new Intent(this,ViewDeletedNote.class);
-        intent.putExtra("id", note.getId());
-        startActivity(intent);
+        Bundle arguments = new Bundle();
+        arguments.putInt("id",note.getId());
+        Fragment fragment = ViewDeletedNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
     }
+
 }

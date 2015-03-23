@@ -1,13 +1,19 @@
 package com.view;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,7 +29,42 @@ import com.models.Tag;
 
 import java.util.ArrayList;
 
-public class ViewNote extends ActionBarActivity {
+public class ViewNote extends Fragment {
+    public View viewNote;
+
+    public static ViewNote newInstance(Bundle arguments){
+        ViewNote viewNote = new ViewNote();
+        if(arguments != null){
+            viewNote.setArguments(arguments);
+        }
+        return viewNote;
+    }
+
+    public ViewNote(){
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        viewNote = inflater.inflate(R.layout.activity_view_note, container, false);
+
+        controller = new NoteController(getActivity().getApplicationContext());
+        listNoteSon = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
+        listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            this.ID_NOTE = bundle.getInt("id");
+            initViewNoteById();
+        }
+        return viewNote;
+    }
 
     public void initViewNoteById(){
         findNoteById();
@@ -34,9 +75,8 @@ public class ViewNote extends ActionBarActivity {
     }
 
     public void generateTagSelected(){
-        TextView viewTags = (TextView) findViewById(R.id.viewTags);
+        TextView viewTags = (TextView) viewNote.findViewById(R.id.viewTags);
         ArrayList<Tag> tagsSelect = noteFather.getTags();
-
         String nameTags = "Tags:\n";
         for (int y=0; y<tagsSelect.size();y++) {
             Tag tagAux = tagsSelect.get(y);
@@ -54,19 +94,19 @@ public class ViewNote extends ActionBarActivity {
     }
 
     public void generateNoteFather(){
-        TextView titleView = (TextView) findViewById(R.id.titleView);
+        TextView titleView = (TextView) viewNote.findViewById(R.id.titleView);
         titleView.setText(this.noteFather.getTitle());
 
-        TextView bodyView = (TextView) findViewById(R.id.bodyView);
+        TextView bodyView = (TextView) viewNote.findViewById(R.id.bodyView);
         bodyView.setText(this.noteFather.getBody());
     }
 
     public void generateListViewNotesSon(){
         if(!noteFather.hasSons())
             return;
-        final ListView listview = (ListView) findViewById(R.id.listViewnoteSon);
+        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
         final ArrayList<String> list = getNotesTitles(noteFather.getSons());
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,16 +122,16 @@ public class ViewNote extends ActionBarActivity {
     }
 
     public void viewNoteSon(Note note){
-        Intent intent = new Intent(ViewNote.class.getName());
+
+       /* Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
-        startActivity(intent);
+        startActivity(intent); */
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_note, menu);
-        return true;
+        inflater.inflate(R.menu.menu_view_note, menu);
     }
 
     @Override
@@ -106,114 +146,38 @@ public class ViewNote extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_newNoteSon) {
-            Intent i = new Intent(this,NewNote.class);
+            Toast.makeText(getActivity(), "Las notas hijas en mantenimiento", Toast.LENGTH_SHORT).show();
+       /*     Intent i = new Intent(this,NewNote.class);
             i.putExtra("id",this.ID_NOTE);
             i.putExtra("isFather",false);
-            startActivity(i);
+            startActivity(i); */
 
         }
         if (id == R.id.action_editNote) {
-            Intent i = new Intent(this,EditNote.class);
-            i.putExtra("id",this.ID_NOTE);
-            startActivity(i);
+            Bundle arguments = new Bundle();
+            arguments.putInt("id", this.ID_NOTE);
+
+            Fragment fragment = EditNote.newInstance(arguments);
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
         }
         if (id == R.id.action_delete) {
             this.noteFather.setStatus(true);
             controller.deleteNote(this.noteFather);
-            Intent i = new Intent(this,ListNotes.class);
-            startActivity(i);
-            this.finish();
+
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_note);
-        controller = new NoteController(getApplicationContext());
-        listNoteSon = (ListView) findViewById(R.id.listViewnoteSon);
-        listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        //Toast.makeText(this, "Entro en ViewNote", Toast.LENGTH_LONG).show();
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            this.ID_NOTE = bundle.getInt("id");
-            initViewNoteById();
-        }
-    }
-
-    /*
-     Métodos de Ramón
-
-      private void loadNote() {
-        Intent intent = getIntent();
-        note = (Note) intent.getSerializableExtra(NOTE_NAME);
-        notes = note.getIncrustedNotes();
-    }
-
-     private void showNoteData() {
-        showTitle();
-        showContent();
-        showSons();
-        showImg();
-        showIncrustedNotes();
-
-    }
-
-     private void showIncrustedNotes() {
-        if(!note.hasIncrustedNotes())
-            return;
-        final ListView listview = (ListView) findViewById(R.id.listIncrustedNotes);
-        final ArrayList<String> list = getNotesTitles(notes);
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
-        listview.setAdapter(adapter);
-
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
-            }
-
-        });
-    }
-
-    private void showImg() {
-    ImageView imgView = (ImageView) findViewById(R.id.imageView);
-
-    imgView.setImageResource(R.drawable.ic_launcher);
-    }
-
-    private void showContent() {
-        EditText txtContent = (EditText) findViewById(R.id.txtContent);
-        txtContent.setText(note.getBody());
-    }
-
-    private void showTitle() {
-        TextView txtTitle = (TextView) findViewById(R.id.txtTitle);
-        txtTitle.setText(note.getTitle());
-    }
-
-    private void passNote(Note note) {
-    //Se crea un intent y se pasa el nombre de la clase
-    Intent intent = new Intent(OpenNote.class.getName());
-    //Se pone la nota en el intent
-    intent.putExtra(NOTE_NAME, note);
-    //Se inicia la actividad
-    startActivity(intent);
-    }
-     */
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        findNoteById();
-        findNotesSon();
-        generateListViewNotesSon();
-        generateNoteFather();
-        generateTagSelected();
     }
 
     private ArrayList<String> getNotesTitles(ArrayList<Note> notes){

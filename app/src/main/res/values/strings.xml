@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="title_activity_main">Menu</string>
     <string name="app_name">AndroidAdmin</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -71,5 +72,27 @@
     <string name="title_activity_list_deleted_notes">ListDeletedNotes</string>
     <string name="title_activity_view_deleted_note">ViewDeletedNote</string>
     <string name="title_activity_register">register</string>
+
+    <!-- Nombres de los items -->
+    <string-array name="nav_drawer_items">
+        <item>Notas</item>
+        <item>Notas eliminadas</item>
+        <item>Tags</item>
+        <item>Configuraciones</item>
+        <item>LogOut</item>
+    </string-array>
+
+    <!-- Iconos de los items -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_sections_notes</item>
+        <item>@drawable/ic_trash</item>
+        <item>@drawable/ic_new_tag</item>
+        <item>@drawable/ic_sections_settings</item>
+        <item>@drawable/ic_logout</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+
 
 </resources>

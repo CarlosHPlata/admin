@@ -1,15 +1,20 @@
 package com.view;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.controllers.NoteController;
 import com.controllers.TagController;
@@ -19,22 +24,57 @@ import com.models.Tag;
 
 import java.util.ArrayList;
 
-public class EditNote extends ActionBarActivity {
+public class EditNote extends Fragment {
+    public View viewEditNote;
+    public static EditNote newInstance(Bundle arguments){
+        EditNote editNote = new EditNote();
+        if(arguments != null){
+            editNote.setArguments(arguments);
+        }
+        return editNote;
+    }
+
+    public EditNote(){
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_note);
-        controller = new NoteController(getApplicationContext());
-        tagController = new TagController(getApplicationContext());
-        viewTags = (TextView) findViewById(R.id.editTags);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        viewEditNote = inflater.inflate(R.layout.activity_edit_note, container, false);
+
+        controller = new NoteController(getActivity().getApplicationContext());
+        tagController = new TagController(getActivity().getApplicationContext());
+        viewTags = (TextView) viewEditNote.findViewById(R.id.editTags);
         tagsSelect = new ArrayList<>();
         indexTagSelect = new ArrayList();
-        Bundle bundle = getIntent().getExtras();
+
+        Button createNote = (Button) viewEditNote.findViewById(R.id.btnUpdateNote);
+        createNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateNote();
+            }
+        });
+
+        Bundle bundle = getArguments();
         if(bundle != null){
             this.ID_NOTE = bundle.getInt("id");
             initViewEditNote();
         }
+
+        return viewEditNote;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
     public void generateTagSelected(){
         tagsSelect = note.getTags();
@@ -57,11 +97,11 @@ public class EditNote extends ActionBarActivity {
     public void listAllTags(){
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
-        dialogNewTag = new AlertDialog.Builder(this);
-        final EditText txtInput = new EditText(this);
+        dialogNewTag = new AlertDialog.Builder(getActivity());
+        final EditText txtInput = new EditText(getActivity());
         allTags = tagController.fingAll();
         labelTags = "Tags:\n";
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];
         final boolean[] allSelected = new boolean[allTags.size()];
         for (int i=0; i<allTags.size(); i++){
@@ -154,16 +194,16 @@ public class EditNote extends ActionBarActivity {
     }
 
     public void generateViewEditNote(){
-      EditText titleEdit = (EditText) findViewById(R.id.titleEdit);
-      EditText bodyEdit = (EditText) findViewById(R.id.bodyEdit);
+      EditText titleEdit = (EditText) viewEditNote.findViewById(R.id.titleEdit);
+      EditText bodyEdit = (EditText) viewEditNote.findViewById(R.id.bodyEdit);
 
         titleEdit.setText(this.note.getTitle());
         bodyEdit.setText(this.note.getBody());
     }
 
-    public void updateNote(View v){
-        EditText titleEdit = (EditText) findViewById(R.id.titleEdit);
-        EditText bodyEdit = (EditText) findViewById(R.id.bodyEdit);
+    public void updateNote(){
+        EditText titleEdit = (EditText) viewEditNote.findViewById(R.id.titleEdit);
+        EditText bodyEdit = (EditText) viewEditNote.findViewById(R.id.bodyEdit);
 
         this.note.setTitle(titleEdit.getText().toString());
         this.note.setBody(bodyEdit.getText().toString());
@@ -173,15 +213,18 @@ public class EditNote extends ActionBarActivity {
     }
 
     public void backView(){
-        super.onBackPressed();
-        this.finish();
+        Bundle arguments = new Bundle();
+        arguments.putInt("id",this.ID_NOTE);
+        Fragment fragment = ViewNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_note, menu);
-        return true;
+        inflater.inflate(R.menu.menu_edit_note, menu);
     }
 
     @Override

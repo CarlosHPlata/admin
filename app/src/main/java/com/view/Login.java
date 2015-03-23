@@ -24,7 +24,7 @@ public class Login extends ActionBarActivity {
        if(this.logincontroller.isUserLogIn()){
           // AlertDialogService alert = new AlertDialogService();
           // alert.showAlertDialog(Login.this, "Entro1", "Email/Contraseña son incorrectos", false);
-           Intent i = new Intent(this,ListNotes.class);
+           Intent i = new Intent(this,MainActivity.class);
            startActivity(i);
            this.finish();
         }
@@ -42,7 +42,8 @@ public class Login extends ActionBarActivity {
         AlertDialogService alert = new AlertDialogService();
         if(email.trim().length() > 0 && password.trim().length() > 0){
             if(this.logincontroller.logIn(email, password)){
-                Intent i = new Intent(this,ListNotes.class);
+               // Intent i = new Intent(this,ListNotes.class);
+                Intent i = new Intent(this,MainActivity.class);
                 startActivity(i);
                 this.finish();
                 //alert.showAlertDialog(Login.this, "Login Success..", "Username/Password is correct", true);

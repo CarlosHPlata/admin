@@ -92,6 +92,10 @@
             android:name="com.view.Register"
             android:label="@string/title_activity_register" >
         </activity>
+        <activity
+            android:name="com.view.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>
