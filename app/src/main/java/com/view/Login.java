@@ -1,5 +1,6 @@
 package com.view;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -52,6 +53,12 @@ public class Login extends ActionBarActivity {
         }else{
             alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
         }
+    }
+
+    public void register(View view) {
+        Intent i = new Intent(this, Register.class);
+        startActivity(i);
+        this.finish();
     }
 
 

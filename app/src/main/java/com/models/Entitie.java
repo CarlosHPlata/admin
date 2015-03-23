@@ -2,6 +2,7 @@ package com.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 /**
  * Esta clase es una clase abstracta encargada de la estructura de todos los objetos del modelo que hacen referencia a una tabla de la base de datos.

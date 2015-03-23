@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.usuario.androidadmin" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -74,5 +76,22 @@
                     android:label="@string/title_activity_note_manager_test" >
                 </activity>
         -->
+        <activity
+            android:name="com.test.CreateSonNote"
+            android:label="@string/title_activity_create_son_note" >
+        </activity>
+        <activity
+            android:name="com.view.ListDeletedNotes"
+            android:label="@string/title_activity_list_deleted_notes" >
+        </activity>
+        <activity
+            android:name="com.view.ViewDeletedNote"
+            android:label="@string/title_activity_view_deleted_note" >
+        </activity>
+        <activity
+            android:name="com.view.Register"
+            android:label="@string/title_activity_register" >
+        </activity>
     </application>
+
 </manifest>

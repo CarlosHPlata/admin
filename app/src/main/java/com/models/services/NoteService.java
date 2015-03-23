@@ -24,6 +24,9 @@ public class NoteService {
         noteMapper = new NoteMapper(context);
     }
 
+    public void restore(Note note){
+        noteMapper.restore(note);
+    }
     public boolean addNote(Note note){
         long longAux =  noteMapper.insertNote(note);
         if(longAux > 0){

@@ -3,6 +3,7 @@ package com.controllers;
 import android.content.Context;
 
 import com.models.Note;
+import com.models.Tag;
 import com.models.services.LoginService;
 import com.models.services.NoteService;
 
@@ -25,6 +26,10 @@ public class NoteController {
         noteService = new NoteService(context);
     }
 
+    public void restore(Note note){
+        noteService.restore(note);
+    }
+
     public boolean logOut(){
         return loginService.logOut();
     }
@@ -33,7 +38,7 @@ public class NoteController {
         return loginService.isUserLoggedIn();
     }
 
-    public boolean addNote(String title, String body, int idFather){
+    public boolean addNote(String title, String body, int idFather, ArrayList<Tag> tags){
         Note note = new Note(title,body);
 
         Date dateCreate = new Date();
@@ -45,9 +50,9 @@ public class NoteController {
         note.setIdFather(idFather);
         note.setExtId(0);
         note.setFavorite(false);
-        note.setStatus(false);
+        note.setStatus(true);
         note.setSyncFlag(false);
-        note.setLabel("label");
+        note.setTags(tags);
 
         return this.noteService.addNote(note);
     }

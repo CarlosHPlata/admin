@@ -10,12 +10,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by José Ramón Díaz on 25/02/2015.
+ * Clase que se encarga de guardar y obtener las notas de la base de datos
+ * @author Ramón Díaz
+ * @version 0.1 25/02/2015.
+ *
  */
 public class NoteMapper {
     public NoteMapper(Context context){
         dbManager = new DBManager(context);
         db = dbManager.getWritableDb();
+    }
+
+    public void restore(Note note){
+        note.setStatus(true);
+        updateNote(note);
     }
 
     public long insertNote(Note note){
@@ -39,11 +47,6 @@ public class NoteMapper {
     public ArrayList getAllNotes(){
         ArrayList  notes = dbManager.getAll(new Note());
         return loadSons(notes);
-    }
-
-    public ArrayList getUndeletedNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1", null);
-        return loadSons(getNotesFromCursor(cursor));
     }
 
     public ArrayList getNotDeletedNotes(){
@@ -77,8 +80,8 @@ public class NoteMapper {
     }
 
     public void delteNote(Note note){
+        note.setStatus(false);
         dbManager.update(note);
-
     }
 
     //Aqui se deben agregar los hijos y las notas incrustadas
