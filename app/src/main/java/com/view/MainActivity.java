@@ -24,24 +24,14 @@ import com.view.menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * Clase principal para mostrar todos los fragmentos de pantalla, como son
+ * el listar notas, listar notas borras, tags, etc.
+ * @author Edgar
+ * @version 0.1 21/03/2015.
+ *
+ */
 public class MainActivity extends ActionBarActivity {
-
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    // nav drawer title
-    private CharSequence mDrawerTitle;
-
-    // used to store app title
-    private CharSequence mTitle;
-
-    // slide menu items
-    private String[] navMenuTitles;
-    private TypedArray navMenuIcons;
-
-    private ArrayList navDrawerItems;
-    private NavDrawerListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,5 +222,23 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    // nav drawer title
+    private CharSequence mDrawerTitle;
+
+    // used to store app title
+    private CharSequence mTitle;
+
+    // slide menu items
+    private String[] navMenuTitles;
+    private TypedArray navMenuIcons;
+
+    private ArrayList navDrawerItems;
+    private NavDrawerListAdapter adapter;
+
     private NoteController controller;
+
 }

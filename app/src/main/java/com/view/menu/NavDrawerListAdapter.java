@@ -14,11 +14,16 @@ import com.example.usuario.androidadmin.R;
 
 import java.util.ArrayList;
 
+/**
+ * Esta clase es necesaria para personalizar el menú lateral de la app, agrega los iconos
+ * al menú desplegable.
+ * @author Edgar
+ * @version 0.1 21/03/2015.
+ *
+ */
 public class NavDrawerListAdapter extends BaseAdapter {
 	
-	private Context context;
-	private ArrayList<NavDrawerItem> navDrawerItems;
-	
+
 	public NavDrawerListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems){
 		this.context = context;
 		this.navDrawerItems = navDrawerItems;
@@ -66,4 +71,6 @@ public class NavDrawerListAdapter extends BaseAdapter {
         return convertView;
 	}
 
+    private Context context;
+    private ArrayList<NavDrawerItem> navDrawerItems;
 }

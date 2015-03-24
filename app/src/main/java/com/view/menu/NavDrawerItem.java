@@ -1,13 +1,15 @@
 package com.view.menu;
 
+
+/**
+ * Esta clase contiene los items del menú como son el titulo, el icono y algún contador
+ * para desplegar junto al menú.
+ * @author Edgar
+ * @version 0.1 21/03/2015.
+ *
+ */
 public class NavDrawerItem {
-	
-	private String title;
-	private int icon;
-	private String count = "0";
-	// boolean to set visiblity of the counter
-	private boolean isCounterVisible = false;
-	
+
 	public NavDrawerItem(){}
 
 	public NavDrawerItem(String title, int icon){
@@ -53,4 +55,10 @@ public class NavDrawerItem {
 	public void setCounterVisibility(boolean isCounterVisible){
 		this.isCounterVisible = isCounterVisible;
 	}
+
+    private String title;
+    private int icon;
+    private String count = "0";
+    // boolean to set visiblity of the counter
+    private boolean isCounterVisible = false;
 }

@@ -13,6 +13,13 @@ import com.controllers.LogInController;
 import com.models.services.AlertDialogService;
 import com.example.usuario.androidadmin.R;
 
+
+/**
+ * Clase que se encarga de mostar el login para acceder a la app.
+ * @author Edgar
+ * @version 0.1 13/02/2015.
+ *
+ */
 public class Login extends ActionBarActivity {
 
     @Override
