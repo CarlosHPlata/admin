@@ -13,6 +13,7 @@ import com.models.User;
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -31,6 +32,9 @@ public class syncUserHandler extends SyncHandler{
         super(context, listener, new AsyncHttpClient());
     }
 
+    //curl -X POST -H "Content-Type: application/json" -d '{"user":{"email":"plata@mail.com","password":"123456"}}' http://104.131.189.224/api/user
+    //response:
+    //{"user":{"id":3,"email":"plata@mail.com","auth_token":"dc45800fddee07cf9b300d2765283cb2"}}
     public void  createUser(User user){
         String bodyAsJson = "{\"user\":{\"email\":\""+user.getEmail()+"\",\"password\":\""+user.getPassword()+"\"}}";
 
@@ -48,35 +52,63 @@ public class syncUserHandler extends SyncHandler{
         client.post(this.context, "http://104.131.189.224/api/user", headers , entity, "application/json",  new JsonHttpResponseHandler() {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                listener.onResponse(1);
+                Log.i("DEBUG:",json.toString());
+                //listener.onResponse(1);
             }
 
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 if (listener != null) listener.onError(statusCode, responseString);
             }
+
+            public void onFailure(int i, Header[] header, Throwable e, JSONObject json) {
+                String error = "Error fatal, intentelo mas tarde";
+                int errorCode = 500;
+                try {
+                    error = json.getString("email");
+                    errorCode = 1;
+                } catch (JSONException e1) {
+                    try {
+                        error = json.getString("password");
+                        errorCode = 2;
+                    } catch (JSONException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+
+                listener.onError(errorCode, error);
+            }
         });
 
     }
 
-
-    public void getToken(User user){
+    //curl -X POST http://104.131.189.224/api/token --data "email=joserracamacho@gmail.com&password=12345678"
+    //response:
+    public void getToken(final User user){
         RequestParams params = new RequestParams();
-        params.add("email", user.getEmail());
-        params.add("password", user.getPassword());
+        params.add("email", "carlos.ksa21@gmail.com");//user.getEmail());
+        params.add("password", "carlosherrera18"); //user.getPassword());
 
         client.post("http://104.131.189.224/api/token", params, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                Log.i("DEBUG:", json.toString());
+                try {
+                    json = json.getJSONObject("user");
+                    String auth = json.getString("auth_token");
+                    user.setToken(auth);
+                    listener.onResponse(user);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
 
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i("DEBUG:", "error");
+                listener.onError(1, "Error");
             }
 
-            public void onFailure(int i, Header[] header, Throwable e, JSONObject json){
-                Log.i("DEBUG:", json.toString());
+            public void onFailure(int i, Header[] header, Throwable e, JSONObject json) {
+                listener.onError(1, json.toString());
             }
         });
     }
@@ -115,7 +147,29 @@ public class syncUserHandler extends SyncHandler{
         });
     }
 
-    public void deleteUser(User user){
 
+
+    //curl -X DELETE -H "Authorization: dc45800fddee07cf9b300d2765283cb2" http://localhost:3000/api/user
+    //response:
+    //OK
+    public void deleteUser(User user){
+        Header[] headers = {
+                new BasicHeader("Authorization",user.getToken())
+        };
+
+        client.delete(context, "http://localhost:3000/api/user", headers, null, new JsonHttpResponseHandler(){
+            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                Log.i("DEBUG:", json.toString());
+            }
+
+
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("DEBUG:", "error");
+            }
+
+            public void onFailure(int i, Header[] header, Throwable e, JSONObject json){
+                Log.i("DEBUG:", json.toString());
+            }
+        });
     }
 }

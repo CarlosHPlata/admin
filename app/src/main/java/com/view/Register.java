@@ -68,7 +68,7 @@ public class Register extends ActionBarActivity implements SyncInterface {
                     User user = new User();
                     user.setEmail(email);
                     user.setPassword(password);
-                    this.sync.getToken(user);
+                    this.sync.createUser(user);
                 } else alert.showAlertDialog(Register.this, "Error", "Ya existe", false);
 
             } else alert.showAlertDialog(Register.this, "Error", "Contraseñas no coinciden", false);
@@ -98,7 +98,23 @@ public class Register extends ActionBarActivity implements SyncInterface {
 
     @Override
     public void onError(int StatusCode, String error) {
-        //TODO HERE
+        AlertDialogService alert = new AlertDialogService();
+        String msg;
+        switch (StatusCode){
+            case 500:
+                msg = "Fatal error";
+                break;
+            case 1:
+                msg = "Email esta en uso o ha sido desabilitado";
+                break;
+            case 2:
+                msg = "La contrasena es muy corta";
+                break;
+            default:
+                msg = "Fatal error";
+                break;
+        }
+        alert.showAlertDialog(Register.this, "REGISTRO:", msg, false);
     }
 
 }
