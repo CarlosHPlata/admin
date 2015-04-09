@@ -3,6 +3,8 @@ package com.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +50,12 @@ public class ListNotes extends ActionBarActivity {
             Intent i = new Intent(this,NewNote.class);
             startActivity(i);
         }
+        if(id == R.id.action_move_note){
+            //Aqui se manejaria el mover las notas
+        }
+        if(id == R.id.action_delete){
+            deleteSelectedNotes();
+        }
 
 
         return super.onOptionsItemSelected(item);
@@ -79,7 +87,7 @@ public class ListNotes extends ActionBarActivity {
     protected void loadNotes() {
 
         NoteController noteController = new NoteController(this);
-        notes = noteController.getNotDeletedNotes();
+        notes = noteController.getFatherNotes();
 
     }
 
@@ -94,19 +102,43 @@ public class ListNotes extends ActionBarActivity {
     private void showNotes() {
         final ListView listview = (ListView) findViewById(R.id.listView);
         final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_multiple_choice, list);
         listview.setAdapter(adapter);
+        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                passNote(notes.get(position));
+                return true;
+            }
+        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
             }
 
         });
+    }
+
+    private void deleteSelectedNotes(){
+
+        final ListView listview = (ListView) findViewById(R.id.listView);
+        SparseBooleanArray selected = listview.getCheckedItemPositions();
+        if(selected != null && selected.size() > 0) {
+            ArrayList<Note> notesToDelete = new ArrayList<>();
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.valueAt(i)) {
+                    notesToDelete.add(notes.get(i));
+                }
+            }
+            controller.deleteNotes(notesToDelete);
+            Intent i = new Intent(this, ListNotes.class);
+            startActivity(i);
+            this.finish();
+        }
     }
 
     private static final String NOTE = "note";

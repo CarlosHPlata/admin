@@ -21,6 +21,12 @@ public class NoteMapper {
         db = dbManager.getWritableDb();
     }
 
+    public void deleteNotes(ArrayList notes){
+        for(Note note:(ArrayList<Note>) notes){
+            delteNote(note);
+        }
+    }
+
     public void restore(Note note){
         note.setStatus(true);
         updateNote(note);
@@ -70,7 +76,7 @@ public class NoteMapper {
     }
 
     public ArrayList<Note> getFatherNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father IS NOT NULL", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = 0 AND status = 1", null);
         return loadSons(getNotesFromCursor(cursor));
     }
 
