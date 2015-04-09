@@ -1,9 +1,12 @@
 package com.models.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.models.Note;
+import com.models.Tag;
 import com.models.mappers.NoteMapper;
+import com.models.mappers.TagMapper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +25,7 @@ public class NoteService {
 
     public NoteService(Context context){
         noteMapper = new NoteMapper(context);
+        tagMapper = new TagMapper(context);
     }
 
     public void deleteNotes(ArrayList notes){
@@ -48,35 +52,56 @@ public class NoteService {
         Note note = new Note();
         note.setId(id);
         note = (Note) noteMapper.getById(note);
+        ArrayList<Tag> tags = note.getTags();
+        for(int x=0; x<tags.size();x++){
+            Tag tagAux = tags.get(x);
+            Tag tag = tagMapper.findOneById(tagAux);
+            tags.set(x,tag);
+        }
+        note.setTags(tags);
         return note;
     }
 
     public ArrayList getAllNotes(){
-        return  noteMapper.getAllNotes();
+        ArrayList<Note> notes =  noteMapper.getAllNotes();
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public ArrayList getNotDeletedNotes(){
-        return noteMapper.getNotDeletedNotes();
+        ArrayList<Note> notes =  noteMapper.getNotDeletedNotes();
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public ArrayList getDeletedNotes(){
-        return noteMapper.getDeletedNotes();
+        ArrayList<Note> notes = noteMapper.getDeletedNotes();
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public ArrayList getNotesByDate(Date date){
-        return noteMapper.getNotesByDate(date);
+        ArrayList<Note> notes = noteMapper.getNotesByDate(date);
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public ArrayList getFavoriteNotes(){
-        return noteMapper.getFavoriteNotes();
+        ArrayList<Note> notes = noteMapper.getFavoriteNotes();
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public ArrayList getFatherNotes(){
-        return noteMapper.getFatherNotes();
+        ArrayList<Note> notes = noteMapper.getFatherNotes();
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public ArrayList getSons(Note note){
-        return noteMapper.getSonsFromDB(note.getId());
+        ArrayList<Note> notes = noteMapper.getSonsFromDB(note.getId());
+        notes = this.findTagsOfArrayNote(notes);
+        return notes;
     }
 
     public void updateNote(Note note){
@@ -88,9 +113,27 @@ public class NoteService {
     }
 
    public ArrayList<Note> findNotesSonByIdFather(int id){
-        return noteMapper.getSonsFromDB(id);
+       ArrayList<Note> notes = noteMapper.getSonsFromDB(id);
+       notes = this.findTagsOfArrayNote(notes);
+       return notes;
+    }
+
+    private ArrayList<Note> findTagsOfArrayNote(ArrayList<Note> notes){
+        for (int i= 0; i<notes.size(); i++){
+            Note note = notes.get(i);
+            ArrayList<Tag> tags = note.getTags();
+            for(int x=0; x<tags.size();x++){
+                Tag tagAux = tags.get(x);
+                Tag tag = tagMapper.findOneById(tagAux);
+                tags.set(x,tag);
+            }
+            note.setTags(tags);
+            notes.set(i,note);
+        }
+        return notes;
     }
 
     private NoteMapper noteMapper;
+    private TagMapper tagMapper;
 
 }

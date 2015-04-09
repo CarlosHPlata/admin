@@ -1,11 +1,16 @@
 package com.view;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +29,8 @@ import java.util.ArrayList;
  *
  */
 
-public class ViewDeletedNote extends ActionBarActivity {
+public class ViewDeletedNote extends Fragment {
+    public View viewDeletedNote;
     /*Metrodos originales, no los borre por si mas adelante los necesito
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,24 @@ public class ViewDeletedNote extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }*/
 
+    public static ViewDeletedNote newInstance(Bundle arguments){
+        ViewDeletedNote viewDeletedNote = new ViewDeletedNote();
+        if(arguments != null){
+            viewDeletedNote.setArguments(arguments);
+        }
+        return viewDeletedNote;
+    }
+
+    public ViewDeletedNote(){
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
+    }
+
     public void initViewNoteById(){
         findNoteById();
         findNotesSon();
@@ -71,19 +95,19 @@ public class ViewDeletedNote extends ActionBarActivity {
     }
 
     public void generateNoteFather(){
-        TextView titleView = (TextView) findViewById(R.id.titleView);
+        TextView titleView = (TextView) viewDeletedNote.findViewById(R.id.titleView);
         titleView.setText(this.noteFather.getTitle());
 
-        TextView bodyView = (TextView) findViewById(R.id.bodyView);
+        TextView bodyView = (TextView) viewDeletedNote.findViewById(R.id.bodyView);
         bodyView.setText(this.noteFather.getBody());
     }
 
     public void generateListViewNotesSon(){
         if(!noteFather.hasSons())
             return;
-        final ListView listview = (ListView) findViewById(R.id.listViewnoteSon);
+        final ListView listview = (ListView) viewDeletedNote.findViewById(R.id.listViewnoteSon);
         final ArrayList<String> list = getNotesTitles(noteFather.getSons());
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,10 +130,11 @@ public class ViewDeletedNote extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_deleted_note, menu);
-        return true;
+      //  getMenuInflater().inflate(R.menu.menu_view_deleted_note, menu);
+        inflater.inflate(R.menu.menu_view_deleted_note, menu);
+      //  return true;
     }
 
     @Override
@@ -124,31 +149,41 @@ public class ViewDeletedNote extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_restore_note) {
-            Intent i = new Intent(this,ListNotes.class);
             controller.restore(noteFather);
-            startActivity(i);
+
+            Fragment fragment = new ListDeletedNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_note);
-        controller = new NoteController(getApplicationContext());
-        listNoteSon = (ListView) findViewById(R.id.listViewnoteSon);
-        listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        //Toast.makeText(this, "Entro en ViewNote", Toast.LENGTH_LONG).show();
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        viewDeletedNote = inflater.inflate(R.layout.activity_view_note, container, false);
 
+        controller = new NoteController(getActivity().getApplicationContext());
+        listNoteSon = (ListView) viewDeletedNote.findViewById(R.id.listViewnoteSon);
+        listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        Bundle bundle = getArguments();
+        if(bundle != null){
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
         }
+        return viewDeletedNote;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
+/*
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,7 +192,7 @@ public class ViewDeletedNote extends ActionBarActivity {
         generateListViewNotesSon();
         generateNoteFather();
     }
-
+*/
 
 
     private ArrayList<String> getNotesTitles(ArrayList<Note> notes){

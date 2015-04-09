@@ -1,12 +1,17 @@
 package com.view;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,46 +23,80 @@ import com.models.Tag;
 
 import java.util.ArrayList;
 
-public class NewNote extends ActionBarActivity {
+public class NewNote extends Fragment {
+public View viewNewNote;
+    public static NewNote newInstance(Bundle arguments){
+        NewNote newNote = new NewNote();
+        if(arguments != null){
+            newNote.setArguments(arguments);
+        }
+        return newNote;
+    }
 
-   @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_note);
+    public NewNote(){
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        viewNewNote = inflater.inflate(R.layout.activity_new_note, container, false);
+
         indexTagSelect = new ArrayList();
-        controller = new NoteController(getApplicationContext());
-        tagController = new TagController(getApplicationContext());
-        viewTags = (TextView) findViewById(R.id.newTags);
+        controller = new NoteController(getActivity().getApplicationContext());
+        tagController = new TagController(getActivity().getApplicationContext());
+        viewTags = (TextView) viewNewNote.findViewById(R.id.newTags);
         tagsSelect = new ArrayList<>();
-        Bundle bundle = getIntent().getExtras();
+
+        Button createNote = (Button) viewNewNote.findViewById(R.id.btnCreateNote);
+        createNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNote();
+            }
+        });
+
+       // Bundle bundle = getIntent().getExtras();
+        Bundle bundle = getArguments();
         if(bundle != null){
             this.ID_FATHER = bundle.getInt("idFather");
         }
+        return viewNewNote;
     }
 
-    public void addNote(View v){
-        EditText textTitle = (EditText) findViewById(R.id.titleEdit);
-        EditText textBody = (EditText) findViewById(R.id.body);
+   @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public void addNote(){
+        EditText textTitle = (EditText) viewNewNote.findViewById(R.id.titleEdit);
+        EditText textBody = (EditText) viewNewNote.findViewById(R.id.body);
         String body = textBody.getText().toString();
         String title = textTitle.getText().toString();
 
         if(controller.addNote(title, body, this.ID_FATHER, tagsSelect)){
-            Toast.makeText(this, "Nota creada", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Nota creada", Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(this, "Error!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Error!!", Toast.LENGTH_LONG).show();
         }
         backView();
-
     }
 
     public void listAllTags(){
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
-        dialogNewTag = new AlertDialog.Builder(this);
-        final EditText txtInput = new EditText(this);
+        dialogNewTag = new AlertDialog.Builder(getActivity());
+        final EditText txtInput = new EditText(getActivity());
         allTags = tagController.fingAll();
         labelTags = "Tags:\n";
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];
         final boolean[] allSelected = new boolean[allTags.size()];
         for (int i=0; i<allTags.size(); i++){
@@ -92,7 +131,7 @@ public class NewNote extends ActionBarActivity {
                     indexAux.remove(Integer.valueOf(which));
                     indexDeleteAux.add(which);
                 }
-                Toast.makeText(getApplicationContext(), which+" Tamaño del array: "+tagsSelect.size(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getApplicationContext(), which+" Tamaño del array: "+tagsSelect.size(), Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
@@ -140,16 +179,17 @@ public class NewNote extends ActionBarActivity {
     }
 
     public void backView(){
-        super.onBackPressed();
-        this.finish();
+        Fragment fragment = new ListNotes();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_new_note, menu);
-        return super.onCreateOptionsMenu(menu);
+        inflater.inflate(R.menu.menu_new_note, menu);
     }
 
     @Override

@@ -4,14 +4,12 @@
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
 
-    <item android:id="@+id/action_logOut" android:title="@string/bt_logout"
-        android:orderInCategory="100" app:showAsAction="always" />
-    <item android:id="@+id/action_newNote"
+	<item android:id="@+id/action_newNote"
         android:title="@string/lb_new_note"
         android:icon="@drawable/ic_new_note"
         android:orderInCategory="100"
         app:showAsAction="always" />
-    <item android:id="@+id/action_move_note"
+	<item android:id="@+id/action_move_note"
         android:title="@string/lb_move_note"
         android:icon="@drawable/ic_move"
         android:orderInCategory="100"
@@ -21,6 +19,11 @@
         android:icon="@drawable/ic_trash"
         android:orderInCategory="100"
         app:showAsAction="always" />
+	<item android:id="@+id/action_findByFilter"
+        android:title="@string/lb_find_filter"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="100"
+        app:showAsAction="always" />	
         <!-- -->
 
 </menu>

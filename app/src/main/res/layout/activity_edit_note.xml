@@ -66,12 +66,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt_update"
-        android:id="@+id/button"
+        android:id="@+id/btnUpdateNote"
         android:background="@drawable/custom_button"
         android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="updateNote" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

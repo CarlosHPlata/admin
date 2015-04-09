@@ -26,6 +26,11 @@ public class TagMapper {
         return tags;
     }
 
+    public Tag findOneById(Tag tag){
+        Tag tagAux = (Tag)dbManager.getById(tag);
+        return tagAux;
+    }
+
     private DBManager dbManager;
     private SQLiteDatabase db;
 }

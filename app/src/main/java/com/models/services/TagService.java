@@ -21,7 +21,6 @@ public class TagService {
         tagMapper = new TagMapper(context);
     }
     public TagService(){
-
     }
 
     public boolean add(Tag tag){
@@ -37,6 +36,10 @@ public class TagService {
         return tagMapper.findAlldTags();
     }
 
+    public Tag findOneById(Tag tag){
+        return tagMapper.findOneById(tag);
+    }
+
     public ArrayList<Tag> convertJsonToObjTags(String jsonArray){
         ArrayList<Tag> tags = new ArrayList<>();
         try {
@@ -45,14 +48,15 @@ public class TagService {
                 for (int i=0; i<jsonA.length(); i++){
                     JSONObject tagAux = (JSONObject) jsonA.get(i);
                     Tag tag = new Tag();
-                    tag.setId((Integer) tagAux.get("id"));
-                    tag.setExtId((Integer)tagAux.get("ext_id"));
+                    tag.setId(tagAux.getInt("id"));
+                    //Tag tagFound = this.tagMapper.findOneById(tag);
+                    /*tag.setExtId((Integer)tagAux.get("ext_id"));
                     if(Boolean.getBoolean(tagAux.get("sync_flag").toString())){
                         tag.setSyncFlag(false);
                     }else{
                         tag.setSyncFlag(true);
                     }
-                    tag.setName((String) tagAux.get("name"));
+                    tag.setName((String) tagAux.get("name"));*/
                     tags.add(tag);
                 }
                 return tags;

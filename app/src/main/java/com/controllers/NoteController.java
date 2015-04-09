@@ -74,6 +74,33 @@ public class NoteController {
         return noteService.findNotesSonByIdFather(id);
     }
 
+    public ArrayList<Note> findNotesByArrayTags(ArrayList tags){
+        ArrayList<Note> notes = noteService.getNotDeletedNotes();
+        ArrayList<Note> notesFound = new ArrayList<>();
+        for (int i=0; i<notes.size(); i++){
+            Note noteAux = notes.get(i);
+            ArrayList<Tag> tagsAux = noteAux.getTags();
+            boolean isTag = false;
+            for (int x =0; x<tagsAux.size(); x++){
+                Tag tagAux = tagsAux.get(x);
+                for (int y=0; y<tags.size(); y++){
+                    Tag tagToFind = (Tag) tags.get(y);
+                    if(tagAux.getId() == tagToFind.getId()){
+                        isTag = true;
+                        break;
+                    }
+                }
+                if(isTag){
+                    break;
+                }
+            }
+            if(isTag){
+                notesFound.add(noteAux);
+            }
+        }
+        return notesFound;
+    }
+
     public void updateNote(Note note){
         noteService.updateNote(note);
     }
