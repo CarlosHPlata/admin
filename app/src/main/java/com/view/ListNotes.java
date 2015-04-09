@@ -142,7 +142,7 @@ public class ListNotes extends Fragment {
 
     private void showNotes() {
         final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,android.R.layout.simple_list_item_multiple_choice, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
        // Log.e("ListNotes","Tamaño de list: "+list.size());
       //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
       //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
@@ -168,7 +168,7 @@ public class ListNotes extends Fragment {
 
     private void deleteSelectedNotes(){
 
-        final ListView listview = (ListView) findViewById(R.id.listView);
+        final ListView listview = (ListView) getActivity().findViewById(R.id.listView);
         SparseBooleanArray selected = listview.getCheckedItemPositions();
         if(selected != null && selected.size() > 0) {
             ArrayList<Note> notesToDelete = new ArrayList<>();
@@ -178,9 +178,14 @@ public class ListNotes extends Fragment {
                 }
             }
             controller.deleteNotes(notesToDelete);
-            Intent i = new Intent(this, ListNotes.class);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
+
+            /*Intent i = new Intent(this, ListNotes.class);
             startActivity(i);
-            this.finish();
+            this.finish();*/
         }
 	}	
     private void listAllTags(){
