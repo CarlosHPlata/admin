@@ -24,6 +24,7 @@
     <string name="lb_index_note">Lista de notas</string>
     <string name="lb_index_total">Total de notas:</string>
     <string name="bt_new_note">Crear nota</string>
+    <string name="lb_find_filter">Buscar por etiquetas</string>
     <!-- end activity note -->
 
 

@@ -23,6 +23,9 @@ public class TagController {
         return tagService.findAll();
     }
 
+    public Tag findOneById(Tag tag){
+        return this.tagService.findOneById(tag);
+    }
 
 
     public boolean addTag(String name){

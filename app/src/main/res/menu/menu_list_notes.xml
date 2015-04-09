@@ -9,6 +9,11 @@
         android:icon="@drawable/ic_new_note"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item android:id="@+id/action_findByFilter"
+        android:title="@string/lb_find_filter"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
         <!-- -->
 
 </menu>
