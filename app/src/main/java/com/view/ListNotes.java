@@ -142,7 +142,7 @@ public class ListNotes extends Fragment {
 
     private void showNotes() {
         final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
        // Log.e("ListNotes","Tamaño de list: "+list.size());
       //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
       //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
@@ -151,8 +151,16 @@ public class ListNotes extends Fragment {
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
+                /*final String item = (String) parent.getItemAtPosition(position);
                 passNote(notes.get(position));
+                return true;*/
+                selection = !selection;
+                if(selection){
+                    setSelectionView();
+                }else{
+                    removeSelectionView();
+                }
+
                 return true;
             }
         });
@@ -161,6 +169,8 @@ public class ListNotes extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                passNote(notes.get(position));
             }
 
         });
@@ -267,6 +277,34 @@ public class ListNotes extends Fragment {
         notes = controller.findNotesByArrayTags(tagsSelect);
     }
 
+    private void setSelectionView(){
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, getNotesTitles());
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+            }
+
+        });
+    }
+
+    private void removeSelectionView(){
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNotesTitles());
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                passNote(notes.get(position));
+            }
+
+        });
+    }
+
     private static final String NOTE = "note";
     protected ArrayList<Note> notes;
     private AlertDialog.Builder dialogNewTag;
@@ -277,4 +315,5 @@ public class ListNotes extends Fragment {
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
     private NoteController controller;
     private TagController tagController;
+    private boolean selection = false;
 }
