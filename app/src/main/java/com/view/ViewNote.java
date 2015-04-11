@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -119,6 +120,31 @@ public class ViewNote extends Fragment {
 
         });
 
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selection = !selection;
+                if(selection){
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                           //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+                    listview.setAdapter(adapter);
+                }else{
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
+                    listview.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
     }
 
     public void viewNoteSon(Note note){
@@ -126,6 +152,12 @@ public class ViewNote extends Fragment {
        /* Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
         startActivity(intent); */
+        Bundle arguments = new Bundle();
+        arguments.putInt("id",note.getId());
+        Fragment fragment = ViewNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
     }
 
     @Override
@@ -146,12 +178,11 @@ public class ViewNote extends Fragment {
             return true;
         }
         if (id == R.id.action_newNoteSon) {
-            Toast.makeText(getActivity(), "Las notas hijas en mantenimiento", Toast.LENGTH_SHORT).show();
-       /*     Intent i = new Intent(this,NewNote.class);
+            /*Intent i = new Intent(this,NewNote.class);
             i.putExtra("id",this.ID_NOTE);
             i.putExtra("isFather",false);
-            startActivity(i); */
-
+            startActivity(i);*/
+            startNewSonNoteFragment();
         }
         if (id == R.id.action_editNote) {
             Bundle arguments = new Bundle();
@@ -163,13 +194,17 @@ public class ViewNote extends Fragment {
                     .replace(R.id.frame_container, fragment).commit();
         }
         if (id == R.id.action_delete) {
-            this.noteFather.setStatus(true);
-            controller.deleteNote(this.noteFather);
+            if(selection){
+                deleteSelectedSons();
+            }else {
+                this.noteFather.setStatus(true);
+                controller.deleteNote(this.noteFather);
 
-            Fragment fragment = new ListNotes();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+                Fragment fragment = new ListNotes();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, fragment).commit();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -188,11 +223,46 @@ public class ViewNote extends Fragment {
         return titles;
     }
 
+    private void startNewSonNoteFragment(){
+        Bundle arguments = new Bundle();
+        arguments.putInt("idFather",noteFather.getId());
+        Fragment fragment = NewNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
+    }
+
+    private void deleteSelectedSons() {
+
+        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
+        SparseBooleanArray selected = listview.getCheckedItemPositions();
+        if (selected != null && selected.size() > 0) {
+            ArrayList<Note> notesToDelete = new ArrayList<>();
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.valueAt(i)) {
+                    notesToDelete.add(notesSon.get(i));
+                }
+            }
+            controller.deleteNotes(notesToDelete);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
+        }
+    }
+
+    private void setSelection(){
+
+    }
+
+    private void removeSelection(){
+
+    }
 
     private int ID_NOTE;
     private NoteController controller;
     private ListView listNoteSon;
     private ArrayList<Note> notesSon;
     private Note noteFather;
-
+    private boolean selection = false;
 }
