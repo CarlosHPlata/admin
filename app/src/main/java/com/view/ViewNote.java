@@ -137,6 +137,15 @@ public class ViewNote extends Fragment {
                     final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
                     listview.setAdapter(adapter);
                 }else{
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            final String item = (String) parent.getItemAtPosition(position);
+                            viewNoteSon(noteFather.getSons().get(position));
+                        }
+
+                    });
 
                     final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
                     listview.setAdapter(adapter);
