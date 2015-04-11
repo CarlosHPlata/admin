@@ -26,6 +26,13 @@ public class NoteController {
         noteService = new NoteService(context);
     }
 
+    public void setMultipleNotesFather(ArrayList<Note> notes,Note father){
+        for(Note note : notes){
+            note.setIdFather(father.getId());
+            updateNote(note);
+        }
+    }
+
     public void deleteNotes(ArrayList<Note> notes){
         noteService.deleteNotes(notes);
     }

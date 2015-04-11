@@ -243,21 +243,37 @@ public class ViewNote extends Fragment {
 
     private void deleteSelectedSons() {
 
-        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
-        SparseBooleanArray selected = listview.getCheckedItemPositions();
-        if (selected != null && selected.size() > 0) {
-            ArrayList<Note> notesToDelete = new ArrayList<>();
-            for (int i = 0; i < selected.size(); i++) {
-                if (selected.valueAt(i)) {
-                    notesToDelete.add(notesSon.get(i));
-                }
-            }
+        ArrayList<Note> notesToDelete = getSelectedNotes();
             controller.deleteNotes(notesToDelete);
             Fragment fragment = new ListNotes();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
+
+    }
+
+    private ArrayList<Note> getSelectedNotes(){
+        final ListView listview = (ListView) getActivity().findViewById(R.id.listViewnoteSon);
+        SparseBooleanArray selected = listview.getCheckedItemPositions();
+        if(selected != null && selected.size() > 0) {
+            ArrayList<Note> selectedNotes = new ArrayList<>();
+            for (int i = 0; i < notesSon.size(); i++) {
+                if (selected.get(i)) {
+                    selectedNotes.add(notesSon.get(i));
+                }
+            }
+            return selectedNotes;
+            /*controller.deleteNotes(notesToDelete);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();*/
+
+            /*Intent i = new Intent(this, ListNotes.class);
+            startActivity(i);
+            this.finish();*/
         }
+        return null;
     }
 
     private void setSelection(){

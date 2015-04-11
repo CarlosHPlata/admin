@@ -96,6 +96,12 @@ public class ListNotes extends Fragment {
         }
         if(id == R.id.action_move_note){
             //Aqui se manejaria el mover las notas
+            if(selection) {
+                ArrayList<Note> notesToMove = getSelectedNotes();
+                showPosibleFathers(notesToMove);
+
+            }
+
         }
         if(id == R.id.action_delete){
             deleteSelectedNotes();
@@ -178,15 +184,7 @@ public class ListNotes extends Fragment {
 
     private void deleteSelectedNotes(){
 
-        final ListView listview = (ListView) getActivity().findViewById(R.id.listView);
-        SparseBooleanArray selected = listview.getCheckedItemPositions();
-        if(selected != null && selected.size() > 0) {
-            ArrayList<Note> notesToDelete = new ArrayList<>();
-            for (int i = 0; i < selected.size(); i++) {
-                if (selected.valueAt(i)) {
-                    notesToDelete.add(notes.get(i));
-                }
-            }
+        ArrayList<Note> notesToDelete = getSelectedNotes();
             controller.deleteNotes(notesToDelete);
             Fragment fragment = new ListNotes();
             FragmentManager fragmentManager = getFragmentManager();
@@ -196,7 +194,7 @@ public class ListNotes extends Fragment {
             /*Intent i = new Intent(this, ListNotes.class);
             startActivity(i);
             this.finish();*/
-        }
+
 	}	
     private void listAllTags(){
         final ArrayList indexAux = new ArrayList();
@@ -300,6 +298,63 @@ public class ListNotes extends Fragment {
                                     int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
                 passNote(notes.get(position));
+            }
+
+        });
+    }
+
+    private ArrayList<Note> getSelectedNotes(){
+        final ListView listview = (ListView) getActivity().findViewById(R.id.listView);
+        SparseBooleanArray selected = listview.getCheckedItemPositions();
+        if(selected != null && selected.size() > 0) {
+            ArrayList<Note> selectedNotes = new ArrayList<>();
+            for (int i = 0; i < notes.size(); i++) {
+                if (selected.get(i)) {
+                    selectedNotes.add(notes.get(i));
+                }
+            }
+            return selectedNotes;
+            /*controller.deleteNotes(notesToDelete);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();*/
+
+            /*Intent i = new Intent(this, ListNotes.class);
+            startActivity(i);
+            this.finish();*/
+        }
+        return null;
+    }
+
+    private void showPosibleFathers(final ArrayList<Note> selectedNotes){
+
+        for(Note note : selectedNotes){
+            Log.v("MiTag",note.getTitle());
+            //adapter.remove(note.getTitle());
+            notes.remove(note);
+        }
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNotesTitles());
+        listview.setAdapter(adapter);
+        //Cambiar el evento para que se mueva la nota
+        //SE TIENE QUE REGRESAR A ABRIR NOTA DESPUES DE QUE SE TERMINE LA OPERACION
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+                controller.setMultipleNotesFather(selectedNotes, notes.get(position));
+
+                //Se regresa el evento para que abra las notas al hacer clic
+                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, final View view,
+                                            int position, long id) {
+                        final String item = (String) parent.getItemAtPosition(position);
+                        passNote(notes.get(position));
+
+                    }
+
+                });
             }
 
         });
