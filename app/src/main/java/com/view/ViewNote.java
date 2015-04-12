@@ -127,6 +127,40 @@ public class ViewNote extends Fragment {
 
         });
 
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selection = !selection;
+                if(selection){
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                           //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+                    listview.setAdapter(adapter);
+                }else{
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            final String item = (String) parent.getItemAtPosition(position);
+                            viewNoteSon(noteFather.getSons().get(position));
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
+                    listview.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
     }
 
     public void viewNoteSon(Note note){
@@ -134,6 +168,12 @@ public class ViewNote extends Fragment {
        /* Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
         startActivity(intent); */
+        Bundle arguments = new Bundle();
+        arguments.putInt("id",note.getId());
+        Fragment fragment = ViewNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
     }
 
     @Override
@@ -154,12 +194,11 @@ public class ViewNote extends Fragment {
             return true;
         }
         if (id == R.id.action_newNoteSon) {
-            Toast.makeText(getActivity(), "Las notas hijas en mantenimiento", Toast.LENGTH_SHORT).show();
-       /*     Intent i = new Intent(this,NewNote.class);
+            /*Intent i = new Intent(this,NewNote.class);
             i.putExtra("id",this.ID_NOTE);
             i.putExtra("isFather",false);
-            startActivity(i); */
-
+            startActivity(i);*/
+            startNewSonNoteFragment();
         }
         if (id == R.id.action_editNote) {
             Bundle arguments = new Bundle();
@@ -171,13 +210,17 @@ public class ViewNote extends Fragment {
                     .replace(R.id.frame_container, fragment).commit();
         }
         if (id == R.id.action_delete) {
-            this.noteFather.setStatus(true);
-            controller.deleteNote(this.noteFather);
+            if(selection){
+                deleteSelectedSons();
+            }else {
+                this.noteFather.setStatus(true);
+                controller.deleteNote(this.noteFather);
 
-            Fragment fragment = new ListNotes();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+                Fragment fragment = new ListNotes();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, fragment).commit();
+            }
         }
         if (id == R.id.action_taskList) {
             listAllCheckList();
@@ -342,6 +385,57 @@ public class ViewNote extends Fragment {
         return titles;
     }
 
+    private void startNewSonNoteFragment(){
+        Bundle arguments = new Bundle();
+        arguments.putInt("idFather",noteFather.getId());
+        Fragment fragment = NewNote.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
+    }
+
+    private void deleteSelectedSons() {
+
+        ArrayList<Note> notesToDelete = getSelectedNotes();
+            controller.deleteNotes(notesToDelete);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
+
+    }
+
+    private ArrayList<Note> getSelectedNotes(){
+        final ListView listview = (ListView) getActivity().findViewById(R.id.listViewnoteSon);
+        SparseBooleanArray selected = listview.getCheckedItemPositions();
+        if(selected != null && selected.size() > 0) {
+            ArrayList<Note> selectedNotes = new ArrayList<>();
+            for (int i = 0; i < notesSon.size(); i++) {
+                if (selected.get(i)) {
+                    selectedNotes.add(notesSon.get(i));
+                }
+            }
+            return selectedNotes;
+            /*controller.deleteNotes(notesToDelete);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();*/
+
+            /*Intent i = new Intent(this, ListNotes.class);
+            startActivity(i);
+            this.finish();*/
+        }
+        return null;
+    }
+
+    private void setSelection(){
+
+    }
+
+    private void removeSelection(){
+
+    }
 
     private int ID_NOTE;
     private NoteController controller;
@@ -353,5 +447,5 @@ public class ViewNote extends Fragment {
     private ArrayList<CheckList> checkLists;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
-
+    private boolean selection = false;
 }
