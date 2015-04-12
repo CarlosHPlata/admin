@@ -2,6 +2,7 @@ package com.models.mappers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.models.Tag;
 
@@ -29,6 +30,15 @@ public class TagMapper {
     public Tag findOneById(Tag tag){
         Tag tagAux = (Tag)dbManager.getById(tag);
         return tagAux;
+    }
+
+    public void updateTag(Tag tag){
+        dbManager.update(tag);
+    }
+
+    public void deleteTag(Tag tag){
+        //db.delete(tag.getTableName(),"id = ?", new String[]{String.valueOf(tag.getId())});
+        dbManager.delete(tag);
     }
 
     private DBManager dbManager;

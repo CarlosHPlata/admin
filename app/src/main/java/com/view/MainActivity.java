@@ -165,8 +165,8 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new ListDeletedNotes();
                 break;
             case 2:
-                Toast.makeText(this, "Esta 2", Toast.LENGTH_SHORT).show();
-              //  fragment = new Seccion();
+               // Toast.makeText(this, "Esta 2", Toast.LENGTH_SHORT).show();
+                fragment = new ListTags();
                 break;
             case 3:
                 Toast.makeText(this, "Esta 3", Toast.LENGTH_SHORT).show();
@@ -200,7 +200,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+        //getSupportActionBar().setTitle(mTitle);
     }
 
     /**

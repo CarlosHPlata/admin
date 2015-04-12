@@ -35,6 +35,9 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Php',0)");
         db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Ruby',0)");
         db.execSQL("INSERT INTO tags(ext_id, name,sync_flag) values (0,'Objective c',0)");
+        //checklist_items
+        db.execSQL("CREATE TABLE IF NOT EXISTS checklist ( id INTEGER PRIMARY KEY AUTOINCREMENT, ext_id INTEGER, description TEXT, checked INTEGER, note_id INTEGER, sync_flag INTEGER)");
+
     }
 
     @Override

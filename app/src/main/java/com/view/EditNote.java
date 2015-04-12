@@ -6,20 +6,27 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.controllers.CheckListController;
 import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
+import com.models.CheckList;
 import com.models.Note;
+import com.models.StableArrayAdapter;
 import com.models.Tag;
 
 import java.util.ArrayList;
@@ -51,6 +58,7 @@ public class EditNote extends Fragment {
 
         controller = new NoteController(getActivity().getApplicationContext());
         tagController = new TagController(getActivity().getApplicationContext());
+        checkListController = new CheckListController(getActivity().getApplicationContext());
         viewTags = (TextView) viewEditNote.findViewById(R.id.editTags);
         tagsSelect = new ArrayList<>();
         indexTagSelect = new ArrayList();
@@ -191,6 +199,7 @@ public class EditNote extends Fragment {
 
     public void findNoteById(){
         this.note = controller.findOneById(this.ID_NOTE);
+        checkLists = this.note.getCheckLists();
     }
 
     public void generateViewEditNote(){
@@ -208,6 +217,7 @@ public class EditNote extends Fragment {
         this.note.setTitle(titleEdit.getText().toString());
         this.note.setBody(bodyEdit.getText().toString());
         this.note.setTags(tagsSelect);
+        this.note.setCheckLists(checkLists);
         controller.updateNote(this.note);
         backView();
     }
@@ -241,8 +251,167 @@ public class EditNote extends Fragment {
         if (id == R.id.action_edit_tag) {
             listAllTags();
         }
+        if (id == R.id.action_task_list_edit) {
+            listAllCheckList();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void listAllCheckList(){
+        dialogCheckLists = new AlertDialog.Builder(getActivity());
+        final EditText txtInput = new EditText(getActivity());
+       // checkLists = checkListController.findAllByNoteId(this.ID_NOTE);
+
+        listViewItems = new ListView(getActivity());
+        listViewItems.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        listViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
+                final int positionAux = position;
+                final long positionId = id;
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    //MENU FILA
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_eliminar:
+                                deleteCheckList(positionAux);
+                                updateListView();
+                                break;
+                            default:
+                                break;
+                        }
+                        return true;
+                    }
+                    //FIN MENU FILA
+                });
+                popup.show();
+                return true;
+            }
+        });
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+
+        ArrayList<String> list = getDescriptionOfCheckList();
+
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        listViewItems.setAdapter(adapter);
+        for (int i=0; i<checkLists.size(); i++){
+            CheckList checkListAux = checkLists.get(i);
+            if(checkListAux.isChecked()){
+                listViewItems.setItemChecked(i, true);
+            }else{
+                listViewItems.setItemChecked(i, false);
+            }
+        }
+        dialogBuilder.setTitle("Lista de tareas");
+        dialogBuilder.setView(listViewItems);
+
+        dialogBuilder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //tagsSelect.clear();
+                SparseBooleanArray sparse = listViewItems.getCheckedItemPositions();
+                for (int x=0; x<checkLists.size();x++){
+                    CheckList checkList = checkLists.get(x);
+                    boolean isCheck = false;
+                    for(int i=0; i<sparse.size();i++){
+                        if(sparse.valueAt(i)){
+                            //CheckList checkList1 = checkLists.get(sparse.keyAt(i));
+                            if(x == sparse.keyAt(i)){
+                                isCheck = true;
+                                break;
+                            }
+                        }else{
+
+                        }
+                    }
+                    if(isCheck){
+                        checkList.setChecked(true);
+                    }else{
+                        checkList.setChecked(false);
+                    }
+                    //checkListController.updateCheckList(checkList);
+                    checkLists.set(x,checkList);
+                }
+
+
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancelar", null);
+        dialogBuilder.setNeutralButton("Nuevo", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialogCheckLists.setTitle("Nueva tarea");
+                dialogCheckLists.setMessage("Descripción");
+                dialogCheckLists.setView(txtInput);
+                dialogCheckLists.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String description = txtInput.getText().toString();
+                        if(description != "" && description.length() >0){
+                            newCheckList(description);
+                            listAllCheckList();
+                        }
+                    }
+                });
+                dialogCheckLists.setNegativeButton("Cancelar", null);
+                AlertDialog dialogTag = dialogCheckLists.create();
+                dialogTag.show();
+            }
+        });
+        dialogCheckList = dialogBuilder.create();
+        dialogCheckList.show();
+    }
+
+    private void updateListView(){
+        //checkLists = checkListController.findAllByNoteId(this.ID_NOTE);
+        ArrayList<String> list = getDescriptionOfCheckList();
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        listViewItems.setAdapter(adapter);
+        for (int i=0; i<checkLists.size(); i++){
+            CheckList checkListAux = checkLists.get(i);
+            if(checkListAux.isChecked()){
+                listViewItems.setItemChecked(i, true);
+            }else{
+                listViewItems.setItemChecked(i, false);
+            }
+        }
+
+    }
+
+    private ArrayList<String> getDescriptionOfCheckList(){
+        ArrayList<String> list = new ArrayList<>();
+        for (int i=0; i<checkLists.size(); i++){
+            CheckList checkListAux = checkLists.get(i);
+            list.add(checkListAux.getDescription());
+        }
+        return list;
+    }
+
+    private void deleteCheckList(int position){
+        checkLists.remove(position);
+        //CheckList checkList = checkLists.get(position);
+        //checkListController.deleteCheckList(checkList);
+    }
+
+    private void newCheckList(String description){
+        //checkListController.addCheckList(description, this.ID_NOTE);
+        CheckList checkList = new CheckList();
+        checkList.setDescription(description);
+        checkList.setExtId(0);
+        checkList.setChecked(false);
+        checkList.setSyncFlag(false);
+        checkList.setNoteId(this.ID_NOTE);
+
+        checkLists.add(checkList);
     }
 
     private ArrayList allTags; //son todos los tags de la BD
@@ -256,4 +425,10 @@ public class EditNote extends Fragment {
     private NoteController controller;
     private TagController tagController;
     private Note note;
+
+    private CheckListController checkListController;
+    private AlertDialog.Builder dialogCheckLists;
+    private ArrayList<CheckList> checkLists;
+    private ListView listViewItems;
+    private AlertDialog dialogCheckList;
 }

@@ -3,6 +3,8 @@ package com.models.services;
 import android.content.Context;
 import android.util.Log;
 
+import com.controllers.NoteController;
+import com.models.Note;
 import com.models.Tag;
 import com.models.mappers.TagMapper;
 
@@ -19,6 +21,7 @@ public class TagService {
 
     public TagService(Context context){
         tagMapper = new TagMapper(context);
+        noteService = new NoteService(context);
     }
     public TagService(){
     }
@@ -30,6 +33,29 @@ public class TagService {
         }else{
             return false;
         }
+    }
+
+    public void update(Tag tag){
+        tagMapper.updateTag(tag);
+    }
+
+    public void delete(Tag tag){
+        ArrayList<Note> notes = noteService.getAllNotes();
+
+        for(int i=0; i<notes.size(); i++){
+            Note note = notes.get(i);
+            ArrayList<Tag> tags = note.getTags();
+            for (int x=0;x<tags.size();x++){
+                Tag tagAux = tags.get(x);
+                if(tagAux.getId() == tag.getId()){
+                    tags.remove(x);
+                    note.setTags(tags);
+                    noteService.updateNote(note);
+                    break;
+                }
+            }
+        }
+        tagMapper.deleteTag(tag);
     }
 
     public ArrayList findAll(){
@@ -80,4 +106,5 @@ public class TagService {
     }
 
     private TagMapper tagMapper;
+    private NoteService noteService;
 }

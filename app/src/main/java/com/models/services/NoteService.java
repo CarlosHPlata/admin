@@ -3,8 +3,10 @@ package com.models.services;
 import android.content.Context;
 import android.util.Log;
 
+import com.models.CheckList;
 import com.models.Note;
 import com.models.Tag;
+import com.models.mappers.CheckListMapper;
 import com.models.mappers.NoteMapper;
 import com.models.mappers.TagMapper;
 
@@ -26,6 +28,7 @@ public class NoteService {
     public NoteService(Context context){
         noteMapper = new NoteMapper(context);
         tagMapper = new TagMapper(context);
+        checkListMapper = new CheckListMapper(context);
     }
 
     public void deleteNotes(ArrayList notes){
@@ -38,6 +41,12 @@ public class NoteService {
     public boolean addNote(Note note){
         long longAux =  noteMapper.insertNote(note);
         if(longAux > 0){
+            ArrayList<CheckList> checkLists = note.getCheckLists();
+            for (int x =0; x<checkLists.size();x++){
+                CheckList checkList = checkLists.get(x);
+                checkList.setNoteId((int) longAux);
+                checkListMapper.insertCheckList(checkList);
+            }
             return true;
         }else{
             return false;
@@ -59,6 +68,9 @@ public class NoteService {
             tags.set(x,tag);
         }
         note.setTags(tags);
+
+        ArrayList<CheckList> checkLists = checkListMapper.findAllCheckListByNoteId(note.getId());
+        note.setCheckLists(checkLists);
         return note;
     }
 
@@ -106,6 +118,32 @@ public class NoteService {
 
     public void updateNote(Note note){
         noteMapper.updateNote(note);
+        ArrayList<CheckList> checkLists = note.getCheckLists();
+        ArrayList<CheckList> checkListsBefore = checkListMapper.findAllCheckListByNoteId(note.getId());
+        for (int y=0;y<checkListsBefore.size();y++){
+            CheckList checkList0 = checkListsBefore.get(y);
+            boolean isDelete = true;
+            for(int x=0; x<checkLists.size(); x++){
+                CheckList checkList = checkLists.get(x);
+                if(checkList0.getId() == checkList.getId()){
+                    isDelete = false;
+                    break;
+                }
+            }
+            if(isDelete){
+                //eliminar
+                checkListMapper.deleteCheckList(checkList0);
+            }
+        }
+        for(int x=0; x<checkLists.size(); x++) {
+            CheckList checkList = checkLists.get(x);
+            if(checkList.getId() == -1){
+                checkListMapper.insertCheckList(checkList);
+            }else{
+                checkListMapper.updateCheckList(checkList);
+            }
+
+        }
      }
 
     public void deleteNote(Note note){
@@ -128,6 +166,8 @@ public class NoteService {
                 tags.set(x,tag);
             }
             note.setTags(tags);
+            ArrayList<CheckList> checkLists = checkListMapper.findAllCheckListByNoteId(note.getId());
+            note.setCheckLists(checkLists);
             notes.set(i,note);
         }
         return notes;
@@ -135,5 +175,6 @@ public class NoteService {
 
     private NoteMapper noteMapper;
     private TagMapper tagMapper;
+    private CheckListMapper checkListMapper;
 
 }

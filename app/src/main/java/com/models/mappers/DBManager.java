@@ -54,6 +54,12 @@ public class DBManager {
         return ids;
     }
 
+    public void delete (Entitie entitie){
+        getWritableDb();
+
+        db.delete(entitie.getTableName(),"id = ?", new String[]{String.valueOf(entitie.getId())});
+    }
+
 
     public void update (Entitie entitie) {
         getWritableDb();

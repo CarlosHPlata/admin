@@ -37,6 +37,7 @@
     <string name="lb_note_son">Crear nota hija</string>
     <string name="lb_new_tags">Agregar tags</string>
     <string name="lb_move_note">Mover nota</string>
+    <string name="lb_task_list">Lista de tareas</string>
     <!-- Fin de menu de nota -->
 
 
@@ -95,6 +96,7 @@
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
-
+    <string name="title_activity_list_tags">ListTags</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

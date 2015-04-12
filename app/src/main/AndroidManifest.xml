@@ -96,6 +96,10 @@
             android:name="com.view.MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
+        <activity
+            android:name="com.view.ListTags"
+            android:label="@string/title_activity_list_tags" >
+        </activity>
     </application>
 
 </manifest>

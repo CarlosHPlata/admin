@@ -178,9 +178,18 @@ public class Note extends Entitie implements Serializable {
         }
     }
 
+    public ArrayList<CheckList> getCheckLists() {
+        return checkLists;
+    }
+
+    public void setCheckLists(ArrayList<CheckList> checkLists) {
+        this.checkLists = checkLists;
+    }
+
     private int idFather;
     private int extId;
     private ArrayList<Tag> tags;
+    private ArrayList<CheckList> checkLists;
     private boolean syncFlag;
     private String title;
     private String body;

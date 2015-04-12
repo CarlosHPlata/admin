@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_new_tag"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item android:id="@+id/action_task_list_edit"
+        android:title="@string/lb_task_list"
+        android:icon="@drawable/ic_task_list"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
 </menu>

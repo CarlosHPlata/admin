@@ -2,6 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.view.ViewNote">
 
+    <item android:id="@+id/action_taskList"
+        android:title="@string/lb_task_list"
+        android:icon="@drawable/ic_task_list"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
     <item android:id="@+id/action_editNote"
         android:title="@string/lb_edit_note"
         android:icon="@drawable/ic_edit_note"

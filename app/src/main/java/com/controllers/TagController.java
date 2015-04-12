@@ -30,9 +30,17 @@ public class TagController {
 
     public boolean addTag(String name){
         Tag tag = new Tag(name);
-        tag.setExtId(1);
+        tag.setExtId(0);
         tag.setSyncFlag(false);
         return tagService.add(tag);
+    }
+
+    public void updateTag(Tag tag){
+        tagService.update(tag);
+    }
+
+    public void deleteTag(Tag tag){
+        tagService.delete(tag);
     }
 
 

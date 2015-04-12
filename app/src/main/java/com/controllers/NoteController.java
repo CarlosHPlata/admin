@@ -2,6 +2,7 @@ package com.controllers;
 
 import android.content.Context;
 
+import com.models.CheckList;
 import com.models.Note;
 import com.models.Tag;
 import com.models.services.LoginService;
@@ -42,7 +43,7 @@ public class NoteController {
         return loginService.isUserLoggedIn();
     }
 
-    public boolean addNote(String title, String body, int idFather, ArrayList<Tag> tags){
+    public boolean addNote(String title, String body, int idFather, ArrayList<Tag> tags, ArrayList<CheckList> checkLists){
         Note note = new Note(title,body);
 
         Date dateCreate = new Date();
@@ -57,6 +58,7 @@ public class NoteController {
         note.setStatus(true);
         note.setSyncFlag(false);
         note.setTags(tags);
+        note.setCheckLists(checkLists);
 
         return this.noteService.addNote(note);
     }
