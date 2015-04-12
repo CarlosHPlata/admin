@@ -24,10 +24,6 @@ import java.util.ArrayList;
  */
 public class syncUserHandler extends SyncHandler{
 
-    private User user;
-    private ArrayList<User> users;
-
-
     public syncUserHandler(Context context, SyncInterface listener) {
         super(context, listener, new AsyncHttpClient());
     }
@@ -172,4 +168,9 @@ public class syncUserHandler extends SyncHandler{
             }
         });
     }
+
+
+    private User user;
+    private ArrayList<User> users;
+
 }
