@@ -37,17 +37,18 @@ import com.models.services.TagService;
 import java.util.ArrayList;
 
 /**
- *  Created by José Ramón Díaz on 13/02/2015.
- *  Vista que permite mostrar una lista de notas ActionBarActivity
+ * Created by José Ramón Díaz on 13/02/2015.
+ * Vista que permite mostrar una lista de notas ActionBarActivity
  */
 
 public class ListNotes extends Fragment {
     public ListView listview;
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-       // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
+        // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
         inflater.inflate(R.menu.menu_list_notes, menu);
-       // return true;
+        // return true;
     }
 
     @Override
@@ -91,19 +92,19 @@ public class ListNotes extends Fragment {
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
         }
-        if(id == R.id.action_findByFilter){
+        if (id == R.id.action_findByFilter) {
             listAllTags();
         }
-        if(id == R.id.action_move_note){
+        if (id == R.id.action_move_note) {
             //Aqui se manejaria el mover las notas
-            if(selection) {
+            if (selection) {
                 ArrayList<Note> notesToMove = getSelectedNotes();
                 showPosibleFathers(notesToMove);
 
             }
 
         }
-        if(id == R.id.action_delete){
+        if (id == R.id.action_delete) {
             deleteSelectedNotes();
         }
         return super.onOptionsItemSelected(item);
@@ -116,7 +117,7 @@ public class ListNotes extends Fragment {
 
     protected void passNote(Note note) {
         Bundle arguments = new Bundle();
-        arguments.putInt("id",note.getId());
+        arguments.putInt("id", note.getId());
         Fragment fragment = ViewNote.newInstance(arguments);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
@@ -126,21 +127,21 @@ public class ListNotes extends Fragment {
         startActivity(intent);*/
     }
 
-/*
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadNotes();
-        showNotes();
-    }
-*/
+    /*
+        @Override
+        protected void onResume() {
+            super.onResume();
+            loadNotes();
+            showNotes();
+        }
+    */
     protected void loadNotes() {
         notes = controller.getFatherNotes();
     }
 
-    private ArrayList<String> getNotesTitles(){
+    private ArrayList<String> getNotesTitles() {
         ArrayList<String> titles = new ArrayList<>();
-        for(Note note: notes){
+        for (Note note : notes) {
             titles.add(note.getTitle());
         }
         return titles;
@@ -148,10 +149,10 @@ public class ListNotes extends Fragment {
 
     private void showNotes() {
         final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
-       // Log.e("ListNotes","Tamaño de list: "+list.size());
-      //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
-      //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        // Log.e("ListNotes","Tamaño de list: "+list.size());
+        //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
+        //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
         listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -161,9 +162,9 @@ public class ListNotes extends Fragment {
                 passNote(notes.get(position));
                 return true;*/
                 selection = !selection;
-                if(selection){
+                if (selection) {
                     setSelectionView();
-                }else{
+                } else {
                     removeSelectionView();
                 }
 
@@ -182,47 +183,48 @@ public class ListNotes extends Fragment {
         });
     }
 
-    private void deleteSelectedNotes(){
+    private void deleteSelectedNotes() {
 
         ArrayList<Note> notesToDelete = getSelectedNotes();
-            controller.deleteNotes(notesToDelete);
-            Fragment fragment = new ListNotes();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+        controller.deleteNotes(notesToDelete);
+        Fragment fragment = new ListNotes();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_container, fragment).commit();
 
             /*Intent i = new Intent(this, ListNotes.class);
             startActivity(i);
             this.finish();*/
 
-	}	
-    private void listAllTags(){
+    }
+
+    private void listAllTags() {
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
         dialogNewTag = new AlertDialog.Builder(getActivity());
-       // final EditText txtInput = new EditText(getActivity());
+        // final EditText txtInput = new EditText(getActivity());
         allTags = tagController.fingAll();
-       // labelTags = "Tags:\n";
+        // labelTags = "Tags:\n";
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];
         final boolean[] allSelected = new boolean[allTags.size()];
-        for (int i=0; i<allTags.size(); i++){
+        for (int i = 0; i < allTags.size(); i++) {
             Tag tagAux = (Tag) allTags.get(i);
-            if(tagsSelect.size() != 0){
+            if (tagsSelect.size() != 0) {
                 boolean isSelected = false;
-                for (int y=0; y<tagsSelect.size();y++){
+                for (int y = 0; y < tagsSelect.size(); y++) {
                     Tag tagTwoAux = (Tag) tagsSelect.get(y);
-                    if(tagAux.getId() == tagTwoAux.getId()){
+                    if (tagAux.getId() == tagTwoAux.getId()) {
                         isSelected = true;
                         break;
                     }
                 }
-                if(isSelected){
+                if (isSelected) {
                     allSelected[i] = true;
-                }else{
+                } else {
                     allSelected[i] = false;
                 }
-            }else{
+            } else {
                 allSelected[i] = false;
             }
             nameTags[i] = tagAux.getName();
@@ -253,29 +255,29 @@ public class ListNotes extends Fragment {
                     indexTagSelect.remove(Integer.valueOf((int) indexDeleteAux.get(x)));
                 }
                 for (int x = 0; x < indexTagSelect.size(); x++) {
-                   // labelTags += nameTags[(Integer) indexTagSelect.get(x)] + ", ";
+                    // labelTags += nameTags[(Integer) indexTagSelect.get(x)] + ", ";
                     tagsSelect.add((Tag) allTags.get((Integer) indexTagSelect.get(x)));
                 }
-                if(tagsSelect.size() == 0){
+                if (tagsSelect.size() == 0) {
                     loadNotes();
                     showNotes();
-                }else{
+                } else {
                     findNotesByTags();
                     showNotes();
                 }
-             //   viewTags.setText(labelTags);
+                //   viewTags.setText(labelTags);
             }
         });
         AlertDialog dialogT = dialogBuilder.create();
         dialogT.show();
     }
 
-    private void findNotesByTags(){
+    private void findNotesByTags() {
         notes.clear();
         notes = controller.findNotesByArrayTags(tagsSelect);
     }
 
-    private void setSelectionView(){
+    private void setSelectionView() {
         StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, getNotesTitles());
         listview.setAdapter(adapter);
 
@@ -288,7 +290,7 @@ public class ListNotes extends Fragment {
         });
     }
 
-    private void removeSelectionView(){
+    private void removeSelectionView() {
         StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNotesTitles());
         listview.setAdapter(adapter);
 
@@ -303,10 +305,10 @@ public class ListNotes extends Fragment {
         });
     }
 
-    private ArrayList<Note> getSelectedNotes(){
+    private ArrayList<Note> getSelectedNotes() {
         final ListView listview = (ListView) getActivity().findViewById(R.id.listView);
         SparseBooleanArray selected = listview.getCheckedItemPositions();
-        if(selected != null && selected.size() > 0) {
+        if (selected != null && selected.size() > 0) {
             ArrayList<Note> selectedNotes = new ArrayList<>();
             for (int i = 0; i < notes.size(); i++) {
                 if (selected.get(i)) {
@@ -318,10 +320,9 @@ public class ListNotes extends Fragment {
         return null;
     }
 
-    private void showPosibleFathers(final ArrayList<Note> selectedNotes){
+    private void showPosibleFathers(final ArrayList<Note> selectedNotes) {
 
-        for(Note note : selectedNotes){
-            Log.v("MiTag",note.getTitle());
+        for (Note note : selectedNotes) {
             notes.remove(note);
         }
         StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNotesTitles());
@@ -355,8 +356,8 @@ public class ListNotes extends Fragment {
     private AlertDialog.Builder dialogNewTag;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
-   // private TextView viewTags; // es el elemento de la vista para colocar el label de tags
-   // private  String  labelTags; // es el label de todos los tags separados por comas
+    // private TextView viewTags; // es el elemento de la vista para colocar el label de tags
+    // private  String  labelTags; // es el label de todos los tags separados por comas
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
     private NoteController controller;
     private TagController tagController;

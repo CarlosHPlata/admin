@@ -38,15 +38,15 @@ import java.util.ArrayList;
 public class ViewNote extends Fragment {
     public View viewNote;
 
-    public static ViewNote newInstance(Bundle arguments){
+    public static ViewNote newInstance(Bundle arguments) {
         ViewNote viewNote = new ViewNote();
-        if(arguments != null){
+        if (arguments != null) {
             viewNote.setArguments(arguments);
         }
         return viewNote;
     }
 
-    public ViewNote(){
+    public ViewNote() {
 
     }
 
@@ -66,14 +66,14 @@ public class ViewNote extends Fragment {
         listNoteSon = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
         listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
         }
         return viewNote;
     }
 
-    public void initViewNoteById(){
+    public void initViewNoteById() {
         findNoteById();
         findNotesSon();
         generateListViewNotesSon();
@@ -81,27 +81,27 @@ public class ViewNote extends Fragment {
         generateTagSelected();
     }
 
-    public void generateTagSelected(){
+    public void generateTagSelected() {
         TextView viewTags = (TextView) viewNote.findViewById(R.id.viewTags);
         ArrayList<Tag> tagsSelect = noteFather.getTags();
         String nameTags = "Tags:\n";
-        for (int y=0; y<tagsSelect.size();y++) {
+        for (int y = 0; y < tagsSelect.size(); y++) {
             Tag tagAux = tagsSelect.get(y);
             nameTags += tagAux.getName() + ", ";
         }
         viewTags.setText(nameTags);
     }
 
-    public void findNotesSon(){
+    public void findNotesSon() {
         notesSon = controller.findAllNotesSonByIdFather(this.ID_NOTE);
     }
 
-    public void findNoteById(){
+    public void findNoteById() {
         this.noteFather = controller.findOneById(this.ID_NOTE);
         checkLists = this.noteFather.getCheckLists();
     }
 
-    public void generateNoteFather(){
+    public void generateNoteFather() {
         TextView titleView = (TextView) viewNote.findViewById(R.id.titleView);
         titleView.setText(this.noteFather.getTitle());
 
@@ -109,12 +109,12 @@ public class ViewNote extends Fragment {
         bodyView.setText(this.noteFather.getBody());
     }
 
-    public void generateListViewNotesSon(){
-        if(!noteFather.hasSons())
+    public void generateListViewNotesSon() {
+        if (!noteFather.hasSons())
             return;
         final ListView listview = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
         final ArrayList<String> list = getNotesTitles(noteFather.getSons());
-        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,23 +127,23 @@ public class ViewNote extends Fragment {
 
         });
 
-        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 selection = !selection;
-                if(selection){
+                if (selection) {
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                         @Override
                         public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                           //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
+                            //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
                         }
 
                     });
 
-                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
                     listview.setAdapter(adapter);
-                }else{
+                } else {
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                         @Override
@@ -154,7 +154,7 @@ public class ViewNote extends Fragment {
 
                     });
 
-                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
                     listview.setAdapter(adapter);
                 }
                 return true;
@@ -163,17 +163,16 @@ public class ViewNote extends Fragment {
 
     }
 
-    public void viewNoteSon(Note note){
+    public void viewNoteSon(Note note) {
 
        /* Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
         startActivity(intent); */
         Bundle arguments = new Bundle();
-        arguments.putInt("id",note.getId());
+        arguments.putInt("id", note.getId());
         Fragment fragment = ViewNote.newInstance(arguments);
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_container, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 
     @Override
@@ -206,20 +205,18 @@ public class ViewNote extends Fragment {
 
             Fragment fragment = EditNote.newInstance(arguments);
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
         }
         if (id == R.id.action_delete) {
-            if(selection){
+            if (selection) {
                 deleteSelectedSons();
-            }else {
+            } else {
                 this.noteFather.setStatus(true);
                 controller.deleteNote(this.noteFather);
 
                 Fragment fragment = new ListNotes();
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
             }
         }
         if (id == R.id.action_taskList) {
@@ -233,7 +230,7 @@ public class ViewNote extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void listAllCheckList(){
+    public void listAllCheckList() {
         dialogCheckLists = new AlertDialog.Builder(getActivity());
         final EditText txtInput = new EditText(getActivity());
         checkLists = checkListController.findAllByNoteId(this.ID_NOTE);
@@ -274,13 +271,13 @@ public class ViewNote extends Fragment {
 
         ArrayList<String> list = getDescriptionOfCheckList();
 
-        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
         listViewItems.setAdapter(adapter);
-        for (int i=0; i<checkLists.size(); i++){
+        for (int i = 0; i < checkLists.size(); i++) {
             CheckList checkListAux = checkLists.get(i);
-            if(checkListAux.isChecked()){
+            if (checkListAux.isChecked()) {
                 listViewItems.setItemChecked(i, true);
-            }else{
+            } else {
                 listViewItems.setItemChecked(i, false);
             }
         }
@@ -293,23 +290,23 @@ public class ViewNote extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 //tagsSelect.clear();
                 SparseBooleanArray sparse = listViewItems.getCheckedItemPositions();
-                for (int x=0; x<checkLists.size();x++){
+                for (int x = 0; x < checkLists.size(); x++) {
                     CheckList checkList = checkLists.get(x);
                     boolean isCheck = false;
-                    for(int i=0; i<sparse.size();i++){
-                        if(sparse.valueAt(i)){
+                    for (int i = 0; i < sparse.size(); i++) {
+                        if (sparse.valueAt(i)) {
                             //CheckList checkList1 = checkLists.get(sparse.keyAt(i));
-                            if(x == sparse.keyAt(i)){
+                            if (x == sparse.keyAt(i)) {
                                 isCheck = true;
-                             break;
+                                break;
                             }
-                        }else{
+                        } else {
 
                         }
                     }
-                    if(isCheck){
+                    if (isCheck) {
                         checkList.setChecked(true);
-                    }else{
+                    } else {
                         checkList.setChecked(false);
                     }
                     checkListController.updateCheckList(checkList);
@@ -328,7 +325,7 @@ public class ViewNote extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String description = txtInput.getText().toString();
-                        if(description != "" && description.length() >0){
+                        if (description != "" && description.length() > 0) {
                             newCheckList(description);
                             listAllCheckList();
                         }
@@ -343,72 +340,68 @@ public class ViewNote extends Fragment {
         dialogCheckList.show();
     }
 
-    private void updateListView(){
+    private void updateListView() {
         checkLists = checkListController.findAllByNoteId(this.ID_NOTE);
         ArrayList<String> list = getDescriptionOfCheckList();
-        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
         listViewItems.setAdapter(adapter);
-        for (int i=0; i<checkLists.size(); i++){
+        for (int i = 0; i < checkLists.size(); i++) {
             CheckList checkListAux = checkLists.get(i);
-            if(checkListAux.isChecked()){
+            if (checkListAux.isChecked()) {
                 listViewItems.setItemChecked(i, true);
-            }else{
+            } else {
                 listViewItems.setItemChecked(i, false);
             }
         }
 
     }
 
-    private ArrayList<String> getDescriptionOfCheckList(){
+    private ArrayList<String> getDescriptionOfCheckList() {
         ArrayList<String> list = new ArrayList<>();
-        for (int i=0; i<checkLists.size(); i++){
+        for (int i = 0; i < checkLists.size(); i++) {
             CheckList checkListAux = checkLists.get(i);
             list.add(checkListAux.getDescription());
         }
         return list;
     }
 
-    private void deleteCheckList(int position){
+    private void deleteCheckList(int position) {
         CheckList checkList = checkLists.get(position);
         checkListController.deleteCheckList(checkList);
     }
 
-    private void newCheckList(String description){
+    private void newCheckList(String description) {
         checkListController.addCheckList(description, this.ID_NOTE);
     }
 
-    private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
+    private ArrayList<String> getNotesTitles(ArrayList<Note> notes) {
         ArrayList<String> titles = new ArrayList<>();
-        for(Note note: notes){
+        for (Note note : notes) {
             titles.add(note.getTitle());
         }
         return titles;
     }
 
-    private void startNewSonNoteFragment(){
+    private void startNewSonNoteFragment() {
         Bundle arguments = new Bundle();
-        arguments.putInt("idFather",noteFather.getId());
+        arguments.putInt("idFather", noteFather.getId());
         Fragment fragment = NewNote.newInstance(arguments);
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_container, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 
     private void deleteSelectedSons() {
-
         ArrayList<Note> notesToDelete = getSelectedNotes();
-            controller.deleteNotes(notesToDelete);
-            Fragment fragment = new ListNotes();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
-
+        controller.deleteNotes(notesToDelete);
+        Fragment fragment = new ListNotes();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 
-    private ArrayList<Note> getSelectedNotes(){
+    private ArrayList<Note> getSelectedNotes() {
         final ListView listview = (ListView) getActivity().findViewById(R.id.listViewnoteSon);
         SparseBooleanArray selected = listview.getCheckedItemPositions();
-        if(selected != null && selected.size() > 0) {
+        if (selected != null && selected.size() > 0) {
             ArrayList<Note> selectedNotes = new ArrayList<>();
             for (int i = 0; i < notesSon.size(); i++) {
                 if (selected.get(i)) {
