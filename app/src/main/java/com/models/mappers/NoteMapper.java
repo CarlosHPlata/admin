@@ -76,7 +76,7 @@ public class NoteMapper {
     }
 
     public ArrayList<Note> getFatherNotes(){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = 0 AND status = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = 0 AND status = 1 ORDER BY id ASC", null);
         return loadSons(getNotesFromCursor(cursor));
     }
 

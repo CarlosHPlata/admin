@@ -416,25 +416,8 @@ public class ViewNote extends Fragment {
                 }
             }
             return selectedNotes;
-            /*controller.deleteNotes(notesToDelete);
-            Fragment fragment = new ListNotes();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();*/
-
-            /*Intent i = new Intent(this, ListNotes.class);
-            startActivity(i);
-            this.finish();*/
         }
         return null;
-    }
-
-    private void setSelection(){
-
-    }
-
-    private void removeSelection(){
-
     }
 
     private int ID_NOTE;

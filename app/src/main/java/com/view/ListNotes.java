@@ -314,15 +314,6 @@ public class ListNotes extends Fragment {
                 }
             }
             return selectedNotes;
-            /*controller.deleteNotes(notesToDelete);
-            Fragment fragment = new ListNotes();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();*/
-
-            /*Intent i = new Intent(this, ListNotes.class);
-            startActivity(i);
-            this.finish();*/
         }
         return null;
     }
@@ -331,7 +322,6 @@ public class ListNotes extends Fragment {
 
         for(Note note : selectedNotes){
             Log.v("MiTag",note.getTitle());
-            //adapter.remove(note.getTitle());
             notes.remove(note);
         }
         StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNotesTitles());
