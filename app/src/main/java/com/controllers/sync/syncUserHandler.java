@@ -18,9 +18,15 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
 /**
- * Created by Usuario on 17/03/2015.
+ * @(#)JceSecurity.java 1.50 04/04/14
+ *
+ * Esta clase se encarga de la sincronizacion de los usuarios con el servidor
+ *
+ * @author Carlos Herrera
+ *
+ * @version 1.50, 014/04/15
+ * @since 1.4
  */
 public class syncUserHandler extends SyncHandler{
 

@@ -15,8 +15,14 @@
     import java.util.ArrayList;
 
     /**
-     * Created by Usuario on 17/03/2015.
-     * Contributors
+     * @(#)JceSecurity.java 1.50 04/04/14
+     *
+     * Esta clase se encarga de la sincronizacion de las notas con el servidor
+     *
+     * @author Carlos Herrera
+     *
+     * @version 1.50, 014/04/15
+     * @since 1.4
      */
 
 

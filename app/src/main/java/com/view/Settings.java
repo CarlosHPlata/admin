@@ -13,13 +13,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.usuario.androidadmin.R;
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link Settings#newInstance} factory method to
- * create an instance of this fragment.
+ * @(#)JceSecurity.java 1.50 04/04/14
+ *
+ * Esta clase seencarga de las opciones de configuracion del usuario
+ *
+ * @author Carlos Herrera
+ *
+ * @version 1.50, 014/04/15
+ * @since 1.4
  */
 public class Settings extends Fragment {
 
