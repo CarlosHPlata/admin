@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.controllers.LogInController;
+import com.controllers.sync.interfaces.SyncInterface;
 import com.models.services.AlertDialogService;
 import com.example.usuario.androidadmin.R;
 
@@ -20,7 +21,7 @@ import com.example.usuario.androidadmin.R;
  * @version 0.1 13/02/2015.
  *
  */
-public class Login extends ActionBarActivity {
+public class Login extends ActionBarActivity implements SyncInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,4 +94,14 @@ public class Login extends ActionBarActivity {
     }
 
     private LogInController logincontroller;
+
+    @Override
+    public void onResponse(Object response) {
+
+    }
+
+    @Override
+    public void onError(int StatusCode, String error) {
+
+    }
 }

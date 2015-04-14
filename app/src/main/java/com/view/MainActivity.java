@@ -169,8 +169,8 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new ListTags();
                 break;
             case 3:
-                Toast.makeText(this, "Esta 3", Toast.LENGTH_SHORT).show();
-              //  fragment = new Seccion();
+                //Toast.makeText(this, "Esta 3", Toast.LENGTH_SHORT).show();
+                fragment = new Settings();
                 break;
             case 4:
                 controller.logOut();

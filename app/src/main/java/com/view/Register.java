@@ -1,12 +1,18 @@
 package com.view;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.controllers.RegisterController;
 import com.controllers.SyncController;
@@ -26,6 +32,23 @@ public class Register extends ActionBarActivity implements SyncInterface {
         setContentView(R.layout.activity_register);
         this.controller = new RegisterController(getApplicationContext());
         this.sync = new syncUserHandler(getApplicationContext(), Register.this);
+
+        Button btnRegister = (Button) findViewById(R.id.registerButton);
+        Button btnCancel = (Button) findViewById(R.id.cancelButton);
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerAction();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToLogin();
+            }
+        });
     }
 
 
@@ -51,7 +74,7 @@ public class Register extends ActionBarActivity implements SyncInterface {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registerAction(View view){
+    public void registerAction(){
         EditText txtUsername = (EditText) findViewById(R.id.emailText);
         EditText  txtPassword = (EditText) findViewById(R.id.passText);
         EditText txtPassword2 = (EditText) findViewById(R.id.pass2Text);
@@ -60,8 +83,6 @@ public class Register extends ActionBarActivity implements SyncInterface {
         String password = txtPassword.getText().toString();
         String password2 = txtPassword2.getText().toString();
 
-        AlertDialogService alert = new AlertDialogService();
-
         if (isEmailValid(email)){
             if (isPasswordCorrect(password, password2)){
                 if (!controller.isUserRegistered(email, password)){
@@ -69,12 +90,23 @@ public class Register extends ActionBarActivity implements SyncInterface {
                     user.setEmail(email);
                     user.setPassword(password);
                     this.sync.createUser(user);
-                } else alert.showAlertDialog(Register.this, "Error", "Ya existe", false);
+                } else showToastMessage("Ya existe el usuario");
+            } else showToastMessage("Contraseñas no coinciden");
+        } else showToastMessage("E-Mail invalido");
 
-            } else alert.showAlertDialog(Register.this, "Error", "Contraseñas no coinciden", false);
-        }
 
+    }
 
+    public void returnToLogin(){
+        Intent i = new Intent(this, Login.class);
+        startActivity(i);
+        this.finish();
+    }
+
+    public void showToastMessage(String msg){
+        Toast toast1 = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+        toast1.setGravity(Gravity.CENTER_HORIZONTAL, 0, 100);
+        toast1.show();
     }
 
     public boolean isPasswordCorrect(String pass, String pass2) {
@@ -84,7 +116,8 @@ public class Register extends ActionBarActivity implements SyncInterface {
     }
 
     boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if (email.equals(""))   return false;
+        else return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private RegisterController controller;
@@ -92,13 +125,28 @@ public class Register extends ActionBarActivity implements SyncInterface {
 
     @Override
     public void onResponse(Object thisNote) {
-        AlertDialogService alert = new AlertDialogService();
-        alert.showAlertDialog(Register.this, "REGISTRO:", "Se registro correctamente", false);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("REGISTRO:");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Se ha registrado correctamente, por favor inicie sesion")
+                .setCancelable(false)
+                .setPositiveButton("Ok Im ready!",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        returnToLogin();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
     }
 
     @Override
     public void onError(int StatusCode, String error) {
-        AlertDialogService alert = new AlertDialogService();
         String msg;
         switch (StatusCode){
             case 500:
@@ -114,7 +162,7 @@ public class Register extends ActionBarActivity implements SyncInterface {
                 msg = "Fatal error";
                 break;
         }
-        alert.showAlertDialog(Register.this, "REGISTRO:", msg, false);
+        showToastMessage(msg);
     }
 
 }
