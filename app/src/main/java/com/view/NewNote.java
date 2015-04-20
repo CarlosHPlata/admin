@@ -4,7 +4,12 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,14 +25,17 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.controllers.FileOpen;
 import com.controllers.CheckListController;
 import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
+import com.models.File;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -69,6 +77,10 @@ public View viewNewNote;
         checkLists = new ArrayList<>();
         viewTags = (TextView) viewNewNote.findViewById(R.id.newTags);
         tagsSelect = new ArrayList<>();
+        files = new ArrayList<>();
+        filesList = (ListView) viewNewNote.findViewById(R.id.nueva_nota_files);
+
+        fileOpen =  new FileOpen();
 
         Button createNote = (Button) viewNewNote.findViewById(R.id.btnCreateNote);
         createNote.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +95,51 @@ public View viewNewNote;
         if(bundle != null){
             this.ID_FATHER = bundle.getInt("idFather");
         }
+
+        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getArrayStringFiles());
+        filesList.setAdapter(adapter);
+        filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        filesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+                // set title
+                alertDialogBuilder.setTitle("Eliminar archivo");
+
+                // set dialog message
+                alertDialogBuilder
+                        .setMessage("Que desea hacer con el archivo?")
+                        .setCancelable(true)
+                        .setPositiveButton("Eliminar archivo",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                deleteFileFromArray(position);
+                            }
+                        }).setNegativeButton("Cancelar",new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog,int id) {
+
+                            }
+                        }).setNeutralButton("Abrir archivo", new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                java.io.File myFile = new java.io.File(files.get(position).getPath());
+                                try {
+                                    FileOpen.openFile(getActivity(), myFile);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    Log.i("error", "eerror");
+                                }
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                alertDialog.show();
+            }
+        });
+
         return viewNewNote;
+
+
     }
 
    @Override
@@ -97,7 +153,7 @@ public View viewNewNote;
         String body = textBody.getText().toString();
         String title = textTitle.getText().toString();
 
-        if(controller.addNote(title, body, this.ID_FATHER, tagsSelect, checkLists)){
+        if(controller.addNote(title, body, this.ID_FATHER, tagsSelect, checkLists, files)){
             Toast.makeText(getActivity(), "Nota creada", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(getActivity(), "Error!!", Toast.LENGTH_LONG).show();
@@ -225,6 +281,10 @@ public View viewNewNote;
         if (id == R.id.action_taskListNew) {
             listAllCheckList();
         }
+        if (id == R.id.action_add_file) {
+            addFile();
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -376,6 +436,77 @@ public View viewNewNote;
        checkLists.add(checkList);
     }
 
+    private void addFile(){
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, fileOpen.RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == fileOpen.RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && data != null){
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int ColumnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(ColumnIndex);
+            cursor.close();
+
+            String filename=picturePath.substring(picturePath.lastIndexOf("/")+1);
+
+            File file = new File();
+            file.setId(0);
+            file.setNote_id(0);
+            file.setExt_id(0);
+            file.setSync_flag(false);
+            file.setPath(picturePath);
+            file.setName(filename);
+
+            files.add(file);
+
+            adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getArrayStringFiles());
+            filesList.setAdapter(adapter);
+            filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            adapter.notifyDataSetChanged();
+
+            Toast toast1 =
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "archivo agregado", Toast.LENGTH_SHORT);
+
+            toast1.show();
+        }
+    }
+
+    public ArrayList<String> getArrayStringFiles(){
+        ArrayList<String> strings = new ArrayList<String>();
+        for (int i =0; i < files.size(); i++){
+            strings.add(files.get(i).getName());
+        }
+
+        return strings;
+    }
+
+    public void deleteFileFromArray(int index){
+        ArrayList<File> tempFiles = new ArrayList<File>();
+
+        for (int i =0; i < files.size(); i++){
+            if (i != index){
+                tempFiles.add(files.get(i));
+            }
+        }
+
+        files = tempFiles;
+
+        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getArrayStringFiles());
+        filesList.setAdapter(adapter);
+        filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        adapter.notifyDataSetChanged();
+    }
+
+
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
     private TextView viewTags; // es el elemento de la vista para colocar el label de tags
@@ -390,6 +521,12 @@ public View viewNewNote;
     private CheckListController checkListController;
     private AlertDialog.Builder dialogCheckLists;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<File> files;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
+
+    private ListView filesList;
+
+    private FileOpen fileOpen;
+    private StableArrayAdapter adapter;
 }

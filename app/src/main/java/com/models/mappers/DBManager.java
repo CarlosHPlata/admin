@@ -10,7 +10,8 @@ import com.models.Note;
 import java.util.ArrayList;
 
 /**
- * Esta clase se encarga de las conexiones a bases de datos, generales, genera una estructura con los metodos basicos, y provee metodos que devuelven base de datos, para crear metodos propios y agenos que cumplan con caracteristicas distintas.
+ * Esta clase se encarga de las conexiones a bases de datos, generales, genera una estructura con los metodos basicos, y provee metodos que devuelven base de datos,
+ * para crear metodos propios y agenos que cumplan con caracteristicas distintas.
  *
  * @author Carlos Herrera
  *

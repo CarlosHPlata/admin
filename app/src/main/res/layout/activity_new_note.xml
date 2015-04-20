@@ -40,7 +40,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/titleEdit"
         android:layout_alignEnd="@+id/titleEdit"
-        android:layout_above="@+id/button"
         android:layout_below="@+id/textView"
         android:hint="@string/ht_body" />
 
@@ -73,5 +72,21 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Archivos Adjuntos:"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/body"
+        android:layout_marginTop="30dp" />
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/nueva_nota_files"
+        android:layout_below="@+id/textView2"
+        android:layout_above="@+id/btnCreateNote" />
+
 
 </RelativeLayout>

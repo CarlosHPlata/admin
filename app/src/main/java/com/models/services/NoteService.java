@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.models.CheckList;
+import com.models.File;
 import com.models.Note;
 import com.models.Tag;
 import com.models.mappers.CheckListMapper;
+import com.models.mappers.FileMapper;
 import com.models.mappers.NoteMapper;
 import com.models.mappers.TagMapper;
 
@@ -29,6 +31,7 @@ public class NoteService {
         noteMapper = new NoteMapper(context);
         tagMapper = new TagMapper(context);
         checkListMapper = new CheckListMapper(context);
+        filesMapper =  new FileMapper(context);
     }
 
     public void deleteNotes(ArrayList notes){
@@ -47,6 +50,15 @@ public class NoteService {
                 checkList.setNoteId((int) longAux);
                 checkListMapper.insertCheckList(checkList);
             }
+
+            ArrayList<File> files = note.getFiles();
+
+            for (int y=0; y<files.size(); y++){
+                File file = files.get(y);
+                file.setNote_id((int) longAux);
+                filesMapper.insetFile(file);
+            }
+
             return true;
         }else{
             return false;
@@ -176,5 +188,6 @@ public class NoteService {
     private NoteMapper noteMapper;
     private TagMapper tagMapper;
     private CheckListMapper checkListMapper;
+    private FileMapper filesMapper;
 
 }

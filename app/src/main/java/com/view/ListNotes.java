@@ -41,7 +41,7 @@ import java.util.ArrayList;
  * Vista que permite mostrar una lista de notas ActionBarActivity
  */
 
-public class ListNotes extends Fragment {
+public class   ListNotes extends Fragment {
     public ListView listview;
 
     @Override

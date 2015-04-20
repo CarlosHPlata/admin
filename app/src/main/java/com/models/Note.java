@@ -178,6 +178,14 @@ public class Note extends Entitie implements Serializable {
         }
     }
 
+    public ArrayList<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(ArrayList<File> files) {
+        this.files = files;
+    }
+
     public ArrayList<CheckList> getCheckLists() {
         return checkLists;
     }
@@ -190,6 +198,7 @@ public class Note extends Entitie implements Serializable {
     private int extId;
     private ArrayList<Tag> tags;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<File> files;
     private boolean syncFlag;
     private String title;
     private String body;
