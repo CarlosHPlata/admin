@@ -100,6 +100,10 @@
             android:name="com.view.ListTags"
             android:label="@string/title_activity_list_tags" >
         </activity>
+        <activity
+            android:name="com.test.Test"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,0 +1,26 @@
+package com.models.services;
+
+import android.content.Context;
+
+import com.models.Link;
+import com.models.mappers.LinksMapper;
+
+/**
+ * Created by JoseRamon on 20/04/2015.
+ * Clase encargada de comunicar el LinkController y LinkMapper
+ */
+public class LinkService {
+    public LinkService(Context context){
+        linksMapper = new LinksMapper(context);
+    }
+
+    public void addLink(Link link){
+        linksMapper.addLink(link);
+    }
+
+    public void deleteLink(Link link){
+        linksMapper.deleteLink(link);
+    }
+
+    private LinksMapper linksMapper;
+}

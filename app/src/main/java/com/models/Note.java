@@ -32,7 +32,7 @@ public class Note extends Entitie implements Serializable {
     }
 
     public boolean hasIncrustedNotes(){
-        return incrustedNotes!=null;
+        return linkedNotes !=null;
     }
 
     public boolean hasSons(){
@@ -99,12 +99,25 @@ public class Note extends Entitie implements Serializable {
         this.sons = sons;
     }
 
-    public ArrayList<Note> getIncrustedNotes() {
-        return incrustedNotes;
+    public ArrayList<Note> getLinkedNotes() {
+        return linkedNotes;
     }
 
-    public void setIncrustedNotes(ArrayList<Note> incrustedNotes) {
-        this.incrustedNotes = incrustedNotes;
+    public void setLinkedNotes(ArrayList<Note> linkedNotes) {
+        this.linkedNotes = linkedNotes;
+    }
+
+    public void addLinkedNote(Note note){
+        if(linkedNotes == null){
+            linkedNotes = new ArrayList<>();
+        }
+        if(links == null){
+            links = new ArrayList<>();
+        }
+        linkedNotes.add(note);
+        Link link = new Link();
+        link.setLinkedNoteId(note.getId());
+        link.setNoteId(this.getId());
     }
 
     public boolean isFavorite() {
@@ -171,13 +184,6 @@ public class Note extends Entitie implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    private void setDate() {
-        if(getId() == NO_INSERTED_NOTE){
-            createdAt = new Date();
-            updatedAt = new Date();
-        }
-    }
-
     public ArrayList<File> getFiles() {
         return files;
     }
@@ -194,6 +200,21 @@ public class Note extends Entitie implements Serializable {
         this.checkLists = checkLists;
     }
 
+    public ArrayList<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(ArrayList<Link> links) {
+        this.links = links;
+    }
+
+    private void setDate() {
+        if(getId() == NO_INSERTED_NOTE){
+            createdAt = new Date();
+            updatedAt = new Date();
+        }
+    }
+
     private int idFather;
     private int extId;
     private ArrayList<Tag> tags;
@@ -207,7 +228,8 @@ public class Note extends Entitie implements Serializable {
     private Date createdAt;
     private Date updatedAt;
     private ArrayList<Note> sons;
-    private ArrayList<Note> incrustedNotes;
+    private ArrayList<Note> linkedNotes;
+    private ArrayList<Link> links;
     private TagService tagService;
     private static final String tableName = "notes";
     private static final String[] columNames = {"id", "title", "body", "favorite", "status", "created_at", "updated_at", "id_father", "ext_id", "tag", "sync_flag"};

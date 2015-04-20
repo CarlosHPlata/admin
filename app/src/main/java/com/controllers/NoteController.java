@@ -68,7 +68,6 @@ public class NoteController {
         note.setTags(tags);
         note.setFiles(files);
         note.setCheckLists(checkLists);
-
         return this.noteService.addNote(note);
     }
 

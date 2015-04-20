@@ -38,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper{
         //checklist_items
         db.execSQL("CREATE TABLE IF NOT EXISTS checklist ( id INTEGER PRIMARY KEY AUTOINCREMENT, ext_id INTEGER, description TEXT, checked INTEGER, note_id INTEGER, sync_flag INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS files ( id INTEGER PRIMARY KEY AUTOINCREMENT, ext_id INTEGER, path TEXT, name TEXT, note_id INTEGER, sync_flag INTEGER)");
-
+        db.execSQL("CREATE TABLE IF NOT EXISTS links ( id INTEGER PRIMARY KEY AUTOINCREMENT, note_id INTEGER, linked_note_id INTEGER, sync_flag INTEGER)");
     }
 
     @Override
