@@ -1,7 +1,6 @@
 package com.models.services;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.models.CheckList;
 import com.models.File;
@@ -9,6 +8,7 @@ import com.models.Note;
 import com.models.Tag;
 import com.models.mappers.CheckListMapper;
 import com.models.mappers.FileMapper;
+import com.models.mappers.LinksMapper;
 import com.models.mappers.NoteMapper;
 import com.models.mappers.TagMapper;
 
@@ -32,6 +32,7 @@ public class NoteService {
         tagMapper = new TagMapper(context);
         checkListMapper = new CheckListMapper(context);
         filesMapper =  new FileMapper(context);
+        linksMapper = new LinksMapper(context);
     }
 
     public void deleteNotes(ArrayList notes){
@@ -83,6 +84,7 @@ public class NoteService {
 
         ArrayList<CheckList> checkLists = checkListMapper.findAllCheckListByNoteId(note.getId());
         note.setCheckLists(checkLists);
+        note.setLinks(linksMapper.getLinksFromNoteId(note.getId()));
         return note;
     }
 
@@ -189,5 +191,5 @@ public class NoteService {
     private TagMapper tagMapper;
     private CheckListMapper checkListMapper;
     private FileMapper filesMapper;
-
+    private LinksMapper linksMapper;
 }

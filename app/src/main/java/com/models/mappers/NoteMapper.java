@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.controllers.LinkController;
 import com.models.Note;
 
 import java.util.ArrayList;
@@ -47,6 +48,8 @@ public class NoteMapper {
     public Note getById(Note note){
         Note wNote = (Note)dbManager.getById(note);
         wNote.setSons(getSonsFromDB(wNote.getId()));
+        //Probablemente este metodo debe ser usado para cargar a cada nota sus links
+        //wNote.setLinks(linkController.getLinksFromNoteId(wNote));
         return wNote;
     }
 
@@ -110,4 +113,5 @@ public class NoteMapper {
 
     private DBManager dbManager;
     private SQLiteDatabase db;
+    //El linkController no puede compartir el context
 }

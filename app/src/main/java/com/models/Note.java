@@ -35,6 +35,10 @@ public class Note extends Entitie implements Serializable {
         return linkedNotes !=null;
     }
 
+    public boolean hasLinks(){
+        return links != null;
+    }
+
     public boolean hasSons(){
         return sons != null;
     }

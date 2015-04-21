@@ -60,19 +60,19 @@ public class Link extends Entitie{
         this.noteId = noteId;
     }
 
-    public Note getLinkedNote() {
+    /*public Note getLinkedNote() {
         return linkedNote;
-    }
+    }*/
 
-    public void setLinkedNote(Note linkedNote) {
+    /*public void setLinkedNote(Note linkedNote) {
         this.linkedNote = linkedNote;
-    }
+    }*/
 
     //No se debe sustituir el id del entitie por que causa problemas
     private int noteId;
     private int linkedNoteId;
     private boolean syncFlag;
-    private Note linkedNote;
+    //private Note linkedNote;
     private static final String tableName = "links";
     private static final String[] columNames = {"id","note_id","linked_note_id", "sync_flag"};
     //Indices para colocar en el vector columNames

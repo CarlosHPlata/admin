@@ -3,7 +3,10 @@ package com.models.services;
 import android.content.Context;
 
 import com.models.Link;
+import com.models.Note;
 import com.models.mappers.LinksMapper;
+
+import java.util.ArrayList;
 
 /**
  * Created by JoseRamon on 20/04/2015.
@@ -23,4 +26,8 @@ public class LinkService {
     }
 
     private LinksMapper linksMapper;
+
+    public ArrayList<Link> getLinksFromNoteId(int noteId) {
+        return linksMapper.getLinksFromNoteId(noteId);
+    }
 }

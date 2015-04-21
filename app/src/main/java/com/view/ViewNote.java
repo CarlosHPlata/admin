@@ -29,6 +29,7 @@ import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
+import com.models.Link;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
@@ -77,6 +78,7 @@ public class ViewNote extends Fragment {
         findNoteById();
         findNotesSon();
         generateListViewNotesSon();
+        generateListViewLinks();
         generateNoteFather();
         generateTagSelected();
     }
@@ -160,6 +162,65 @@ public class ViewNote extends Fragment {
                 return true;
             }
         });
+
+    }
+
+    //Carga el listview de links con los links que tenga la nota
+    public void generateListViewLinks() {
+        if (!noteFather.hasLinks()) {
+            Log.v("%%%%%%%%%%%%%%%%%%", "Noooo Tiene links");
+            return;
+        }
+        Log.v("%%%%%%%%%%%%%%%%%%", "Si Tiene links");
+        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
+        final ArrayList<String> list = getNotesTitlesFromLinks(noteFather.getLinks());
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                //Probablemente este metodo debe ser refactorizado a viewNote()
+                viewNoteSon(controller.findOneById(noteFather.getLinks().get(position).getLinkedNoteId()));
+            }
+
+        });
+        /*
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selection = !selection;
+                if (selection) {
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
+                    listview.setAdapter(adapter);
+                } else {
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            final String item = (String) parent.getItemAtPosition(position);
+                            viewNoteSon(noteFather.getSons().get(position));
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+                    listview.setAdapter(adapter);
+                }
+                return true;
+            }
+        });*/
 
     }
 
@@ -378,6 +439,14 @@ public class ViewNote extends Fragment {
         ArrayList<String> titles = new ArrayList<>();
         for (Note note : notes) {
             titles.add(note.getTitle());
+        }
+        return titles;
+    }
+
+    private ArrayList<String> getNotesTitlesFromLinks(ArrayList<Link> links){
+        ArrayList<String> titles = new ArrayList<>();
+        for (Link link : links) {
+            titles.add(controller.findOneById(link.getLinkedNoteId()).getTitle());
         }
         return titles;
     }
