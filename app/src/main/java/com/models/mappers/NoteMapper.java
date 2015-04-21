@@ -27,6 +27,13 @@ public class NoteMapper {
         return loadSons(getNotesFromCursor(cursor));
     }
 
+    public void deleteNotePermanently(Note note){
+        db.execSQL("DELETE FROM notes WHERE id = " + note.getId());
+        db.execSQL("DELETE FROM links WHERE note_id = " + note.getId() + " OR linked_note_id = " + note.getId());
+        db.execSQL("DELETE FROM checklist WHERE id = " + note.getId());
+        db.execSQL("DELETE FROM files WHERE id = " + note.getId());
+    }
+
     public void deleteNotes(ArrayList notes){
         for(Note note:(ArrayList<Note>) notes){
             delteNote(note);

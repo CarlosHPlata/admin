@@ -39,6 +39,10 @@ public class NoteController {
         }
     }
 
+    public void deleteNotePermanently(Note note){
+        noteService.deleteNotePermanently(note);
+    }
+
     public void deleteNotes(ArrayList<Note> notes){
         noteService.deleteNotes(notes);
     }

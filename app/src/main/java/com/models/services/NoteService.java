@@ -44,6 +44,10 @@ public class NoteService {
         noteMapper.deleteNotes(notes);
     }
 
+    public void deleteNotePermanently(Note note){
+        noteMapper.deleteNotePermanently(note);
+    }
+
     public void restore(Note note){
         noteMapper.restore(note);
     }
