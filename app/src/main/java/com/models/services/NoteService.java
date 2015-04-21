@@ -12,6 +12,7 @@ import com.models.mappers.LinksMapper;
 import com.models.mappers.NoteMapper;
 import com.models.mappers.TagMapper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -33,6 +34,10 @@ public class NoteService {
         checkListMapper = new CheckListMapper(context);
         filesMapper =  new FileMapper(context);
         linksMapper = new LinksMapper(context);
+    }
+
+    public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
+        return noteMapper.getNotDeletedNotesButThis(noteId);
     }
 
     public void deleteNotes(ArrayList notes){

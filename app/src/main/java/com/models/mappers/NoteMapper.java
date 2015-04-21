@@ -22,6 +22,11 @@ public class NoteMapper {
         db = dbManager.getWritableDb();
     }
 
+    public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1 AND id != "+noteId, null);
+        return loadSons(getNotesFromCursor(cursor));
+    }
+
     public void deleteNotes(ArrayList notes){
         for(Note note:(ArrayList<Note>) notes){
             delteNote(note);

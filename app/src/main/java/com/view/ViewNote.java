@@ -4,29 +4,23 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.controllers.CheckListController;
 import com.controllers.NoteController;
-import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
 import com.models.Link;
@@ -124,7 +118,7 @@ public class ViewNote extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
-                viewNoteSon(noteFather.getSons().get(position));
+                viewNote(noteFather.getSons().get(position));
             }
 
         });
@@ -151,7 +145,7 @@ public class ViewNote extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                             final String item = (String) parent.getItemAtPosition(position);
-                            viewNoteSon(noteFather.getSons().get(position));
+                            viewNote(noteFather.getSons().get(position));
                         }
 
                     });
@@ -183,7 +177,7 @@ public class ViewNote extends Fragment {
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
                 //Probablemente este metodo debe ser refactorizado a viewNote()
-                viewNoteSon(controller.findOneById(noteFather.getLinks().get(position).getLinkedNoteId()));
+                viewNote(controller.findOneById(noteFather.getLinks().get(position).getLinkedNoteId()));
             }
 
         });
@@ -210,7 +204,7 @@ public class ViewNote extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                             final String item = (String) parent.getItemAtPosition(position);
-                            viewNoteSon(noteFather.getSons().get(position));
+                            viewNote(noteFather.getSons().get(position));
                         }
 
                     });
@@ -224,7 +218,7 @@ public class ViewNote extends Fragment {
 
     }
 
-    public void viewNoteSon(Note note) {
+    public void viewNote(Note note) {
 
        /* Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
@@ -283,7 +277,25 @@ public class ViewNote extends Fragment {
         if (id == R.id.action_taskList) {
             listAllCheckList();
         }
+        if (id == R.id.action_add_link) {
+            addLink();
+        }
+        if (id == R.id.action_delete_link) {
+            deleteLink();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addLink(){
+        Bundle arguments = new Bundle();
+        arguments.putInt("noteId", noteFather.getId());
+        Fragment fragment = ListNotesToLink.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+    }
+
+    public void deleteLink(){
+
     }
 
     @Override
