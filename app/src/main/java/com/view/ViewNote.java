@@ -20,6 +20,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.controllers.CheckListController;
+import com.controllers.LinkController;
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
@@ -56,6 +57,7 @@ public class ViewNote extends Fragment {
                              Bundle savedInstanceState) {
         viewNote = inflater.inflate(R.layout.activity_view_note, container, false);
 
+        linkController = new LinkController(getActivity().getApplicationContext());
         controller = new NoteController(getActivity().getApplicationContext());
         checkListController = new CheckListController(getActivity().getApplicationContext());
         listNoteSon = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
@@ -295,6 +297,26 @@ public class ViewNote extends Fragment {
     }
 
     public void deleteLink(){
+        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
+        //final ArrayList<String> list = getNotesTitles(noteFather.getSons());
+        //final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        //listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                //final String item = (String) parent.getItemAtPosition(position);
+                //viewNote(noteFather.getSons().get(position));
+                //Aqui se elimina el link a la nota clickeada
+                linkController.deleteLink(noteFather.getLinks().get(position));
+                //Regresa a listar las notas
+                Fragment fragment = new ListNotes();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            }
+
+        });
 
     }
 
@@ -505,4 +527,5 @@ public class ViewNote extends Fragment {
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
     private boolean selection = false;
+    private LinkController linkController;
 }
