@@ -170,6 +170,12 @@ public class ViewDeletedNote extends Fragment {
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id == R.id.action_delete){
+            controller.deleteNotePermanently(noteFather);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        }
         if (id == R.id.action_restore_note) {
             controller.restore(noteFather);
 

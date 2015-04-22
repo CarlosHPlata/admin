@@ -66,6 +66,10 @@
         android:layout_above="@+id/btnCreateNote"
         android:layout_below="@+id/textView3" />
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewLinks" />
 
     <ScrollView
         android:layout_width="match_parent"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.controllers.LinkController;
 import com.models.Note;
 
 import java.util.ArrayList;
@@ -19,6 +20,18 @@ public class NoteMapper {
     public NoteMapper(Context context){
         dbManager = new DBManager(context);
         db = dbManager.getWritableDb();
+    }
+
+    public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1 AND id != "+noteId, null);
+        return loadSons(getNotesFromCursor(cursor));
+    }
+
+    public void deleteNotePermanently(Note note){
+        db.execSQL("DELETE FROM notes WHERE id = " + note.getId());
+        db.execSQL("DELETE FROM links WHERE note_id = " + note.getId() + " OR linked_note_id = " + note.getId());
+        db.execSQL("DELETE FROM checklist WHERE id = " + note.getId());
+        db.execSQL("DELETE FROM files WHERE id = " + note.getId());
     }
 
     public void deleteNotes(ArrayList notes){
@@ -41,12 +54,15 @@ public class NoteMapper {
     }
 
     public void updateNote(Note note){
+        note.setSyncFlag(false);
         dbManager.update(note);
     }
 
     public Note getById(Note note){
         Note wNote = (Note)dbManager.getById(note);
         wNote.setSons(getSonsFromDB(wNote.getId()));
+        //Probablemente este metodo debe ser usado para cargar a cada nota sus links
+        //wNote.setLinks(linkController.getLinksFromNoteId(wNote));
         return wNote;
     }
 
@@ -110,4 +126,5 @@ public class NoteMapper {
 
     private DBManager dbManager;
     private SQLiteDatabase db;
+    //El linkController no puede compartir el context
 }

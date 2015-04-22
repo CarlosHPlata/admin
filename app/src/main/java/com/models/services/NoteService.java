@@ -1,7 +1,6 @@
 package com.models.services;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.models.CheckList;
 import com.models.File;
@@ -11,9 +10,11 @@ import com.models.Tag;
 import com.models.mappers.CheckListMapper;
 import com.models.mappers.FileMapper;
 import com.models.mappers.FoldMapper;
+import com.models.mappers.LinksMapper;
 import com.models.mappers.NoteMapper;
 import com.models.mappers.TagMapper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -35,10 +36,19 @@ public class NoteService {
         checkListMapper = new CheckListMapper(context);
         filesMapper =  new FileMapper(context);
         foldMapper = new FoldMapper(context);
+        linksMapper = new LinksMapper(context);
+    }
+
+    public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
+        return noteMapper.getNotDeletedNotesButThis(noteId);
     }
 
     public void deleteNotes(ArrayList notes){
         noteMapper.deleteNotes(notes);
+    }
+
+    public void deleteNotePermanently(Note note){
+        noteMapper.deleteNotePermanently(note);
     }
 
     public void restore(Note note){
@@ -95,6 +105,8 @@ public class NoteService {
         note.setCheckLists(checkLists);
         ArrayList<Fold> folds = foldMapper.findAllByNoteId(note.getId());
         note.setFolds(folds);
+
+        note.setLinks(linksMapper.getLinksFromNoteId(note.getId()));
         return note;
     }
 
@@ -231,5 +243,5 @@ public class NoteService {
     private CheckListMapper checkListMapper;
     private FoldMapper foldMapper;
     private FileMapper filesMapper;
-
+    private LinksMapper linksMapper;
 }
