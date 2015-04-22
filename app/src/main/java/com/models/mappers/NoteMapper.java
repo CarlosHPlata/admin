@@ -34,6 +34,13 @@ public class NoteMapper {
         db.execSQL("DELETE FROM files WHERE id = " + note.getId());
     }
 
+    public void dropNotes(){
+        db.delete("notes",null,null);
+        db.delete("links",null,null);
+        db.delete("checklist",null,null);
+        db.delete("files",null,null);
+    }
+
     public void deleteNotes(ArrayList notes){
         for(Note note:(ArrayList<Note>) notes){
             delteNote(note);
@@ -99,11 +106,6 @@ public class NoteMapper {
     public ArrayList<Note> getSonsFromDB(int id){
         Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE id_father = " + id +" AND status = 1", null);
         return getNotesFromCursor(cursor);
-    }
-
-    public void dropNotes(){
-        String query = "delete from users";
-        db.rawQuery(query, null);
     }
 
     public void delteNote(Note note){

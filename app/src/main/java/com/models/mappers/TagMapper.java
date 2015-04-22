@@ -1,6 +1,7 @@
 package com.models.mappers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -30,6 +31,18 @@ public class TagMapper {
     public Tag findOneById(Tag tag){
         Tag tagAux = (Tag)dbManager.getById(tag);
         return tagAux;
+    }
+
+    public Tag findOneByExtId(Tag tag){
+        Cursor cursor = db.query(tag.getTableName(), tag.getColumnNames(), "ext_id = ?", new String[]{String.valueOf(tag.getExtId())}, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0)
+            cursor.moveToFirst();
+        else
+            return null;
+
+        tag.setContentValues(cursor);
+
+        return tag;
     }
 
     public void updateTag(Tag tag){
