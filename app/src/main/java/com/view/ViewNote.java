@@ -4,39 +4,51 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.controllers.CheckListController;
+import com.controllers.LinkController;
 import com.controllers.NoteController;
-import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
+import com.models.Fold;
+import com.models.Link;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/** *
+ *
+ * Esta clase se encarga de visualizar una nota seleccionada, puede borrar, editar, marcar
+ * como favorito, y ver lista de tareas o los checkList.
+ *
+ * @author Edgar 28/02/2015
+ *
+ * */
 public class ViewNote extends Fragment {
     public View viewNote;
+    List<String> group;
+    List<List<String>> child;
+    ExpandableListView expandList;
+    InfoDetailsAdapter adapterExpandableListView;
 
     public static ViewNote newInstance(Bundle arguments) {
         ViewNote viewNote = new ViewNote();
@@ -61,22 +73,33 @@ public class ViewNote extends Fragment {
                              Bundle savedInstanceState) {
         viewNote = inflater.inflate(R.layout.activity_view_note, container, false);
 
+        linkController = new LinkController(getActivity().getApplicationContext());
         controller = new NoteController(getActivity().getApplicationContext());
         checkListController = new CheckListController(getActivity().getApplicationContext());
         listNoteSon = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
         listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        expandList = (ExpandableListView) viewNote.findViewById(R.id.expandableListView1);
         Bundle bundle = getArguments();
         if (bundle != null) {
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
+            initExpandableListView();
         }
+
         return viewNote;
+    }
+
+    public void initExpandableListView(){
+        initialDataFold();
+        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        expandList.setAdapter(adapterExpandableListView);
     }
 
     public void initViewNoteById() {
         findNoteById();
         findNotesSon();
         generateListViewNotesSon();
+        generateListViewLinks();
         generateNoteFather();
         generateTagSelected();
     }
@@ -99,6 +122,7 @@ public class ViewNote extends Fragment {
     public void findNoteById() {
         this.noteFather = controller.findOneById(this.ID_NOTE);
         checkLists = this.noteFather.getCheckLists();
+        folds = this.noteFather.getFolds();
     }
 
     public void generateNoteFather() {
@@ -122,7 +146,7 @@ public class ViewNote extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
-                viewNoteSon(noteFather.getSons().get(position));
+                viewNote(noteFather.getSons().get(position));
             }
 
         });
@@ -149,7 +173,7 @@ public class ViewNote extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                             final String item = (String) parent.getItemAtPosition(position);
-                            viewNoteSon(noteFather.getSons().get(position));
+                            viewNote(noteFather.getSons().get(position));
                         }
 
                     });
@@ -163,7 +187,66 @@ public class ViewNote extends Fragment {
 
     }
 
-    public void viewNoteSon(Note note) {
+    //Carga el listview de links con los links que tenga la nota
+    public void generateListViewLinks() {
+        if (!noteFather.hasLinks()) {
+            Log.v("%%%%%%%%%%%%%%%%%%", "Noooo Tiene links");
+            return;
+        }
+        Log.v("%%%%%%%%%%%%%%%%%%", "Si Tiene links");
+        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
+        final ArrayList<String> list = getNotesTitlesFromLinks(noteFather.getLinks());
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                //Probablemente este metodo debe ser refactorizado a viewNote()
+                viewNote(controller.findOneById(noteFather.getLinks().get(position).getLinkedNoteId()));
+            }
+
+        });
+        /*
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selection = !selection;
+                if (selection) {
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
+                    listview.setAdapter(adapter);
+                } else {
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            final String item = (String) parent.getItemAtPosition(position);
+                            viewNote(noteFather.getSons().get(position));
+                        }
+
+                    });
+
+                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+                    listview.setAdapter(adapter);
+                }
+                return true;
+            }
+        });*/
+
+    }
+
+    public void viewNote(Note note) {
 
        /* Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
@@ -222,7 +305,45 @@ public class ViewNote extends Fragment {
         if (id == R.id.action_taskList) {
             listAllCheckList();
         }
+        if (id == R.id.action_add_link) {
+            addLink();
+        }
+        if (id == R.id.action_delete_link) {
+            deleteLink();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addLink(){
+        Bundle arguments = new Bundle();
+        arguments.putInt("noteId", noteFather.getId());
+        Fragment fragment = ListNotesToLink.newInstance(arguments);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+    }
+
+    public void deleteLink(){
+        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
+        //final ArrayList<String> list = getNotesTitles(noteFather.getSons());
+        //final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        //listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                //final String item = (String) parent.getItemAtPosition(position);
+                //viewNote(noteFather.getSons().get(position));
+                //Aqui se elimina el link a la nota clickeada
+                linkController.deleteLink(noteFather.getLinks().get(position));
+                //Regresa a listar las notas
+                Fragment fragment = new ListNotes();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            }
+
+        });
+
     }
 
     @Override
@@ -382,6 +503,14 @@ public class ViewNote extends Fragment {
         return titles;
     }
 
+    private ArrayList<String> getNotesTitlesFromLinks(ArrayList<Link> links){
+        ArrayList<String> titles = new ArrayList<>();
+        for (Link link : links) {
+            titles.add(controller.findOneById(link.getLinkedNoteId()).getTitle());
+        }
+        return titles;
+    }
+
     private void startNewSonNoteFragment() {
         Bundle arguments = new Bundle();
         arguments.putInt("idFather", noteFather.getId());
@@ -413,6 +542,32 @@ public class ViewNote extends Fragment {
         return null;
     }
 
+    private void initialDataFold() {
+        group = new ArrayList<String>();
+        child = new ArrayList<List<String>>();
+        for(int x =0; x<folds.size(); x++){
+            Fold fold = folds.get(x);
+            String content = fold.getContent();
+            String groupAux = "";
+            if(content.length() > 8){
+                groupAux = content.substring(0, 8);
+            }else{
+                groupAux = content;
+            }
+            groupAux += "...";
+            addInfoFold(groupAux, new String[] { content });
+        }
+    }
+
+    private void addInfoFold(String p, String[] c) {
+        group.add(p);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < c.length; i++) {
+            item.add(c[i]);
+        }
+        child.add(item);
+    }
+
     private int ID_NOTE;
     private NoteController controller;
     private ListView listNoteSon;
@@ -421,7 +576,9 @@ public class ViewNote extends Fragment {
     private CheckListController checkListController;
     private AlertDialog.Builder dialogCheckLists;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<Fold> folds;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
     private boolean selection = false;
+    private LinkController linkController;
 }

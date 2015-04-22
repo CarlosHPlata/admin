@@ -19,7 +19,6 @@ public class LinksMapper {
     public LinksMapper(Context context){
         dbManager = new DBManager(context);
         db = dbManager.getWritableDb();
-        noteController = new NoteController(context);
     }
 
     public void addLink(Link link){
@@ -30,8 +29,8 @@ public class LinksMapper {
         dbManager.delete(link);
     }
 
-    public ArrayList<Link> getLinksFromNote(Note note){
-        Cursor cursor = db.rawQuery("SELECT * FROM links WHERE note_id = " + note.getId(), null);
+    public ArrayList<Link> getLinksFromNoteId(int noteId){
+        Cursor cursor = db.rawQuery("SELECT * FROM links WHERE note_id = " + noteId, null);
         return getLinksFromCursor(cursor);
     }
 
@@ -40,7 +39,7 @@ public class LinksMapper {
         while(cursor.moveToNext()){
             Link link = new Link();
             link.setContentValues(cursor);
-            link.setLinkedNote(noteController.findOneById(link.getLinkedNoteId()));
+            //link.setLinkedNote(noteController.findOneById(link.getLinkedNoteId()));
             links.add(link);
         }
         return links;
@@ -48,5 +47,4 @@ public class LinksMapper {
 
     private DBManager dbManager;
     private SQLiteDatabase db;
-    private NoteController noteController;
 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -25,14 +26,22 @@ import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
+import com.models.Fold;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.models.services.AlertDialogService;
+import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EditNote extends Fragment {
     public View viewEditNote;
+    public ExpandableListView expandList;
+    public InfoDetailsAdapter adapterExpandableListView;
+    public List<String> group;
+    public List<List<String>> child;
     public static EditNote newInstance(Bundle arguments){
         EditNote editNote = new EditNote();
         if(arguments != null){
@@ -59,6 +68,7 @@ public class EditNote extends Fragment {
         controller = new NoteController(getActivity().getApplicationContext());
         tagController = new TagController(getActivity().getApplicationContext());
         checkListController = new CheckListController(getActivity().getApplicationContext());
+        expandList = (ExpandableListView) viewEditNote.findViewById(R.id.expandableListView2);
         viewTags = (TextView) viewEditNote.findViewById(R.id.editTags);
         tagsSelect = new ArrayList<>();
         indexTagSelect = new ArrayList();
@@ -75,9 +85,65 @@ public class EditNote extends Fragment {
         if(bundle != null){
             this.ID_NOTE = bundle.getInt("id");
             initViewEditNote();
+            initExpandableListView();
         }
 
         return viewEditNote;
+    }
+
+    public void initExpandableListView(){
+        initialDataFold();
+        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        expandList.setAdapter(adapterExpandableListView);
+        expandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView arg0, View arg1,
+                                        int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        });
+        expandList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView arg0, View arg1,
+                                        int arg2, int arg3, long arg4) {
+                // TODO Auto-generated method stub
+                editFold(arg2);
+                return false;
+            }
+        });
+        expandList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
+                final int positionAux = position;
+                final long positionId = id;
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    //MENU FILA
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_eliminar:
+                                if(positionId >= 0){
+                                    deleteFoldToGroup(positionAux);
+                                }else{
+                                    deleteFoldToGroup(positionAux -1);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        return true;
+                    }
+                    //FIN MENU FILA
+                });
+                popup.show();
+                return true;
+            }
+        });
+
     }
 
     @Override
@@ -105,7 +171,7 @@ public class EditNote extends Fragment {
     public void listAllTags(){
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
-        dialogNewTag = new AlertDialog.Builder(getActivity());
+        dialogAlert = new AlertDialog.Builder(getActivity());
         final EditText txtInput = new EditText(getActivity());
         allTags = tagController.fingAll();
         labelTags = "Tags:\n";
@@ -168,21 +234,24 @@ public class EditNote extends Fragment {
         dialogBuilder.setNeutralButton("Nuevo", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialogNewTag.setTitle("Nuevo tag");
-                dialogNewTag.setMessage("Agregar el nombre del nuevo tag");
-                dialogNewTag.setView(txtInput);
-                dialogNewTag.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                dialogAlert.setTitle("Nuevo tag");
+                dialogAlert.setMessage("Agregar el nombre del nuevo tag");
+                dialogAlert.setView(txtInput);
+                dialogAlert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String nameTag = txtInput.getText().toString();
-                        if(nameTag != ""){
+                        if(nameTag != "" && nameTag.length() >0){
                             tagController.addTag(nameTag);
                             listAllTags();
+                        }else{
+                            AlertDialogService alert = new AlertDialogService();
+                            alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                         }
                     }
                 });
-                dialogNewTag.setNegativeButton("Cancelar", null);
-                AlertDialog dialogTag = dialogNewTag.create();
+                dialogAlert.setNegativeButton("Cancelar", null);
+                AlertDialog dialogTag = dialogAlert.create();
                 dialogTag.show();
             }
         });
@@ -200,6 +269,7 @@ public class EditNote extends Fragment {
     public void findNoteById(){
         this.note = controller.findOneById(this.ID_NOTE);
         checkLists = this.note.getCheckLists();
+        folds = this.note.getFolds();
     }
 
     public void generateViewEditNote(){
@@ -213,13 +283,22 @@ public class EditNote extends Fragment {
     public void updateNote(){
         EditText titleEdit = (EditText) viewEditNote.findViewById(R.id.titleEdit);
         EditText bodyEdit = (EditText) viewEditNote.findViewById(R.id.bodyEdit);
+        String body = titleEdit.getText().toString();
+        String title = bodyEdit.getText().toString();
 
-        this.note.setTitle(titleEdit.getText().toString());
-        this.note.setBody(bodyEdit.getText().toString());
-        this.note.setTags(tagsSelect);
-        this.note.setCheckLists(checkLists);
-        controller.updateNote(this.note);
-        backView();
+        if(body != "" && body.length() > 0 && title != "" && title.length() >0){
+            this.note.setTitle(body);
+            this.note.setBody(title);
+            this.note.setTags(tagsSelect);
+            this.note.setCheckLists(checkLists);
+            this.note.setFolds(folds);
+            controller.updateNote(this.note);
+            backView();
+        }else{
+            AlertDialogService alert = new AlertDialogService();
+            alert.showAlertDialog(getActivity(), "Error", "Agregue un titulo y un texto a la nota", false);
+        }
+
     }
 
     public void backView(){
@@ -254,9 +333,138 @@ public class EditNote extends Fragment {
         if (id == R.id.action_task_list_edit) {
             listAllCheckList();
         }
+        if (id == R.id.action_edit_fold) {
+            showDialogNewFold();
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void initialDataFold() {
+        group = new ArrayList<String>();
+        child = new ArrayList<List<String>>();
+        for(int x =0; x<folds.size(); x++){
+            Fold fold = folds.get(x);
+            String content = fold.getContent();
+            String groupAux = "";
+            if(content.length() > 8){
+                groupAux = content.substring(0, 8);
+            }else{
+                groupAux = content;
+            }
+            groupAux += "...";
+            addInfoFold(groupAux, new String[]{content});
+        }
+
+    }
+
+    public void addInfoFold(String p, String[] c) {
+        group.add(p);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < c.length; i++) {
+            item.add(c[i]);
+        }
+        child.add(item);
+    }
+
+    public void showDialogNewFold(){
+        final EditText txtInput = new EditText(getActivity());
+        dialogAlert = new AlertDialog.Builder(getActivity());
+        dialogAlert.setTitle("Nueva pliegue");
+        dialogAlert.setMessage("Descripción");
+        dialogAlert.setView(txtInput);
+        dialogAlert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String description = txtInput.getText().toString();
+                if (description != "" && description.length() > 0) {
+                    addFoldToGroup(description);
+                }else{
+                    AlertDialogService alert = new AlertDialogService();
+                    alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
+                }
+            }
+        });
+        dialogAlert.setNegativeButton("Cancelar", null);
+        AlertDialog dialogTag = dialogAlert.create();
+        dialogTag.show();
+
+    }
+
+    public void addFoldToGroup(String content) {
+        Fold fold = new Fold(content);
+        fold.setSyncFlag(false);
+        fold.setExtId(0);
+        folds.add(fold);
+        String[] data = { content };
+        String group = "";
+        if(content.length() > 8){
+            group = content.substring(0, 8);
+        }else{
+            group = content;
+        }
+        group += "...";
+        addInfoFold(group, data);
+        adapterExpandableListView.notifyDataSetChanged();
+    }
+
+    public void deleteFoldToGroup(int position){
+        group.remove(position);
+        child.remove(position);
+        folds.remove(position);
+        adapterExpandableListView.notifyDataSetChanged();
+    }
+
+    public void editFold(int position){
+        positionToEditFlod = position;
+        ArrayList<String> list = (ArrayList<String>) child.get(position);
+        String content = list.get(0);
+        final EditText txtInput = new EditText(getActivity());
+        txtInput.setText(content);
+        dialogAlert = new AlertDialog.Builder(getActivity());
+        dialogAlert.setTitle("Editar pliegue");
+        dialogAlert.setMessage("Descripción");
+        dialogAlert.setView(txtInput);
+        dialogAlert.setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String description = txtInput.getText().toString();
+                if (description != "" && description.length() > 0) {
+                    updateFold(positionToEditFlod, description);
+                }else{
+                    AlertDialogService alert = new AlertDialogService();
+                    alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
+                }
+            }
+        });
+        dialogAlert.setNegativeButton("Cancelar", null);
+        AlertDialog dialogTag = dialogAlert.create();
+        dialogTag.show();
+    }
+
+    private void updateFold(int position, String content){
+        Fold fold = folds.get(position);
+        fold.setContent(content);
+        folds.set(position, fold);
+        String[] data = { content };
+
+        String groupAux = "";
+        if(content.length() > 8){
+            groupAux = content.substring(0, 8);
+        }else{
+            groupAux = content;
+        }
+        groupAux += "...";
+
+        group.set(position,groupAux);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < data.length; i++) {
+            item.add(data[i]);
+        }
+        child.set(position, item);
+        adapterExpandableListView.notifyDataSetChanged();
+    }
+
 
 
     public void listAllCheckList(){
@@ -359,6 +567,9 @@ public class EditNote extends Fragment {
                         if(description != "" && description.length() >0){
                             newCheckList(description);
                             listAllCheckList();
+                        }else{
+                            AlertDialogService alert = new AlertDialogService();
+                            alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                         }
                     }
                 });
@@ -398,8 +609,6 @@ public class EditNote extends Fragment {
 
     private void deleteCheckList(int position){
         checkLists.remove(position);
-        //CheckList checkList = checkLists.get(position);
-        //checkListController.deleteCheckList(checkList);
     }
 
     private void newCheckList(String description){
@@ -414,12 +623,13 @@ public class EditNote extends Fragment {
         checkLists.add(checkList);
     }
 
+    private int positionToEditFlod = 0;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
     private TextView viewTags; // es el elemento de la vista para colocar el label de tags
     private  String  labelTags; // es el label de todos los tags separados por comas
     //  private AlertDialog.Builder dialogBuilder;
-    private AlertDialog.Builder dialogNewTag;
+    private AlertDialog.Builder dialogAlert;
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
     private int ID_NOTE;
     private NoteController controller;
@@ -429,6 +639,7 @@ public class EditNote extends Fragment {
     private CheckListController checkListController;
     private AlertDialog.Builder dialogCheckLists;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<Fold> folds;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
 }

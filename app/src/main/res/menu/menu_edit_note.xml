@@ -17,4 +17,10 @@
         android:icon="@drawable/ic_add_file"
         app:showAsAction="always"
     />
+    <item
+        android:id="@+id/action_edit_fold"
+        android:title="@string/lb_add_fold"
+        android:icon="@drawable/ic_fold"
+        app:showAsAction="always"
+        />
 </menu>

@@ -8,7 +8,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="185dp"
         android:id="@+id/scrollView2" >
         <LinearLayout
             android:layout_width="fill_parent"
@@ -32,13 +32,45 @@
         </LinearLayout>
 
     </ScrollView>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notas hijas:"
+        android:id="@+id/textView4"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="172dp"
+        android:layout_height="55dp"
         android:id="@+id/listViewnoteSon"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1.15" />
+        android:layout_gravity="center_horizontal" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pliegues:"
+        android:id="@+id/textView3"
+        android:layout_marginTop="2dp"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="105dp"
+        android:id="@+id/expandableListView1"
+        android:layout_alignRight="@+id/btnCreateNote"
+        android:layout_alignEnd="@+id/btnCreateNote"
+        android:layout_above="@+id/btnCreateNote"
+        android:layout_below="@+id/textView3" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewLinks" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="60dp"

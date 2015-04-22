@@ -147,7 +147,7 @@ public class   ListNotes extends Fragment {
         return titles;
     }
 
-    private void showNotes() {
+    protected void showNotes() {
         final ArrayList<String> list = getNotesTitles();
         final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         // Log.e("ListNotes","Tamaño de list: "+list.size());
@@ -351,7 +351,7 @@ public class   ListNotes extends Fragment {
         });
     }
 
-    private static final String NOTE = "note";
+    protected NoteController controller;
     protected ArrayList<Note> notes;
     private AlertDialog.Builder dialogNewTag;
     private ArrayList allTags; //son todos los tags de la BD
@@ -359,7 +359,7 @@ public class   ListNotes extends Fragment {
     // private TextView viewTags; // es el elemento de la vista para colocar el label de tags
     // private  String  labelTags; // es el label de todos los tags separados por comas
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
-    private NoteController controller;
     private TagController tagController;
     private boolean selection = false;
+    private static final String NOTE = "note";
 }

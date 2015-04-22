@@ -12,15 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
+import com.models.Fold;
 import com.models.Note;
 import com.models.StableArrayAdapter;
+import com.models.Tag;
+import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Clase que se encarga de mostrar los datos de una nota que ha sido borrada
@@ -31,6 +36,10 @@ import java.util.ArrayList;
 
 public class ViewDeletedNote extends Fragment {
     public View viewDeletedNote;
+    List<String> group;
+    List<List<String>> child;
+    ExpandableListView expandList;
+    InfoDetailsAdapter adapterExpandableListView;
     /*Metrodos originales, no los borre por si mas adelante los necesito
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +93,18 @@ public class ViewDeletedNote extends Fragment {
         findNotesSon();
         generateListViewNotesSon();
         generateNoteFather();
+        generateTagSelected();
+    }
+
+    public void generateTagSelected() {
+        TextView viewTags = (TextView) viewDeletedNote.findViewById(R.id.viewTags);
+        ArrayList<Tag> tagsSelect = noteFather.getTags();
+        String nameTags = "Tags:\n";
+        for (int y = 0; y < tagsSelect.size(); y++) {
+            Tag tagAux = tagsSelect.get(y);
+            nameTags += tagAux.getName() + ", ";
+        }
+        viewTags.setText(nameTags);
     }
 
     public void findNotesSon(){
@@ -92,6 +113,7 @@ public class ViewDeletedNote extends Fragment {
 
     public void findNoteById(){
         this.noteFather = controller.findOneById(this.ID_NOTE);
+        folds = this.noteFather.getFolds();
     }
 
     public void generateNoteFather(){
@@ -148,6 +170,12 @@ public class ViewDeletedNote extends Fragment {
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id == R.id.action_delete){
+            controller.deleteNotePermanently(noteFather);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        }
         if (id == R.id.action_restore_note) {
             controller.restore(noteFather);
 
@@ -169,13 +197,20 @@ public class ViewDeletedNote extends Fragment {
         controller = new NoteController(getActivity().getApplicationContext());
         listNoteSon = (ListView) viewDeletedNote.findViewById(R.id.listViewnoteSon);
         listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
+        expandList = (ExpandableListView) viewDeletedNote.findViewById(R.id.expandableListView1);
         Bundle bundle = getArguments();
         if(bundle != null){
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
+            initExpandableListView();
         }
         return viewDeletedNote;
+    }
+
+    public void initExpandableListView(){
+        initialDataFold();
+        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        expandList.setAdapter(adapterExpandableListView);
     }
 
     @Override
@@ -194,6 +229,31 @@ public class ViewDeletedNote extends Fragment {
     }
 */
 
+    private void initialDataFold() {
+        group = new ArrayList<String>();
+        child = new ArrayList<List<String>>();
+        for(int x =0; x<folds.size(); x++){
+            Fold fold = folds.get(x);
+            String content = fold.getContent();
+            String groupAux = "";
+            if(content.length() > 8){
+                groupAux = content.substring(0, 8);
+            }else{
+                groupAux = content;
+            }
+            groupAux += "...";
+            addInfoFold(groupAux, new String[]{content});
+        }
+    }
+
+    private void addInfoFold(String p, String[] c) {
+        group.add(p);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < c.length; i++) {
+            item.add(c[i]);
+        }
+        child.add(item);
+    }
 
     private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
         ArrayList<String> titles = new ArrayList<>();
@@ -205,6 +265,7 @@ public class ViewDeletedNote extends Fragment {
 
     private int ID_NOTE;
     private NoteController controller;
+    private ArrayList<Fold> folds;
     private ListView listNoteSon;
     private ArrayList<Note> notesSon;
     private Note noteFather;
