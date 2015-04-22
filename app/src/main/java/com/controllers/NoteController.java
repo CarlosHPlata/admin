@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.models.CheckList;
 import com.models.File;
+import com.models.Fold;
 import com.models.Note;
 import com.models.Tag;
 import com.models.services.LoginService;
@@ -51,7 +52,7 @@ public class NoteController {
         return loginService.isUserLoggedIn();
     }
 
-    public boolean addNote(String title, String body, int idFather, ArrayList<Tag> tags, ArrayList<CheckList> checkLists, ArrayList<File> files){
+    public boolean addNote(String title, String body, int idFather, ArrayList<Tag> tags, ArrayList<CheckList> checkLists, ArrayList<File> files, ArrayList<Fold> folds){
         Note note = new Note(title,body);
 
         Date dateCreate = new Date();
@@ -68,6 +69,7 @@ public class NoteController {
         note.setTags(tags);
         note.setFiles(files);
         note.setCheckLists(checkLists);
+        note.setFolds(folds);
         return this.noteService.addNote(note);
     }
 

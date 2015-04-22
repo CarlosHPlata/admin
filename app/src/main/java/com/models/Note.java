@@ -200,6 +200,14 @@ public class Note extends Entitie implements Serializable {
         this.checkLists = checkLists;
     }
 
+    public ArrayList<Fold> getFolds() {
+        return folds;
+    }
+
+    public void setFolds(ArrayList<Fold> folds) {
+        this.folds = folds;
+    }
+
     public ArrayList<Link> getLinks() {
         return links;
     }
@@ -219,6 +227,7 @@ public class Note extends Entitie implements Serializable {
     private int extId;
     private ArrayList<Tag> tags;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<Fold> folds;
     private ArrayList<File> files;
     private boolean syncFlag;
     private String title;

@@ -128,12 +128,9 @@ public class ListTags extends Fragment {
                         switch (item.getItemId()) {
                             case R.id.menu_eliminar:
                                 deleteTag(positionAux);
-                            //    Log.e("POP_MENU", "item "+item.getItemId()+" posicion "+positionAux+" id"+positionId
                                 initViewListTag();
                                 break;
                             default:
-                               // Log.e("POP_MENU", "DEFAULT");
-                               // Log.e("POP_MENU", "item "+item.getItemId()+" posicion "+positionAux+" id"+positionId);
                                 break;
                         }
                         return true;

@@ -12,4 +12,10 @@
         android:icon="@drawable/ic_task_list"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_edit_fold"
+        android:title="@string/lb_add_fold"
+        android:icon="@drawable/ic_fold"
+        app:showAsAction="always"
+        />
 </menu>

@@ -38,6 +38,7 @@
     <string name="lb_new_tags">Agregar tags</string>
     <string name="lb_move_note">Mover nota</string>
     <string name="lb_task_list">Lista de tareas</string>
+    <string name="lb_add_fold">Agregar pliegue</string>
     <!-- Fin de menu de nota -->
 
 

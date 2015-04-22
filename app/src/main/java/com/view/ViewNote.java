@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -29,14 +30,29 @@ import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
+import com.models.Fold;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/** *
+ *
+ * Esta clase se encarga de visualizar una nota seleccionada, puede borrar, editar, marcar
+ * como favorito, y ver lista de tareas o los checkList.
+ *
+ * @author Edgar 28/02/2015
+ *
+ * */
 public class ViewNote extends Fragment {
     public View viewNote;
+    List<String> group;
+    List<List<String>> child;
+    ExpandableListView expandList;
+    InfoDetailsAdapter adapterExpandableListView;
 
     public static ViewNote newInstance(Bundle arguments) {
         ViewNote viewNote = new ViewNote();
@@ -65,12 +81,21 @@ public class ViewNote extends Fragment {
         checkListController = new CheckListController(getActivity().getApplicationContext());
         listNoteSon = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
         listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        expandList = (ExpandableListView) viewNote.findViewById(R.id.expandableListView1);
         Bundle bundle = getArguments();
         if (bundle != null) {
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
+            initExpandableListView();
         }
+
         return viewNote;
+    }
+
+    public void initExpandableListView(){
+        initialDataFold();
+        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        expandList.setAdapter(adapterExpandableListView);
     }
 
     public void initViewNoteById() {
@@ -99,6 +124,7 @@ public class ViewNote extends Fragment {
     public void findNoteById() {
         this.noteFather = controller.findOneById(this.ID_NOTE);
         checkLists = this.noteFather.getCheckLists();
+        folds = this.noteFather.getFolds();
     }
 
     public void generateNoteFather() {
@@ -413,6 +439,32 @@ public class ViewNote extends Fragment {
         return null;
     }
 
+    private void initialDataFold() {
+        group = new ArrayList<String>();
+        child = new ArrayList<List<String>>();
+        for(int x =0; x<folds.size(); x++){
+            Fold fold = folds.get(x);
+            String content = fold.getContent();
+            String groupAux = "";
+            if(content.length() > 8){
+                groupAux = content.substring(0, 8);
+            }else{
+                groupAux = content;
+            }
+            groupAux += "...";
+            addInfoFold(groupAux, new String[] { content });
+        }
+    }
+
+    private void addInfoFold(String p, String[] c) {
+        group.add(p);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < c.length; i++) {
+            item.add(c[i]);
+        }
+        child.add(item);
+    }
+
     private int ID_NOTE;
     private NoteController controller;
     private ListView listNoteSon;
@@ -421,6 +473,7 @@ public class ViewNote extends Fragment {
     private CheckListController checkListController;
     private AlertDialog.Builder dialogCheckLists;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<Fold> folds;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
     private boolean selection = false;

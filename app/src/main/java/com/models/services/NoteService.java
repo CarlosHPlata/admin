@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.models.CheckList;
 import com.models.File;
+import com.models.Fold;
 import com.models.Note;
 import com.models.Tag;
 import com.models.mappers.CheckListMapper;
 import com.models.mappers.FileMapper;
+import com.models.mappers.FoldMapper;
 import com.models.mappers.NoteMapper;
 import com.models.mappers.TagMapper;
 
@@ -32,6 +34,7 @@ public class NoteService {
         tagMapper = new TagMapper(context);
         checkListMapper = new CheckListMapper(context);
         filesMapper =  new FileMapper(context);
+        foldMapper = new FoldMapper(context);
     }
 
     public void deleteNotes(ArrayList notes){
@@ -49,6 +52,13 @@ public class NoteService {
                 CheckList checkList = checkLists.get(x);
                 checkList.setNoteId((int) longAux);
                 checkListMapper.insertCheckList(checkList);
+            }
+
+            ArrayList<Fold> folds = note.getFolds();
+            for (int x =0; x<folds.size();x++){
+                Fold fold = folds.get(x);
+                fold.setNoteId((int) longAux);
+                foldMapper.insertFold(fold);
             }
 
             ArrayList<File> files = note.getFiles();
@@ -83,6 +93,8 @@ public class NoteService {
 
         ArrayList<CheckList> checkLists = checkListMapper.findAllCheckListByNoteId(note.getId());
         note.setCheckLists(checkLists);
+        ArrayList<Fold> folds = foldMapper.findAllByNoteId(note.getId());
+        note.setFolds(folds);
         return note;
     }
 
@@ -154,7 +166,33 @@ public class NoteService {
             }else{
                 checkListMapper.updateCheckList(checkList);
             }
+        }
 
+        //update folds
+        ArrayList<Fold> folds = note.getFolds();
+        ArrayList<Fold> foldsBefore = foldMapper.findAllByNoteId(note.getId());
+        for (int y=0;y<foldsBefore.size();y++){
+            Fold fold0 = foldsBefore.get(y);
+            boolean isDelete = true;
+            for(int x=0; x<folds.size(); x++){
+                Fold fold = folds.get(x);
+                if(fold0.getId() == fold.getId()){
+                    isDelete = false;
+                    break;
+                }
+            }
+            if(isDelete){
+                //eliminar
+                foldMapper.deleteFold(fold0);
+            }
+        }
+        for(int x=0; x<folds.size(); x++) {
+            Fold fold = folds.get(x);
+            if(fold.getId() == -1){
+                foldMapper.insertFold(fold);
+            }else{
+                foldMapper.updateFold(fold);
+            }
         }
      }
 
@@ -180,6 +218,9 @@ public class NoteService {
             note.setTags(tags);
             ArrayList<CheckList> checkLists = checkListMapper.findAllCheckListByNoteId(note.getId());
             note.setCheckLists(checkLists);
+
+            ArrayList<Fold> folds = foldMapper.findAllByNoteId(note.getId());
+            note.setFolds(folds);
             notes.set(i,note);
         }
         return notes;
@@ -188,6 +229,7 @@ public class NoteService {
     private NoteMapper noteMapper;
     private TagMapper tagMapper;
     private CheckListMapper checkListMapper;
+    private FoldMapper foldMapper;
     private FileMapper filesMapper;
 
 }

@@ -8,6 +8,7 @@ import com.models.services.CheckListService;
 import java.util.ArrayList;
 
 /**
+ * Esta clase se encarga de administrar (agregar, borrar) la lista de tareas o checklist de una nota.
  * Created by Edgar on 11/04/2015.
  */
 public class CheckListController {

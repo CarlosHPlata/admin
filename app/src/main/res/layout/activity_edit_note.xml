@@ -29,7 +29,7 @@
         android:layout_below="@+id/titleEdit"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="57dp" />
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -39,9 +39,25 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/titleEdit"
         android:layout_alignEnd="@+id/titleEdit"
-        android:layout_above="@+id/button"
         android:layout_below="@+id/textView"
         android:hint="@string/ht_body" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pliegues:"
+        android:id="@+id/textView3"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/expandableListView2"
+        android:layout_alignRight="@+id/btnCreateNote"
+        android:layout_alignEnd="@+id/btnCreateNote"
+        android:layout_above="@+id/btnUpdateNote"
+        android:layout_below="@+id/textView3" />
+
 
     <ScrollView
         android:layout_width="match_parent"

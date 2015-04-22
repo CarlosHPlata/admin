@@ -1,5 +1,7 @@
 package com.view;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -20,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -32,11 +36,15 @@ import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
 import com.models.File;
+import com.models.Fold;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.models.services.AlertDialogService;
+import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Clase que se encarga de crear nuevas notas en la app,
@@ -46,7 +54,12 @@ import java.util.ArrayList;
  *
  */
 public class NewNote extends Fragment {
-public View viewNewNote;
+    public View viewNewNote;
+    public ExpandableListView expandList;
+    public InfoDetailsAdapter adapterExpandableListView;
+    public List<String> group;
+    public List<List<String>> child;
+
     public static NewNote newInstance(Bundle arguments){
         NewNote newNote = new NewNote();
         if(arguments != null){
@@ -75,11 +88,12 @@ public View viewNewNote;
         tagController = new TagController(getActivity().getApplicationContext());
         checkListController = new CheckListController(getActivity().getApplicationContext());
         checkLists = new ArrayList<>();
+        folds = new ArrayList<>();
         viewTags = (TextView) viewNewNote.findViewById(R.id.newTags);
         tagsSelect = new ArrayList<>();
         files = new ArrayList<>();
         filesList = (ListView) viewNewNote.findViewById(R.id.nueva_nota_files);
-
+        expandList = (ExpandableListView) viewNewNote.findViewById(R.id.expandableListView);
         fileOpen =  new FileOpen();
 
         Button createNote = (Button) viewNewNote.findViewById(R.id.btnCreateNote);
@@ -136,9 +150,69 @@ public View viewNewNote;
                 alertDialog.show();
             }
         });
-
+        initExpandableListView();
         return viewNewNote;
 
+
+    }
+
+    public void initExpandableListView(){
+        initialDataFold();
+        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        expandList.setAdapter(adapterExpandableListView);
+        expandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView arg0, View arg1,
+                                        int arg2, long arg3) {
+                // TODO Auto-generated method stub
+               /* System.out.println("The row id of the group clicked" + arg3);
+                Toast.makeText(getActivity(), "[Group Click]:" + arg2,
+                        Toast.LENGTH_SHORT).show(); */
+                return false;
+            }
+        });
+        expandList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView arg0, View arg1,
+                                        int arg2, int arg3, long arg4) {
+                // TODO Auto-generated method stub
+                /*Toast.makeText(getActivity(), "[Child Click]:" + arg2 + ":" + arg3,
+                        Toast.LENGTH_SHORT).show();*/
+                editFold(arg2);
+                return false;
+            }
+        });
+        expandList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
+                final int positionAux = position;
+                final long positionId = id;
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    //MENU FILA
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_eliminar:
+                                if(positionId >= 0){
+                                    deleteFoldToGroup(positionAux);
+                                }else{
+                                    deleteFoldToGroup(positionAux -1);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        return true;
+                    }
+                    //FIN MENU FILA
+                });
+                popup.show();
+                return true;
+            }
+        });
 
     }
 
@@ -153,18 +227,24 @@ public View viewNewNote;
         String body = textBody.getText().toString();
         String title = textTitle.getText().toString();
 
-        if(controller.addNote(title, body, this.ID_FATHER, tagsSelect, checkLists, files)){
-            Toast.makeText(getActivity(), "Nota creada", Toast.LENGTH_LONG).show();
+        if(body != "" && body.length() > 0 && title != "" && title.length() >0){
+            if(controller.addNote(title, body, this.ID_FATHER, tagsSelect, checkLists, files, folds)){
+                Toast.makeText(getActivity(), "Nota creada", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getActivity(), "Error!!", Toast.LENGTH_LONG).show();
+            }
+            backView();
         }else{
-            Toast.makeText(getActivity(), "Error!!", Toast.LENGTH_LONG).show();
+            AlertDialogService alert = new AlertDialogService();
+            alert.showAlertDialog(getActivity(), "Error", "Agregue un titulo y un texto a la nota", false);
         }
-        backView();
+
     }
 
     public void listAllTags(){
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
-        dialogNewTag = new AlertDialog.Builder(getActivity());
+        dialogAlert = new AlertDialog.Builder(getActivity());
         final EditText txtInput = new EditText(getActivity());
         allTags = tagController.fingAll();
         labelTags = "Tags:\n";
@@ -228,21 +308,24 @@ public View viewNewNote;
         dialogBuilder.setNeutralButton("Nuevo", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialogNewTag.setTitle("Nuevo tag");
-                dialogNewTag.setMessage("Agregar el nombre del nuevo tag");
-                dialogNewTag.setView(txtInput);
-                dialogNewTag.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                dialogAlert.setTitle("Nuevo tag");
+                dialogAlert.setMessage("Agregar el nombre del nuevo tag");
+                dialogAlert.setView(txtInput);
+                dialogAlert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                        String nameTag = txtInput.getText().toString();
-                        if(nameTag != ""){
+                        if(nameTag != "" && nameTag.length() > 0){
                             tagController.addTag(nameTag);
                             listAllTags();
+                        }else{
+                            AlertDialogService alert = new AlertDialogService();
+                            alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                         }
                     }
                 });
-                dialogNewTag.setNegativeButton("Cancelar", null);
-                AlertDialog dialogTag = dialogNewTag.create();
+                dialogAlert.setNegativeButton("Cancelar", null);
+                AlertDialog dialogTag = dialogAlert.create();
                 dialogTag.show();
             }
         });
@@ -284,9 +367,123 @@ public View viewNewNote;
         if (id == R.id.action_add_file) {
             addFile();
         }
-
+        if (id == R.id.action_add_fold) {
+            showDialogNewFold();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void initialDataFold() {
+        group = new ArrayList<String>();
+        child = new ArrayList<List<String>>();
+    }
+
+    public void addInfoFold(String p, String[] c) {
+        group.add(p);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < c.length; i++) {
+            item.add(c[i]);
+        }
+        child.add(item);
+    }
+
+    public void showDialogNewFold(){
+        final EditText txtInput = new EditText(getActivity());
+        dialogAlert = new AlertDialog.Builder(getActivity());
+        dialogAlert.setTitle("Nueva pliegue");
+        dialogAlert.setMessage("Descripción");
+        dialogAlert.setView(txtInput);
+        dialogAlert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String description = txtInput.getText().toString();
+                if (description != "" && description.length() > 0) {
+                    addFoldToGroup(description);
+                }else{
+                    AlertDialogService alert = new AlertDialogService();
+                    alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
+                }
+            }
+        });
+        dialogAlert.setNegativeButton("Cancelar", null);
+        AlertDialog dialogTag = dialogAlert.create();
+        dialogTag.show();
+
+    }
+
+    public void addFoldToGroup(String content) {
+        Fold fold = new Fold(content);
+        fold.setSyncFlag(false);
+        fold.setExtId(0);
+        folds.add(fold);
+        String[] data = { content };
+        String group = "";
+        if(content.length() > 8){
+            group = content.substring(0, 8);
+        }else{
+            group = content;
+        }
+        group += "...";
+        addInfoFold(group, data);
+        adapterExpandableListView.notifyDataSetChanged();
+    }
+
+    public void deleteFoldToGroup(int position){
+        group.remove(position);
+        child.remove(position);
+        folds.remove(position);
+        adapterExpandableListView.notifyDataSetChanged();
+    }
+
+    public void editFold(int position){
+        positionToEditFlod = position;
+        ArrayList<String> list = (ArrayList<String>) child.get(position);
+        String content = list.get(0);
+        final EditText txtInput = new EditText(getActivity());
+        txtInput.setText(content);
+        dialogAlert = new AlertDialog.Builder(getActivity());
+        dialogAlert.setTitle("Editar pliegue");
+        dialogAlert.setMessage("Descripción");
+        dialogAlert.setView(txtInput);
+        dialogAlert.setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String description = txtInput.getText().toString();
+                if (description != "" && description.length() > 0) {
+                    updateFold(positionToEditFlod, description);
+                }else{
+                    AlertDialogService alert = new AlertDialogService();
+                    alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
+                }
+            }
+        });
+        dialogAlert.setNegativeButton("Cancelar", null);
+        AlertDialog dialogTag = dialogAlert.create();
+        dialogTag.show();
+    }
+
+    private void updateFold(int position, String content){
+        Fold fold = folds.get(position);
+        fold.setContent(content);
+        folds.set(position, fold);
+        String[] data = { content };
+
+        String groupAux = "";
+        if(content.length() > 8){
+            groupAux = content.substring(0, 8);
+        }else{
+            groupAux = content;
+        }
+        groupAux += "...";
+
+        group.set(position,groupAux);
+        List<String> item = new ArrayList<String>();
+        for (int i = 0; i < data.length; i++) {
+            item.add(data[i]);
+        }
+        child.set(position, item);
+        adapterExpandableListView.notifyDataSetChanged();
     }
 
 
@@ -384,6 +581,9 @@ public View viewNewNote;
                         if(description != "" && description.length() >0){
                             newCheckList(description);
                             listAllCheckList();
+                        }else{
+                            AlertDialogService alert = new AlertDialogService();
+                            alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                         }
                     }
                 });
@@ -507,12 +707,13 @@ public View viewNewNote;
     }
 
 
+    private int positionToEditFlod = 0;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
     private TextView viewTags; // es el elemento de la vista para colocar el label de tags
     private  String  labelTags; // es el label de todos los tags separados por comas
   //  private AlertDialog.Builder dialogBuilder;
-    private AlertDialog.Builder dialogNewTag;
+    private AlertDialog.Builder dialogAlert;
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
     private TagController tagController;
     private NoteController controller;
@@ -521,6 +722,7 @@ public View viewNewNote;
     private CheckListController checkListController;
     private AlertDialog.Builder dialogCheckLists;
     private ArrayList<CheckList> checkLists;
+    private ArrayList<Fold> folds;
     private ArrayList<File> files;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
