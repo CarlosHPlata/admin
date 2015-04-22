@@ -2,6 +2,8 @@ package com.controllers;
 
 import android.content.Context;
 
+import com.models.User;
+import com.models.mappers.UserMapper;
 import com.models.services.LoginService;
 
 /** *
@@ -27,6 +29,11 @@ public class LogInController {
         }else{
             return false;
         }
+    }
+
+    public boolean logInFromServer(User user){
+        service.loginFromServer(user);
+        return true;
     }
 
     public boolean logOut(){

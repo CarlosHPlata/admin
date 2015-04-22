@@ -37,6 +37,11 @@ public class UserMapper {
         return null;
     }
 
+    public void dropUsers(){
+        String query = "delete from users";
+        db.rawQuery(query, null);
+    }
+
 
     private DBManager dbManager;
     private SQLiteDatabase db;

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,14 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.controllers.RegisterController;
-import com.controllers.SyncController;
-import com.controllers.sync.SyncNotesHandler;
 import com.controllers.sync.interfaces.SyncInterface;
-import com.controllers.sync.syncUserHandler;
+import com.controllers.sync.SyncUserHandler;
 import com.example.usuario.androidadmin.R;
-import com.models.Note;
 import com.models.User;
-import com.models.services.AlertDialogService;
 
 public class Register extends ActionBarActivity implements SyncInterface {
 
@@ -31,7 +26,7 @@ public class Register extends ActionBarActivity implements SyncInterface {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         this.controller = new RegisterController(getApplicationContext());
-        this.sync = new syncUserHandler(getApplicationContext(), Register.this);
+        this.sync = new SyncUserHandler(getApplicationContext(), Register.this);
 
         Button btnRegister = (Button) findViewById(R.id.registerButton);
         Button btnCancel = (Button) findViewById(R.id.cancelButton);
@@ -121,7 +116,7 @@ public class Register extends ActionBarActivity implements SyncInterface {
     }
 
     private RegisterController controller;
-    private syncUserHandler sync;
+    private SyncUserHandler sync;
 
     @Override
     public void onResponse(Object thisNote) {

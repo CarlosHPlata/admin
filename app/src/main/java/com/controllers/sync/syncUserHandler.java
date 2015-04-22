@@ -28,9 +28,9 @@ import java.util.ArrayList;
  * @version 1.50, 014/04/15
  * @since 1.4
  */
-public class syncUserHandler extends SyncHandler{
+public class SyncUserHandler extends SyncHandler{
 
-    public syncUserHandler(Context context, SyncInterface listener) {
+    public SyncUserHandler(Context context, SyncInterface listener) {
         super(context, listener, new AsyncHttpClient());
     }
 
@@ -54,8 +54,7 @@ public class syncUserHandler extends SyncHandler{
         client.post(this.context, "http://104.131.189.224/api/user", headers , entity, "application/json",  new JsonHttpResponseHandler() {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                Log.i("DEBUG:",json.toString());
-                //listener.onResponse(1);
+                listener.onResponse(1);
             }
 
 
@@ -88,8 +87,8 @@ public class syncUserHandler extends SyncHandler{
     //response:
     public void getToken(final User user){
         RequestParams params = new RequestParams();
-        params.add("email", "carlos.ksa21@gmail.com");//user.getEmail());
-        params.add("password", "carlosherrera18"); //user.getPassword());
+        params.add("email", user.getEmail());
+        params.add("password", user.getPassword());
 
         client.post("http://104.131.189.224/api/token", params, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -176,7 +175,6 @@ public class syncUserHandler extends SyncHandler{
     }
 
 
-    private User user;
     private ArrayList<User> users;
 
 }

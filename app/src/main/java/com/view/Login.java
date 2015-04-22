@@ -7,10 +7,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.controllers.LogInController;
+import com.controllers.sync.SyncNotesHandler;
+import com.controllers.sync.SyncUserHandler;
 import com.controllers.sync.interfaces.SyncInterface;
+import com.models.User;
+import com.models.mappers.UserMapper;
 import com.models.services.AlertDialogService;
 import com.example.usuario.androidadmin.R;
 
@@ -56,7 +62,18 @@ public class Login extends ActionBarActivity implements SyncInterface {
                 this.finish();
                 //alert.showAlertDialog(Login.this, "Login Success..", "Username/Password is correct", true);
             }else{
-                alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
+                SyncUserHandler sync = new SyncUserHandler(getApplicationContext(), this);
+                User user = new User();
+                user.setEmail(email);
+                user.setPassword(password);
+                sync.getToken(user);
+                Button btnLogin = (Button) findViewById(R.id.button7);
+                Button register = (Button) findViewById(R.id.registerButton);
+                btnLogin.setEnabled(false);
+                register.setEnabled(false);
+                txtUsername.setEnabled(false);
+                txtPassword.setEnabled(false);
+                //alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
             }
 
         }else{
@@ -98,10 +115,54 @@ public class Login extends ActionBarActivity implements SyncInterface {
     @Override
     public void onResponse(Object response) {
 
+        final EditText txtUsername = (EditText) findViewById(R.id.email);
+        final EditText  txtPassword = (EditText) findViewById(R.id.password);
+        final Button btnLogin = (Button) findViewById(R.id.button7);
+        final Button register = (Button) findViewById(R.id.registerButton);
+
+        final AlertDialogService alert = new AlertDialogService();
+
+        User user = (User) response;
+
+        UserMapper mapper = new UserMapper(getApplicationContext());
+        mapper.dropUsers();
+        mapper.insertUser(user);
+
+        SyncNotesHandler notesHandler = new SyncNotesHandler(getApplicationContext(), new SyncInterface() {
+            @Override
+            public void onResponse(Object response) {
+                goToMain();
+            }
+
+            @Override
+            public void onError(int StatusCode, String error) {
+                btnLogin.setEnabled(true);
+                register.setEnabled(true);
+                txtUsername.setEnabled(true);
+                txtPassword.setEnabled(true);
+                alert.showAlertDialog(Login.this, "Error", "No se pudo sincronizar", false);
+            }
+        });
+        notesHandler.getNotesFromuser(user.getToken());
     }
 
     @Override
     public void onError(int StatusCode, String error) {
+        EditText txtUsername = (EditText) findViewById(R.id.email);
+        EditText  txtPassword = (EditText) findViewById(R.id.password);
+        Button btnLogin = (Button) findViewById(R.id.button7);
+        Button register = (Button) findViewById(R.id.registerButton);
+        btnLogin.setEnabled(true);
+        register.setEnabled(true);
+        txtUsername.setEnabled(true);
+        txtPassword.setEnabled(true);
+        AlertDialogService alert = new AlertDialogService();
+        alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
+    }
 
+    public void goToMain(){
+        Intent i = new Intent(this,MainActivity.class);
+        startActivity(i);
+        this.finish();
     }
 }

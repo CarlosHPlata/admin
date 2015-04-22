@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.controllers.sync.SyncNotesHandler;
 import com.models.mappers.UserMapper;
 import com.models.User;
 import com.view.Login;
@@ -109,6 +110,12 @@ public class LoginService {
 
         context.startActivity(i);
         return true;
+    }
+
+    public void loginFromServer(User user){
+        if (user != null && !user.getToken().equals("")){
+            userMAnager.dropUsers();
+        }
     }
 
     public User getUserOfSession(){

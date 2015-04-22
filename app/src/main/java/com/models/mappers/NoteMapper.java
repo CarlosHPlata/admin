@@ -85,6 +85,11 @@ public class NoteMapper {
         return getNotesFromCursor(cursor);
     }
 
+    public void dropNotes(){
+        String query = "delete from users";
+        db.rawQuery(query, null);
+    }
+
     public void delteNote(Note note){
         note.setStatus(false);
         dbManager.update(note);

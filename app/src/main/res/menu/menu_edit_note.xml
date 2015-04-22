@@ -12,4 +12,9 @@
         android:icon="@drawable/ic_task_list"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item android:id="@+id/action_add_file_edit"
+        android:title="@string/lb_add_file"
+        android:icon="@drawable/ic_add_file"
+        app:showAsAction="always"
+    />
 </menu>
