@@ -9,7 +9,14 @@ import com.models.File;
 import java.util.ArrayList;
 
 /**
- * Created by Usuario on 19/04/2015.
+ * @(#)JceSecurity.java 1.50 04/04/14
+ *
+ * mapper de archivos
+ *
+ * @author Carlos Herrera
+ *
+ * @version 1.50, 014/04/15
+ * @since 1.4
  */
 public class FileMapper {
 

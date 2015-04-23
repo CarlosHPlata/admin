@@ -12,7 +12,14 @@ import com.models.mappers.TagMapper;
 import com.models.mappers.UserMapper;
 
 /**
- * Created by Usuario on 21/04/2015.
+ * @(#)JceSecurity.java 1.50 04/04/14
+ *
+ * Esta clase se encarga de la sincronizacion asincrona
+ *
+ * @author Carlos Herrera
+ *
+ * @version 1.50, 014/04/15
+ * @since 1.4
  */
 public class SyncProcess implements SyncInterface{
 
