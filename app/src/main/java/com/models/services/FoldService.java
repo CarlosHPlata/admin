@@ -8,6 +8,8 @@ import com.models.mappers.FoldMapper;
 import java.util.ArrayList;
 
 /**
+ * Clase que se encarga de agregar un fold o pliegue de una nota a la BD, tambien
+ * recupera todos los pliegues de una nota, actualiza y borra
  * Created by Edgar on 20/04/2015.
  */
 public class FoldService {

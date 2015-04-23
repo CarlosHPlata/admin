@@ -25,9 +25,9 @@ public class LinkService {
         linksMapper.deleteLink(link);
     }
 
-    private LinksMapper linksMapper;
-
     public ArrayList<Link> getLinksFromNoteId(int noteId) {
         return linksMapper.getLinksFromNoteId(noteId);
     }
+
+    private LinksMapper linksMapper;
 }

@@ -34,17 +34,14 @@ public class FoldMapper {
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 Fold fold = new Fold();
                 fold.setContentValues(cursor);
-                // Adding contact to list
                 folds.add(fold);
             } while (cursor.moveToNext());
         }
 
-        // return contact list
         return folds;
 
     }

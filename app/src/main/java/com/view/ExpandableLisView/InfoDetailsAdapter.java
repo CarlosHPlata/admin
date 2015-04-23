@@ -11,6 +11,8 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
+ * Clase que extiende de un ExpandableListAdapter, usado para los pliegues de la nota,
+ * esta clase puede ser personalizada para agregar elementos a la lista de pliegues.
  * Created by Edgar on 21/04/2015.
  */
 public class InfoDetailsAdapter extends BaseExpandableListAdapter {

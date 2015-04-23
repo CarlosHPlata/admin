@@ -160,24 +160,12 @@ public class NewNote extends Fragment {
         initialDataFold();
         adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
-        expandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView arg0, View arg1,
-                                        int arg2, long arg3) {
-                // TODO Auto-generated method stub
-               /* System.out.println("The row id of the group clicked" + arg3);
-                Toast.makeText(getActivity(), "[Group Click]:" + arg2,
-                        Toast.LENGTH_SHORT).show(); */
-                return false;
-            }
-        });
+
         expandList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView arg0, View arg1,
                                         int arg2, int arg3, long arg4) {
                 // TODO Auto-generated method stub
-                /*Toast.makeText(getActivity(), "[Child Click]:" + arg2 + ":" + arg3,
-                        Toast.LENGTH_SHORT).show();*/
                 editFold(arg2);
                 return false;
             }
