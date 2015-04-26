@@ -29,6 +29,10 @@ public class NoteController {
         noteService = new NoteService(context);
     }
 
+    public ArrayList<Note> findNotes(String query){
+        return noteService.findNotes(query);
+    }
+
     public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
         return noteService.getNotDeletedNotesButThis(noteId);
     }

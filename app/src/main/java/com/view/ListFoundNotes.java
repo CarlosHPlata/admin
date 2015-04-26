@@ -2,8 +2,8 @@ package com.view;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,26 +18,22 @@ import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
 
-import java.util.ArrayList;
-
 /**
- * Created by JoseRamon on 21/04/2015.
- * Clase encargada de mostrar las notas que son posibles de linkear o incrustar en otra nota
+ * Created by JoseRamon on 26/04/2015.
+ * Clase encargada de desplegar las notas que el usuario ha buscado
  */
-public class ListNotesToLink extends ListNotes{
-    public View listNotesToLink;
-
-    public static ListNotesToLink newInstance(Bundle arguments){
-        ListNotesToLink listNotesToLink = new ListNotesToLink();
-        if(arguments != null){
-            listNotesToLink.setArguments(arguments);
-        }
-        return listNotesToLink;
-    }
-
+public class ListFoundNotes extends ListNotes{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public static ListFoundNotes newInstance(Bundle arguments){
+        ListFoundNotes listFoundNotes = new ListFoundNotes();
+        if(arguments != null){
+            listFoundNotes.setArguments(arguments);
+        }
+        return listFoundNotes;
     }
 
     @Override
@@ -54,8 +50,7 @@ public class ListNotesToLink extends ListNotes{
 	}*/
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //Colocamos el menu que no tiene botones en la parte de arriba
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_list_deleted_notes, menu);
     }
 
     @Override
@@ -74,36 +69,16 @@ public class ListNotesToLink extends ListNotes{
     }
 
     @Override
-    protected void loadNotes() {
-        NoteController noteController = new NoteController(getActivity().getApplicationContext());
-        //Es necesario eliminar la nota que esta incrustando notas para que no se incruste a si misma
-        notes = noteController.getNotDeletedNotesButThis(noteId);
-    }
-    @Override
-    protected void passNote(Note note) {
-        //Aqui se maneja el evento del clic del usuario
-        linkController.addLink(note, controller.findOneById(noteId));
-        //Regresa a la nota que agrego un link
-        //No se puede iniciar como activity
-        Bundle arguments = new Bundle();
-        arguments.putInt("id", noteId);
-        Fragment fragment = ViewNote.newInstance(arguments);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         controller = new NoteController(getActivity().getApplicationContext());
-        linkController = new LinkController(getActivity().getApplicationContext());
+        //linkController = new LinkController(getActivity().getApplicationContext());
         View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
         listview = (ListView) rootView.findViewById(R.id.listView);
         searchView = (SearchView) rootView.findViewById(R.id.searchView);
 
         Bundle bundle = getArguments();
         if(bundle != null){
-            this.noteId = bundle.getInt("noteId");
+            this.query = bundle.getString("query");
         }
         loadNotes();
         showNotes();
@@ -111,10 +86,11 @@ public class ListNotesToLink extends ListNotes{
         return rootView;
     }
 
-    private void initViewListNotesToLink(){
-        loadNotes();
+    @Override
+    protected void loadNotes() {
+        NoteController noteController = new NoteController(getActivity().getApplicationContext());
+        notes = noteController.findNotes(query);
     }
 
-    private int noteId;
-    private LinkController linkController;
+    private String query;
 }

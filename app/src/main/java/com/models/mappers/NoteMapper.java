@@ -22,6 +22,11 @@ public class NoteMapper {
         db = dbManager.getWritableDb();
     }
 
+    public ArrayList<Note> findNotes(String query){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE ( title || body ) LIKE '%" +query+"%'", null);
+        return loadSons(getNotesFromCursor(cursor));
+    }
+
     public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
         Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE status = 1 AND id != "+noteId, null);
         return loadSons(getNotesFromCursor(cursor));

@@ -39,6 +39,10 @@ public class NoteService {
         linksMapper = new LinksMapper(context);
     }
 
+    public ArrayList<Note> findNotes(String query) {
+        return noteMapper.findNotes(query);
+    }
+
     public ArrayList<Note> getNotDeletedNotesButThis(int noteId){
         return noteMapper.getNotDeletedNotesButThis(noteId);
     }

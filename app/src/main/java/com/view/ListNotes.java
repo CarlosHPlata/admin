@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class   ListNotes extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
         //rootView.findViewById();
         listview = (ListView) rootView.findViewById(R.id.listView);
+        searchView = (SearchView) rootView.findViewById(R.id.searchView);
 
         controller = new NoteController(getActivity().getApplicationContext());
         tagController = new TagController(getActivity().getApplicationContext());
@@ -72,6 +74,7 @@ public class   ListNotes extends Fragment {
         //  setContentView(R.layout.activity_list_notes);
         loadNotes();
         showNotes();
+        setSearchEvents();
         return rootView;
     }
 
@@ -180,6 +183,34 @@ public class   ListNotes extends Fragment {
                 passNote(notes.get(position));
             }
 
+        });
+    }
+
+    //Setea los eventos para la busqueda de notas
+    protected void setSearchEvents(){
+
+        //*** setOnQueryTextListener ***
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+
+                //Toast.makeText(getActivity().getApplicationContext(), query,Toast.LENGTH_SHORT).show();
+                //Se llama a un fragment para que haga la busqueda y despliegue el resultado
+                Bundle arguments = new Bundle();
+                arguments.putString("query", query);
+                Fragment fragment = ListFoundNotes.newInstance(arguments);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, fragment).commit();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
         });
     }
 
@@ -353,6 +384,7 @@ public class   ListNotes extends Fragment {
 
     protected NoteController controller;
     protected ArrayList<Note> notes;
+    protected SearchView searchView;
     private AlertDialog.Builder dialogNewTag;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
@@ -362,4 +394,5 @@ public class   ListNotes extends Fragment {
     private TagController tagController;
     private boolean selection = false;
     private static final String NOTE = "note";
+
 }
