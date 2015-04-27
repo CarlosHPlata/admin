@@ -19,7 +19,7 @@ import com.example.usuario.androidadmin.R;
 import com.models.Note;
 
 /**
- * Created by JoseRamon on 26/04/2015.
+ * Created by Jose Ramon Diaz on 26/04/2015.
  * Clase encargada de desplegar las notas que el usuario ha buscado
  */
 public class ListFoundNotes extends ListNotes{
@@ -42,12 +42,6 @@ public class ListFoundNotes extends ListNotes{
         setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_deleted_notes, menu);
-        return true;
-	}*/
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list_deleted_notes, menu);
@@ -71,7 +65,6 @@ public class ListFoundNotes extends ListNotes{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         controller = new NoteController(getActivity().getApplicationContext());
-        //linkController = new LinkController(getActivity().getApplicationContext());
         View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
         listview = (ListView) rootView.findViewById(R.id.listView);
         searchView = (SearchView) rootView.findViewById(R.id.searchView);
