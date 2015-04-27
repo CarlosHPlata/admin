@@ -8,9 +8,15 @@
     import com.loopj.android.http.AsyncHttpClient;
     import com.loopj.android.http.JsonHttpResponseHandler;
     import com.models.CheckList;
+    import com.models.File;
+    import com.models.Fold;
+    import com.models.Link;
     import com.models.Note;
     import com.models.Tag;
     import com.models.mappers.CheckListMapper;
+    import com.models.mappers.FileMapper;
+    import com.models.mappers.FoldMapper;
+    import com.models.mappers.LinksMapper;
     import com.models.mappers.NoteMapper;
     import com.models.mappers.TagMapper;
 
@@ -69,16 +75,34 @@
                             noteTemp.setStatus(!tempJson.getBoolean("deleted"));
                             noteTemp.setCreatedAt(new Date());
                             noteTemp.setUpdatedAt(new Date());
-                            noteTemp.setIdFather(0);
+                            noteTemp.setIdFather(tempJson.getInt("parent_id"));
                             noteTemp.setTags(new ArrayList<Tag>());
                             noteTemp.setId(-1);
                             noteTemp.setSyncFlag(true);
+
+                            //obteniendo tags
                             noteTemp.setTags(insertTagsFromNotes(tempJson.getJSONArray("tags")));
+
+                            //insertando nota
                             long idNote = noteMapper.insertNote(noteTemp);
 
-
+                            //insertando checklist de la nota
                             JSONArray checkJson = tempJson.getJSONArray("checklist_items");
                             insertCheckFromUser(checkJson, (int) idNote);
+
+                            //insertando los archivos:
+                            JSONArray arrayFiles = tempJson.getJSONArray("assets");
+                            insertFilesFromNotes(arrayFiles, (int) idNote);
+
+                            //insertando los folds:
+                            JSONArray arrayFolds = tempJson.getJSONArray("folds");
+                            insertFoldsFromNote(arrayFolds, (int) idNote);
+
+                            //insertando los links
+                            JSONArray arrayLinks = tempJson.getJSONArray("links");
+                            insertLinksFromNote(arrayLinks, (int) idNote);
+
+
                         }
                         Log.i("NOTES",notes.toString());
                         listener.onResponse(1);
@@ -148,6 +172,54 @@
                 tags.add(tempTag);
             }
             return tags;
+        }
+
+        public void insertFilesFromNotes(JSONArray arrayFiles, int idNote) throws JSONException {
+            for (int e=0; e<arrayFiles.length(); e++){
+                JSONObject tempFileJson = arrayFiles.getJSONObject(e);
+                File tempFile = new File();
+                tempFile.setId(-1);
+                tempFile.setName(tempFileJson.getString("filename"));
+                tempFile.setNote_id(idNote);
+                tempFile.setExt_id(tempFileJson.getInt("id"));
+                tempFile.setPath("");
+                tempFile.setSync_flag(true);
+
+                FileMapper fileMapper = new FileMapper(context);
+                fileMapper.insetFile(tempFile);
+            }
+        }
+
+        public void insertFoldsFromNote(JSONArray arrayFolds, int idNote) throws JSONException {
+            for (int e=0; e<arrayFolds.length(); e++){
+                JSONObject JsonFold = arrayFolds.getJSONObject(e);
+
+                Fold fold = new Fold();
+                fold.setId(-1);
+                fold.setSyncFlag(true);
+                fold.setExtId(JsonFold.getInt("id"));
+                fold.setNoteId(idNote);
+                fold.setContent(JsonFold.getString("content"));
+
+                FoldMapper foldMapper = new FoldMapper(context);
+                foldMapper.insertFold(fold);
+            }
+        }
+
+        public void insertLinksFromNote(JSONArray arrayLinks, int idNote) throws JSONException {
+            Link link = new Link();
+            LinksMapper linksMapper = new LinksMapper(context);
+            for (int e=0; e<arrayLinks.length(); e++){
+                JSONObject jsonLink = arrayLinks.getJSONObject(e);
+
+                link = new Link();
+                link.setId(-1);
+                link.setSyncFlag(true);
+                link.setNoteId(idNote);
+                link.setLinkedNoteId(jsonLink.getInt("linked_note"));
+
+                //linksMapper.insert(link);
+            }
         }
 
 
