@@ -11,7 +11,7 @@
     <string name="title_activity_index_note">indexNote</string>
 
     <!-- Activity main -->
-    <string name="lb_hello">Bienvenido al App Ideon</string>
+    <string name="lb_hello">IDEON</string>
     <string name="bt_login">Log In</string>
     <string name="bt_logout">Log Out</string>
     <string name="ht_user_name">Nombre de usuario</string>

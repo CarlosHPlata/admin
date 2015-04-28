@@ -34,6 +34,7 @@ import com.models.StableArrayAdapter;
 import com.models.Tag;
 import com.models.mappers.NoteMapper;
 import com.models.services.TagService;
+import com.view.items.NoteAdapter;
 
 import java.util.ArrayList;
 
@@ -151,39 +152,13 @@ public class   ListNotes extends Fragment {
     }
 
     protected void showNotes() {
-        final ArrayList<String> list = getNotesTitles();
-        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
         // Log.e("ListNotes","Tamaño de list: "+list.size());
         //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
         //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
-        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                /*final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
-                return true;*/
-                selection = !selection;
-                if (selection) {
-                    setSelectionView();
-                } else {
-                    removeSelectionView();
-                }
+        //listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-                return true;
-            }
-        });
-
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
-            }
-
-        });
     }
 
     //Setea los eventos para la busqueda de notas
