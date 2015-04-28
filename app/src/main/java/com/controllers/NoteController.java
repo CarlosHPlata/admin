@@ -126,6 +126,7 @@ public class NoteController {
     }
 
     public void updateNote(Note note){
+        note.setSyncFlag(false);
         noteService.updateNote(note);
     }
 

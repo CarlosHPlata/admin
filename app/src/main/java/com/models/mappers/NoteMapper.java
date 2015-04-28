@@ -66,7 +66,6 @@ public class NoteMapper {
     }
 
     public void updateNote(Note note){
-        note.setSyncFlag(false);
         dbManager.update(note);
     }
 
