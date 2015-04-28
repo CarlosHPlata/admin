@@ -20,6 +20,7 @@ public class Link extends Entitie{
         contentValues.put(columNames[NOTE_ID_POSITION], noteId);
         contentValues.put(columNames[LINKED_NOTE_POSITION], linkedNoteId);
         contentValues.put(columNames[SYNC_FLAG_POSITION], syncFlag);
+        contentValues.put(columNames[EXT_ID_POSITION], extId);
         return contentValues;
     }
 
@@ -29,6 +30,7 @@ public class Link extends Entitie{
         noteId = cursor.getInt(NOTE_ID_POSITION);
         linkedNoteId = cursor.getInt(LINKED_NOTE_POSITION);
         syncFlag = Boolean.parseBoolean(cursor.getString(SYNC_FLAG_POSITION));
+        extId = cursor.getInt(EXT_ID_POSITION);
     }
 
     @Override
@@ -60,6 +62,14 @@ public class Link extends Entitie{
         this.noteId = noteId;
     }
 
+    public int getExtId() {
+        return extId;
+    }
+
+    public void setExtId(int extId) {
+        this.extId = extId;
+    }
+
     /*public Note getLinkedNote() {
         return linkedNote;
     }*/
@@ -72,12 +82,14 @@ public class Link extends Entitie{
     private int noteId;
     private int linkedNoteId;
     private boolean syncFlag;
+    private int extId;
     //private Note linkedNote;
     private static final String tableName = "links";
-    private static final String[] columNames = {"id","note_id","linked_note_id", "sync_flag"};
+    private static final String[] columNames = {"id","note_id","linked_note_id", "sync_flag", "ext_id"};
     //Indices para colocar en el vector columNames
     private static final int ID_POSITION = 0;
     private static final int NOTE_ID_POSITION = 1;
     private static final int LINKED_NOTE_POSITION = 2;
     private static final int SYNC_FLAG_POSITION = 3;
+    private static final int EXT_ID_POSITION = 4;
 }
