@@ -44,6 +44,7 @@ public class NoteMapper {
         db.delete("links",null,null);
         db.delete("checklist",null,null);
         db.delete("files",null,null);
+        db.delete("folds",null,null);
     }
 
     public void deleteNotes(ArrayList notes){
