@@ -32,6 +32,19 @@ public class NoteMapper {
         return loadSons(getNotesFromCursor(cursor));
     }
 
+    public Note findOneByExtId(Note tag){
+        Cursor cursor = db.query(tag.getTableName(), tag.getColumnNames(), "ext_id = ?", new String[]{String.valueOf(tag.getExtId())}, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0)
+            cursor.moveToFirst();
+        else
+            return null;
+
+        tag.setContentValues(cursor);
+
+        return tag;
+    }
+
+
     public void deleteNotePermanently(Note note){
         db.execSQL("DELETE FROM notes WHERE id = " + note.getId());
         db.execSQL("DELETE FROM links WHERE note_id = " + note.getId() + " OR linked_note_id = " + note.getId());

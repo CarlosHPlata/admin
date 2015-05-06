@@ -11,11 +11,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.view.Login"
-            android:theme="@style/Theme2">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/Theme2" >
+
         </activity>
         <activity
             android:name="com.view.ListNotes"
@@ -74,7 +71,8 @@
         </activity>
         <activity
             android:name="com.view.Register"
-            android:theme="@style/Theme2">>
+            android:theme="@style/Theme2" >
+>
         </activity>
         <activity
             android:name="com.view.MainActivity"
@@ -87,6 +85,15 @@
         <activity
             android:name="com.test.Test"
             android:label="@string/title_activity_test" >
+        </activity>
+        <activity
+            android:name="com.view.SplashScreen"
+            android:theme="@style/Theme2" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

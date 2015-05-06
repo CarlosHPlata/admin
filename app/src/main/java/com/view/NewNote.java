@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -40,6 +41,9 @@ import com.models.Fold;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
 import com.models.services.AlertDialogService;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.io.IOException;
@@ -151,8 +155,76 @@ public class NewNote extends Fragment {
             }
         });
         initExpandableListView();
-        return viewNewNote;
 
+        createLolipopMenu();
+
+        return viewNewNote;
+    }
+
+    public void createLolipopMenu(){
+        //creating floating menu
+        ((MainActivity )getActivity()).actionMenu.close(true);
+        ImageView icon = new ImageView(getActivity()); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_new_note));
+
+        ((MainActivity )getActivity()).actionButton= new FloatingActionButton.Builder(getActivity())
+                .setContentView(icon)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+        // repeat many times:
+        ImageView itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_new_tag));
+        SubActionButton newTag = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_task_list));
+        SubActionButton checkList = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_file));
+        final SubActionButton addFile = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_fold));
+        SubActionButton newFold = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
+
+        ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(newTag)
+                .addSubActionView(checkList)
+                .addSubActionView(addFile)
+                .addSubActionView(newFold)
+                .attachTo(((MainActivity) getActivity()).actionButton)
+                .build();
+
+        newTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listAllTags();
+            }
+        });
+
+        checkList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listAllCheckList();
+            }
+        });
+
+        addFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFile();
+            }
+        });
+
+        newFold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogNewFold();
+            }
+        });
 
     }
 
@@ -346,19 +418,6 @@ public class NewNote extends Fragment {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_new_tag) {
-            listAllTags();
-        }
-        if (id == R.id.action_taskListNew) {
-            listAllCheckList();
-        }
-        if (id == R.id.action_add_file) {
-            addFile();
-        }
-        if (id == R.id.action_add_fold) {
-            showDialogNewFold();
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

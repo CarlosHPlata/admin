@@ -94,8 +94,24 @@ public class LoginService {
         editor.commit();
     }
 
+    public void addUserToSession(User user){
+        //UserMapper userMAnager = new UserMapper(this.context);
+
+        editor.putBoolean(IS_USER_LOGIN, true);
+        editor.putInt(this.KEY_ID, user.getId());
+        editor.putString(this.KEY_EMAIL, user.getEmail());
+        editor.putString(this.KEY_PASSWORD, user.getPassword());
+        editor.putString(this.KEY_TOKEN, user.getToken());
+        // commit changes
+        editor.commit();
+    }
+
     public boolean isUserLoggedIn(){
         return pref.getBoolean(this.IS_USER_LOGIN, false);
+    }
+
+    public String getTokenFromSession(){
+        return pref.getString(this.KEY_TOKEN, "");
     }
 
     public boolean logOut(){

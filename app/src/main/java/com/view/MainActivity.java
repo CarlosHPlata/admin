@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.view.menu.NavDrawerItem;
 import com.view.menu.NavDrawerListAdapter;
 
@@ -102,6 +105,7 @@ public class MainActivity extends ActionBarActivity {
             // on first time display view for first nav item
             displayView(0);
         }
+
     }
 
 
@@ -221,6 +225,10 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    public FloatingActionButton getActionButton(){
+        return this.actionButton;
+    }
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -239,5 +247,8 @@ public class MainActivity extends ActionBarActivity {
     private NavDrawerListAdapter adapter;
 
     private NoteController controller;
+
+    public FloatingActionButton actionButton;
+    public FloatingActionMenu actionMenu;
 
 }

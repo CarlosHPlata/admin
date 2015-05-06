@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.view.menu.MenuView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.AttributeSet;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -34,6 +36,9 @@ import com.models.StableArrayAdapter;
 import com.models.Tag;
 import com.models.mappers.NoteMapper;
 import com.models.services.TagService;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.view.items.NoteAdapter;
 
 import java.util.ArrayList;
@@ -45,11 +50,25 @@ import java.util.ArrayList;
 
 public class   ListNotes extends Fragment {
     public ListView listview;
+    private MenuItem deletedItem;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
         inflater.inflate(R.menu.menu_list_notes, menu);
+
+        MenuItem itemdeleted = menu.findItem(R.id.action_delete);
+        itemdeleted.setVisible(false);
+        this.deletedItem = itemdeleted;
+
+        MenuItem item = menu.findItem(R.id.action_newNote);
+        item.setVisible(false);
+
+        item = menu.findItem(R.id.action_findByFilter);
+        item.setVisible(false);
+
+        item = menu.findItem(R.id.action_move_note);
+        item.setVisible(false);
         // return true;
     }
 
@@ -76,7 +95,60 @@ public class   ListNotes extends Fragment {
         loadNotes();
         showNotes();
         setSearchEvents();
+
+        createLolipopMenu();
+
         return rootView;
+    }
+
+    public void createLolipopMenu(){
+        //creating floating menu
+
+        if (((MainActivity )getActivity()).actionMenu != null){
+            ((MainActivity )getActivity()).actionMenu.close(true);
+        }
+
+        ImageView icon = new ImageView(getActivity()); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_app));
+
+        ((MainActivity )getActivity()).actionButton= new FloatingActionButton.Builder(getActivity())
+                .setContentView(icon)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+// repeat many times:
+        ImageView itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_new_note));
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_filter));
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
+
+
+        ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .attachTo(((MainActivity) getActivity()).actionButton)
+                .build();
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new NewNote();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, fragment).commit();
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listAllTags();
+            }
+        });
     }
 
     @Override
@@ -157,7 +229,28 @@ public class   ListNotes extends Fragment {
         //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
         //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
-        //listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note note = (Note) adapter.getItem(position);
+                passNote(note);
+            }
+
+        });
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selection = !selection;
+                if (selection) {
+                    setSelectionView();
+                } else {
+                    removeSelectionView();
+                }
+
+                return true;
+            }
+        });
+        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
     }
 
@@ -284,7 +377,8 @@ public class   ListNotes extends Fragment {
     }
 
     private void setSelectionView() {
-        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, getNotesTitles());
+        deletedItem.setVisible(true);
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), R.layout.item_note_checked, getNotesTitles());
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -297,18 +391,8 @@ public class   ListNotes extends Fragment {
     }
 
     private void removeSelectionView() {
-        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNotesTitles());
-        listview.setAdapter(adapter);
-
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                passNote(notes.get(position));
-            }
-
-        });
+        deletedItem.setVisible(false);
+        showNotes();
     }
 
     private ArrayList<Note> getSelectedNotes() {

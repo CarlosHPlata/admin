@@ -7,6 +7,7 @@
     import com.controllers.sync.interfaces.SyncInterface;
     import com.loopj.android.http.AsyncHttpClient;
     import com.loopj.android.http.JsonHttpResponseHandler;
+    import com.loopj.android.http.RequestParams;
     import com.models.CheckList;
     import com.models.File;
     import com.models.Fold;
@@ -123,8 +124,14 @@
 
         //curl -X POST -H "Authorization: 68f582de1c5439ae3a0a4f6a050822ac" -H
         // "Content-Type: application/json" -d '{"note":{"title":"nueva nota","body":"esta es la super nota", "tag_ids":[3,4]}}' http://104.131.189.224/api/notes
-        public void createNote(String token, Note note){
-            String bodyAsJson = "{\"note\":{\"title\":\""+note.getTitle()+"\",\"body\":\""+note.getBody()+"\", ";
+        // response
+        //{"note":{"id":9,"title":"nueva nota","body": "esta es la super nota","favorite":false,"status":null,"tags":[{"id":3,"title":"et2"},{"id":4,"title":"et1"}]}}
+        public void createNote(String token, final Note note){
+            Note fatherNote = new Note();
+            fatherNote.setIdFather(note.getIdFather());
+            fatherNote = noteMapper.findOneByExtId(fatherNote);
+
+            String bodyAsJson = "{\"note\":{\"title\":\""+note.getTitle()+"\",\"body\":\""+note.getBody()+"\", \"favorite\":"+note.isFavorite()+", \"deleted\":"+!note.isStatus()+", \"parent_id\":"+fatherNote.getExtId()+", ";
 
             String jsonTags = "\"tag_ids\":[ ";
 
@@ -139,6 +146,8 @@
 
             StringEntity entity  = null;
 
+            Log.i("IDEON", bodyAsJson);
+
             try {
                 entity = new StringEntity(bodyAsJson);
             } catch (UnsupportedEncodingException e) {
@@ -146,21 +155,34 @@
             }
 
             Header[] headers = {
-                    new BasicHeader("Authorization",token)
+                    new BasicHeader("Authorization",token),
+                    new BasicHeader("Content-type", "application/json")
             };
 
             client.post(this.context, "http://104.131.189.224/api/notes", headers , entity, "application/json",  new JsonHttpResponseHandler() {
 
                 public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                    Log.i("IDEON", "success");
+                    try {
+                        JSONObject noteJson = json.getJSONObject("note");
+                        note.setExtId(noteJson.getInt("id"));
+                        note.setSyncFlag(true);
+                        NoteMapper mapper = new NoteMapper(context);
+                        mapper.updateNote(note);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     listener.onResponse(1);
                 }
 
 
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.i("IDEON", "failure");
                     if (listener != null) listener.onError(statusCode, responseString);
                 }
 
                 public void onFailure(int i, Header[] header, Throwable e, JSONObject json) {
+                    Log.i("IDEON", "failure2"+json.toString());
                     String error = "Error fatal, intentelo mas tarde";
                     int errorCode = 500;
                     try {
@@ -180,15 +202,20 @@
             });
         }
 
-        //curl -X PUT -H "Authorization: dc45800fddee07cf9b300d2765283cb2" -H "Content-Type: application/json" -d '{"note":{"title":"actualizar etiquetas","body":"etiquetaaas actualizadaaas", "tag_ids":[3,4]}}' http://104.131.189.224/api/notes/
-        public void updateNote(String token, Note note){
+        //curl -X PUT -H "Authorization: dc45800fddee07cf9b300d2765283cb2" -H "Content-Type: application/json" -d
+        // '{"note":{"title":"actualizar etiquetas","body":"etiquetaaas actualizadaaas", "tag_ids":[3,4]}}' http://104.131.189.224/api/notes/
+        public void updateNote(String token, final Note note){
             Header[] headers = {
-                    new BasicHeader("Authorization",token)
+                    new BasicHeader("Authorization",token),
+                    new BasicHeader("Content-type", "application/json")
             };
 
+            Note fatherNote = new Note();
+            fatherNote.setIdFather(note.getIdFather());
+            fatherNote = noteMapper.findOneByExtId(fatherNote);
 
+            String bodyAsJson = "{\"note\":{\"title\":\""+note.getTitle()+"\",\"body\":\""+note.getBody()+"\", \"favorite\":"+note.isFavorite()+", \"deleted\":"+!note.isStatus()+", \"parent_id\":"+fatherNote.getExtId()+", ";
 
-            String bodyAsJson = "{\"note\":{\"title\":\""+note.getTitle()+"\",\"body\":\""+note.getBody()+"\", ";
 
             String jsonTags = "\"tag_ids\":[ ";
 
@@ -206,8 +233,13 @@
                 e.printStackTrace();
             }
 
+            Log.i("IDEON", bodyAsJson);
+
             client.put(this.context, "http://104.131.189.224/api/notes/"+note.getExtId(), headers, entity,"application/json",new JsonHttpResponseHandler(){
                 public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                    note.setSyncFlag(true);
+                    NoteMapper mapper = new NoteMapper(context);
+                    mapper.updateNote(note);
                     Log.i("DEBUG:", json.toString());
                 }
 

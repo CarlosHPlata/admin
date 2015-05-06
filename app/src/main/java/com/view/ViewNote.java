@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -30,6 +31,9 @@ import com.models.Link;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.util.ArrayList;
@@ -86,7 +90,91 @@ public class ViewNote extends Fragment {
             initExpandableListView();
         }
 
+        createLolipopMenu();
+
         return viewNote;
+    }
+
+    public void createLolipopMenu(){
+        //creating floating menu
+        ((MainActivity )getActivity()).actionMenu.close(true);
+        ImageView icon = new ImageView(getActivity()); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_note));
+
+        ((MainActivity )getActivity()).actionButton= new FloatingActionButton.Builder(getActivity())
+                .setContentView(icon)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+        // repeat many times:
+
+        ImageView itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_link));
+        SubActionButton addLink = itemBuilder.setContentView(itemIcon).
+                setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_link));
+        SubActionButton deleteLink = itemBuilder.setContentView(itemIcon).
+                setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_note));
+        SubActionButton editNote = itemBuilder.setContentView(itemIcon).
+                setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        itemIcon = new ImageView(getActivity());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_new_note));
+        SubActionButton addNote = itemBuilder.setContentView(itemIcon).
+                setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
+                .build();
+
+        ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(addLink)
+                .addSubActionView(deleteLink)
+                .addSubActionView(editNote)
+                .addSubActionView(addNote)
+                .attachTo(((MainActivity) getActivity()).actionButton)
+                .build();
+
+        addLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addLink();
+            }
+        });
+
+        deleteLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteLink();
+            }
+        });
+
+        editNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle arguments = new Bundle();
+                arguments.putInt("id", ID_NOTE);
+
+                Fragment fragment = EditNote.newInstance(arguments);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            }
+        });
+
+        addNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startNewSonNoteFragment();
+            }
+        });
+
+
     }
 
     public void initExpandableListView(){
@@ -275,21 +363,6 @@ public class ViewNote extends Fragment {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_newNoteSon) {
-            /*Intent i = new Intent(this,NewNote.class);
-            i.putExtra("id",this.ID_NOTE);
-            i.putExtra("isFather",false);
-            startActivity(i);*/
-            startNewSonNoteFragment();
-        }
-        if (id == R.id.action_editNote) {
-            Bundle arguments = new Bundle();
-            arguments.putInt("id", this.ID_NOTE);
-
-            Fragment fragment = EditNote.newInstance(arguments);
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-        }
         if (id == R.id.action_delete) {
             if (selection) {
                 deleteSelectedSons();
@@ -304,12 +377,6 @@ public class ViewNote extends Fragment {
         }
         if (id == R.id.action_taskList) {
             listAllCheckList();
-        }
-        if (id == R.id.action_add_link) {
-            addLink();
-        }
-        if (id == R.id.action_delete_link) {
-            deleteLink();
         }
         return super.onOptionsItemSelected(item);
     }

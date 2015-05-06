@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.models.User;
 import com.models.mappers.UserMapper;
 import com.models.services.AlertDialogService;
 import com.example.usuario.androidadmin.R;
+import com.models.services.LoginService;
 
 
 /**
@@ -99,7 +101,9 @@ public class Login extends ActionBarActivity implements SyncInterface {
 
         final AlertDialogService alert = new AlertDialogService();
 
-        User user = (User) response;
+        final User user = (User) response;
+
+        Log.i("error", user.getPassword());
 
         UserMapper mapper = new UserMapper(getApplicationContext());
         mapper.dropUsers();
@@ -108,6 +112,8 @@ public class Login extends ActionBarActivity implements SyncInterface {
         SyncNotesHandler notesHandler = new SyncNotesHandler(getApplicationContext(), new SyncInterface() {
             @Override
             public void onResponse(Object response) {
+                LoginService service = new LoginService(getApplicationContext());
+                service.addUserToSession(user);
                 goToMain();
             }
 

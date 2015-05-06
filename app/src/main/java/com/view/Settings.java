@@ -1,6 +1,7 @@
 package com.view;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -12,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.controllers.sync.SyncProcess;
+import com.controllers.sync.interfaces.SyncInterface;
 import com.example.usuario.androidadmin.R;
+import com.models.services.LoginService;
+
 /**
  * @(#)JceSecurity.java 1.50 04/04/14
  *
@@ -46,12 +51,29 @@ public class Settings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
-        Button btn = (Button) view.findViewById(R.id.editButton);
+        Button btnSync = (Button) view.findViewById(R.id.syncBbutton);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog progressRing = ProgressDialog.show(getActivity(), "Please wait ...", "Sync data", true);
+                progressRing.show();
 
+                LoginService service = new LoginService(getActivity().getApplicationContext());
+                String token = service.getTokenFromSession();
+                SyncProcess syncProcess = new SyncProcess(getActivity().getApplicationContext(), token);
+                syncProcess.startMidSync(new SyncInterface(){
+
+                    @Override
+                    public void onResponse(Object response) {
+                        progressRing.dismiss();
+                    }
+
+                    @Override
+                    public void onError(int StatusCode, String error) {
+
+                    }
+                });
             }
         });
 
