@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -17,6 +18,7 @@ import com.controllers.LinkController;
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
+import com.view.items.NoteAdapter;
 
 /**
  * Created by Jose Ramon Diaz on 26/04/2015.
@@ -83,6 +85,25 @@ public class ListFoundNotes extends ListNotes{
     protected void loadNotes() {
         NoteController noteController = new NoteController(getActivity().getApplicationContext());
         notes = noteController.findNotes(query);
+    }
+
+    protected void showNotes() {
+        final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
+        // Log.e("ListNotes","Tamaño de list: "+list.size());
+        //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
+        //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note note = (Note) adapter.getItem(position);
+                passNote(note);
+            }
+
+        });
+
+        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
     }
 
     private String query;
