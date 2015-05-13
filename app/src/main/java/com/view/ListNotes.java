@@ -3,6 +3,7 @@ package com.view;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,19 +57,18 @@ public class   ListNotes extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
         inflater.inflate(R.menu.menu_list_notes, menu);
-
         MenuItem itemdeleted = menu.findItem(R.id.action_delete);
         itemdeleted.setVisible(false);
         this.deletedItem = itemdeleted;
 
-        MenuItem item = menu.findItem(R.id.action_newNote);
+      /*  MenuItem item = menu.findItem(R.id.action_newNote);
         item.setVisible(false);
 
         item = menu.findItem(R.id.action_findByFilter);
         item.setVisible(false);
 
         item = menu.findItem(R.id.action_move_note);
-        item.setVisible(false);
+        item.setVisible(false); */
         // return true;
     }
 
@@ -81,7 +81,6 @@ public class   ListNotes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
         //rootView.findViewById();
         listview = (ListView) rootView.findViewById(R.id.listView);
@@ -137,9 +136,11 @@ public class   ListNotes extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new NewNote();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, fragment).commit();
+
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -157,21 +158,21 @@ public class   ListNotes extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
         if (id == R.id.action_newNote) {
             Fragment fragment = new NewNote();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
         if (id == R.id.action_findByFilter) {
             listAllTags();
         }
-        if (id == R.id.action_move_note) {
+       /* if (id == R.id.action_move_note) {
             //Aqui se manejaria el mover las notas
             if (selection) {
                 ArrayList<Note> notesToMove = getSelectedNotes();
@@ -179,7 +180,7 @@ public class   ListNotes extends Fragment {
 
             }
 
-        }
+        }*/
         if (id == R.id.action_delete) {
             deleteSelectedNotes();
         }
@@ -195,12 +196,11 @@ public class   ListNotes extends Fragment {
         Bundle arguments = new Bundle();
         arguments.putInt("id", note.getId());
         Fragment fragment = ViewNote.newInstance(arguments);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_container, fragment).commit();
-     /*   Intent intent = new Intent(this,ViewNote.class);
-        intent.putExtra("id", note.getId());
-        startActivity(intent);*/
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     /*

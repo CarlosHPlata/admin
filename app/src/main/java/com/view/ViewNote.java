@@ -3,6 +3,7 @@ package com.view;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -162,8 +163,10 @@ public class ViewNote extends Fragment {
                 arguments.putInt("id", ID_NOTE);
 
                 Fragment fragment = EditNote.newInstance(arguments);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -335,15 +338,14 @@ public class ViewNote extends Fragment {
     }
 
     public void viewNote(Note note) {
-
-       /* Intent intent = new Intent(ViewNote.class.getName());
-        intent.putExtra("id", note.getId());
-        startActivity(intent); */
         Bundle arguments = new Bundle();
         arguments.putInt("id", note.getId());
         Fragment fragment = ViewNote.newInstance(arguments);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -369,10 +371,7 @@ public class ViewNote extends Fragment {
             } else {
                 this.noteFather.setStatus(true);
                 controller.deleteNote(this.noteFather);
-
-                Fragment fragment = new ListNotes();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+                getActivity().onBackPressed();
             }
         }
         if (id == R.id.action_taskList) {
@@ -582,16 +581,30 @@ public class ViewNote extends Fragment {
         Bundle arguments = new Bundle();
         arguments.putInt("idFather", noteFather.getId());
         Fragment fragment = NewNote.newInstance(arguments);
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        /*
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit(); */
     }
 
     private void deleteSelectedSons() {
         ArrayList<Note> notesToDelete = getSelectedNotes();
         controller.deleteNotes(notesToDelete);
-        Fragment fragment = new ListNotes();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        /*Fragment fragment = new ListNotes();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, fragment);
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        Log.e("ViewNote","deleteSelectedSons");*/
+        getActivity().onBackPressed();
+        /*FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();*/
     }
 
     private ArrayList<Note> getSelectedNotes() {

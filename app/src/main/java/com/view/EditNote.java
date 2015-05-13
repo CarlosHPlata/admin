@@ -302,12 +302,7 @@ public class EditNote extends Fragment {
     }
 
     public void backView(){
-        Bundle arguments = new Bundle();
-        arguments.putInt("id",this.ID_NOTE);
-        Fragment fragment = ViewNote.newInstance(arguments);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_container, fragment).commit();
+        getActivity().onBackPressed();
     }
 
     @Override
