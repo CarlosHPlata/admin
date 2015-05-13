@@ -28,6 +28,7 @@ public class Tag extends Entitie {
         contentValues.put(columNames[NAME_POSITION], name);
         contentValues.put(columNames[EXT_ID_POSITION], extId);
         contentValues.put(columNames[SYNC_FLAG_POSITION], syncFlag);
+        contentValues.put(columNames[USER_ID_POSITION], userId);
         return contentValues;
     }
 
@@ -37,6 +38,7 @@ public class Tag extends Entitie {
         extId = cursor.getInt(EXT_ID_POSITION);
         name = cursor.getString(NAME_POSITION);
         syncFlag = Boolean.parseBoolean(cursor.getString(SYNC_FLAG_POSITION));
+        userId = cursor.getInt(USER_ID_POSITION);
     }
 
     @Override
@@ -68,6 +70,14 @@ public class Tag extends Entitie {
         this.syncFlag = syncFlag;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public JSONObject toJSON(){
         JSONObject jsonObject= new JSONObject();
         try {
@@ -88,10 +98,12 @@ public class Tag extends Entitie {
     private int extId;
     private String name;
     private boolean syncFlag;
+    private int userId;
     private static final String tableName = "tags";
-    private static final String[] columNames = {"id","ext_id","name","sync_flag"};
+    private static final String[] columNames = {"id","ext_id","name","sync_flag", "user_id"};
     private static final int ID_POSITION = 0;
     private static final int EXT_ID_POSITION = 1;
     private static final int NAME_POSITION = 2;
     private static final int SYNC_FLAG_POSITION = 3;
+    private static final int USER_ID_POSITION = 4;
 }

@@ -20,11 +20,13 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.controllers.LogInController;
 import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.models.services.LoginService;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -81,7 +83,6 @@ public class ListTags extends Fragment {
         listview = (ListView) viewTag.findViewById(R.id.listViewTags);
 
         tagController = new TagController(getActivity().getApplicationContext());
-
         initViewListTag();
         return viewTag;
     }
@@ -92,7 +93,7 @@ public class ListTags extends Fragment {
     }
 
     public void loadTags(){
-        tags = tagController.fingAll();
+        tags = tagController.findTagsOfUser();
     }
 
     public void showTags(){

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.models.Tag;
+import com.models.User;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,11 @@ public class TagMapper {
     public ArrayList findAlldTags(){
        ArrayList tags = dbManager.getAll(new Tag());
         return tags;
+    }
+
+    public ArrayList findTagsOfUser(User user){
+        Cursor cursor = db.rawQuery("SELECT * FROM tags WHERE user_id = " + 1, null);
+        return getTagsFromCursor(cursor);
     }
 
     public Tag findOneById(Tag tag){
@@ -52,6 +58,16 @@ public class TagMapper {
     public void deleteTag(Tag tag){
         //db.delete(tag.getTableName(),"id = ?", new String[]{String.valueOf(tag.getId())});
         dbManager.delete(tag);
+    }
+
+    private ArrayList getTagsFromCursor(Cursor cursor){
+        ArrayList<Tag> tags = new ArrayList<>();
+        while(cursor.moveToNext()){
+            Tag tag = new Tag();
+            tag.setContentValues(cursor);
+            tags.add(tag);
+        }
+        return tags;
     }
 
     private DBManager dbManager;

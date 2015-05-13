@@ -6,6 +6,7 @@ import android.util.Log;
 import com.controllers.NoteController;
 import com.models.Note;
 import com.models.Tag;
+import com.models.User;
 import com.models.mappers.TagMapper;
 
 import org.json.JSONArray;
@@ -33,6 +34,10 @@ public class TagService {
         }else{
             return false;
         }
+    }
+
+    public ArrayList findTagsOfUser(User user){
+        return tagMapper.findTagsOfUser(user);
     }
 
     public void update(Tag tag){

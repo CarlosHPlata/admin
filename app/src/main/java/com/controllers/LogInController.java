@@ -25,6 +25,7 @@ public class LogInController {
     public boolean logIn(String email, String password){
         if(service.logIn(email, password)){
             service.addUserToSession(email, password);
+            service.getUserOfSession().getId();
             return true;
         }else{
             return false;
