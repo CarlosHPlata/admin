@@ -365,7 +365,7 @@ public class EditNote extends Fragment {
     public void showDialogNewFold(){
         final EditText txtInput = new EditText(getActivity());
         dialogAlert = new AlertDialog.Builder(getActivity());
-        dialogAlert.setTitle("Nueva pliegue");
+        dialogAlert.setTitle("Nuevo pliegue");
         dialogAlert.setMessage("Descripción");
         dialogAlert.setView(txtInput);
         dialogAlert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
@@ -389,6 +389,7 @@ public class EditNote extends Fragment {
     public void addFoldToGroup(String content) {
         Fold fold = new Fold(content);
         fold.setSyncFlag(false);
+        fold.setNoteId(note.getId());
         fold.setExtId(0);
         folds.add(fold);
         String[] data = { content };
