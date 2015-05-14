@@ -14,6 +14,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
 
     public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects) {
         super(context, textViewResourceId, objects);
+        objectsItems = objects;
         for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i), i);
         }
@@ -21,8 +22,13 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public long getItemId(int position) {
-        String item = getItem(position);
-        return mIdMap.get(item);
+        if(objectsItems.size() > 0){
+            String item = getItem(position);
+            return mIdMap.get(item);
+        }else{
+            return 0;
+        }
+
     }
 
     @Override
@@ -31,4 +37,5 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
     }
 
     private HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+    private List<String> objectsItems;
 }

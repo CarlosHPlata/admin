@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.view.ListNotes">
 
-	<item android:id="@+id/action_newNote"
+	<!-- <item android:id="@+id/action_newNote"
         android:title="@string/lb_new_note"
         android:icon="@drawable/ic_new_note"
         android:orderInCategory="100"
@@ -12,16 +12,16 @@
         android:icon="@drawable/ic_move"
         android:orderInCategory="100"
         app:showAsAction="always" />
+	<item android:id="@+id/action_findByFilter"
+        android:title="@string/lb_find_filter"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="100"
+        app:showAsAction="always" />-->
     <item android:id="@+id/action_delete"
         android:title="@string/lb_delete"
         android:icon="@drawable/ic_trash"
         android:orderInCategory="100"
         app:showAsAction="always" />
-	<item android:id="@+id/action_findByFilter"
-        android:title="@string/lb_find_filter"
-        android:icon="@drawable/ic_filter"
-        android:orderInCategory="100"
-        app:showAsAction="always" />	
         <!-- -->
 
 </menu>

@@ -135,6 +135,7 @@ public class LoginService {
     }
 
     public User getUserOfSession(){
+
         User user = new User();
         user.setId(pref.getInt(this.KEY_ID, 0));
         user.setEmail(pref.getString(this.KEY_EMAIL,null));

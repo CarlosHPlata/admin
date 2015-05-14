@@ -1,6 +1,7 @@
 package com.models.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.models.CheckList;
 import com.models.File;
@@ -186,6 +187,7 @@ public class NoteService {
 
         //update folds
         ArrayList<Fold> folds = note.getFolds();
+        Log.e("note service","pliegues: "+folds);
         ArrayList<Fold> foldsBefore = foldMapper.findAllByNoteId(note.getId());
         for (int y=0;y<foldsBefore.size();y++){
             Fold fold0 = foldsBefore.get(y);
@@ -206,6 +208,7 @@ public class NoteService {
             Fold fold = folds.get(x);
             if(fold.getId() == -1){
                 foldMapper.insertFold(fold);
+                Log.e("note service","nuevo : "+fold.getContent());
             }else{
                 foldMapper.updateFold(fold);
             }

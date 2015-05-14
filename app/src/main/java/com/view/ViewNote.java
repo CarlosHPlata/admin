@@ -3,6 +3,7 @@ package com.view;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,6 +74,17 @@ public class ViewNote extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(listviewLinks.getHeaderViewsCount() > 0){
+            listviewLinks.removeAllViews();
+        }
+        if(listNoteSon.getHeaderViewsCount() > 0){
+            listNoteSon.removeAllViews();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewNote = inflater.inflate(R.layout.activity_view_note, container, false);
@@ -80,7 +92,13 @@ public class ViewNote extends Fragment {
         linkController = new LinkController(getActivity().getApplicationContext());
         controller = new NoteController(getActivity().getApplicationContext());
         checkListController = new CheckListController(getActivity().getApplicationContext());
+        listviewLinks = (ListView) viewNote.findViewById(R.id.listViewLinks);
+
         listNoteSon = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
+
+        listviewLinks.setFooterDividersEnabled(false);
+        listNoteSon.setFooterDividersEnabled(false);
+
         listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         expandList = (ExpandableListView) viewNote.findViewById(R.id.expandableListView1);
         Bundle bundle = getArguments();
@@ -91,7 +109,6 @@ public class ViewNote extends Fragment {
         }
 
         createLolipopMenu();
-
         return viewNote;
     }
 
@@ -162,8 +179,10 @@ public class ViewNote extends Fragment {
                 arguments.putInt("id", ID_NOTE);
 
                 Fragment fragment = EditNote.newInstance(arguments);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -181,6 +200,7 @@ public class ViewNote extends Fragment {
         initialDataFold();
         adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
+        expandList.setFooterDividersEnabled(false);
     }
 
     public void initViewNoteById() {
@@ -225,7 +245,9 @@ public class ViewNote extends Fragment {
         if (!noteFather.hasSons())
             return;
         final ListView listview = (ListView) viewNote.findViewById(R.id.listViewnoteSon);
+
         final ArrayList<String> list = getNotesTitles(noteFather.getSons());
+
         final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
@@ -282,12 +304,13 @@ public class ViewNote extends Fragment {
             return;
         }
         Log.v("%%%%%%%%%%%%%%%%%%", "Si Tiene links");
-        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
+     //   final ListView listviewLinks = (ListView) viewNote.findViewById(R.id.listViewLinks);
+        listviewLinks.setFooterDividersEnabled(false);
         final ArrayList<String> list = getNotesTitlesFromLinks(noteFather.getLinks());
         final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-        listview.setAdapter(adapter);
+        listviewLinks.setAdapter(adapter);
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listviewLinks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
@@ -335,15 +358,14 @@ public class ViewNote extends Fragment {
     }
 
     public void viewNote(Note note) {
-
-       /* Intent intent = new Intent(ViewNote.class.getName());
-        intent.putExtra("id", note.getId());
-        startActivity(intent); */
         Bundle arguments = new Bundle();
         arguments.putInt("id", note.getId());
         Fragment fragment = ViewNote.newInstance(arguments);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -358,7 +380,6 @@ public class ViewNote extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -367,12 +388,9 @@ public class ViewNote extends Fragment {
             if (selection) {
                 deleteSelectedSons();
             } else {
-                this.noteFather.setStatus(true);
+               // this.noteFather.setStatus(true);
                 controller.deleteNote(this.noteFather);
-
-                Fragment fragment = new ListNotes();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+                getActivity().onBackPressed();
             }
         }
         if (id == R.id.action_taskList) {
@@ -390,12 +408,12 @@ public class ViewNote extends Fragment {
     }
 
     public void deleteLink(){
-        final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
+       // final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
         //final ArrayList<String> list = getNotesTitles(noteFather.getSons());
         //final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         //listview.setAdapter(adapter);
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listviewLinks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
@@ -424,6 +442,7 @@ public class ViewNote extends Fragment {
         checkLists = checkListController.findAllByNoteId(this.ID_NOTE);
 
         listViewItems = new ListView(getActivity());
+        listViewItems.setFooterDividersEnabled(false);
         listViewItems.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         listViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -582,16 +601,21 @@ public class ViewNote extends Fragment {
         Bundle arguments = new Bundle();
         arguments.putInt("idFather", noteFather.getId());
         Fragment fragment = NewNote.newInstance(arguments);
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        /*
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit(); */
     }
 
     private void deleteSelectedSons() {
         ArrayList<Note> notesToDelete = getSelectedNotes();
         controller.deleteNotes(notesToDelete);
-        Fragment fragment = new ListNotes();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        getActivity().onBackPressed();
     }
 
     private ArrayList<Note> getSelectedNotes() {
@@ -638,6 +662,7 @@ public class ViewNote extends Fragment {
     private int ID_NOTE;
     private NoteController controller;
     private ListView listNoteSon;
+    private ListView listviewLinks;
     private ArrayList<Note> notesSon;
     private Note noteFather;
     private CheckListController checkListController;
