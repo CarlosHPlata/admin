@@ -210,7 +210,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         int count = getFragmentManager().getBackStackEntryCount();
-        Log.e("Boton atras","Fragmentos: "+count);
         if (count == 1) {
             super.onBackPressed();
         } else {
