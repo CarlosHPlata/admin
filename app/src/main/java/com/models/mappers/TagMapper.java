@@ -30,7 +30,7 @@ public class TagMapper {
     }
 
     public ArrayList findTagsOfUser(User user){
-        Cursor cursor = db.rawQuery("SELECT * FROM tags WHERE user_id = " + 1, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM tags WHERE user_id = " + user.getId(), null);
         return getTagsFromCursor(cursor);
     }
 
