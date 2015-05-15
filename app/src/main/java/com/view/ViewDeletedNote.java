@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
+import com.models.ExpandableListAdapter;
 import com.models.Fold;
 import com.models.Note;
 import com.models.StableArrayAdapter;
@@ -36,10 +37,10 @@ import java.util.List;
 
 public class ViewDeletedNote extends Fragment {
     public View viewDeletedNote;
-    List<String> group;
-    List<List<String>> child;
-    ExpandableListView expandList;
-    InfoDetailsAdapter adapterExpandableListView;
+    public List<String> group;
+    public List<List<String>> child;
+    public ExpandableListView expandList;
+    public ExpandableListAdapter adapterExpandableListView;
     /*Metrodos originales, no los borre por si mas adelante los necesito
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,8 +203,9 @@ public class ViewDeletedNote extends Fragment {
 
     public void initExpandableListView(){
         initialDataFold();
-        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        adapterExpandableListView = new ExpandableListAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
+        expandList.setGroupIndicator(null);
     }
 
     @Override

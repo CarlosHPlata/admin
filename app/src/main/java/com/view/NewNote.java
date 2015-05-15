@@ -39,6 +39,7 @@ import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
+import com.models.ExpandableListAdapter;
 import com.models.File;
 import com.models.Fold;
 import com.models.StableArrayAdapter;
@@ -63,7 +64,7 @@ import java.util.List;
 public class NewNote extends Fragment {
     public View viewNewNote;
     public ExpandableListView expandList;
-    public InfoDetailsAdapter adapterExpandableListView;
+    public ExpandableListAdapter adapterExpandableListView;
     public List<String> group;
     public List<List<String>> child;
 
@@ -250,14 +251,18 @@ public class NewNote extends Fragment {
     public void hideKeyboard(){
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm.isAcceptingText()) {
+            Log.e("New Note","Esta editado text");
+        }else{
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            Log.e("New Note","NOO Esta editado text");
         }
     }
 
     public void initExpandableListView(){
         initialDataFold();
-        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        adapterExpandableListView = new ExpandableListAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
+        expandList.setGroupIndicator(null);
 
         expandList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

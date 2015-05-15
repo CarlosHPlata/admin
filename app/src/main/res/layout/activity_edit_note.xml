@@ -69,7 +69,8 @@
         android:layout_alignRight="@+id/btnCreateNote"
         android:layout_alignEnd="@+id/btnCreateNote"
 
-        android:layout_below="@+id/textView3" />
+        android:layout_below="@+id/textView3"
+        android:layout_above="@+id/btnUpdateNote" />
 
 
     <ScrollView

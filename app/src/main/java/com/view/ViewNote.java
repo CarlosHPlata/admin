@@ -34,6 +34,7 @@ import com.models.Link;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.models.ExpandableListAdapter;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -52,10 +53,10 @@ import java.util.List;
  * */
 public class ViewNote extends Fragment {
     public View viewNote;
-    List<String> group;
-    List<List<String>> child;
-    ExpandableListView expandList;
-    InfoDetailsAdapter adapterExpandableListView;
+    public List<String> group;
+    public List<List<String>> child;
+    public ExpandableListView expandList;
+    public ExpandableListAdapter adapterExpandableListView;
 
     public static ViewNote newInstance(Bundle arguments) {
         ViewNote viewNote = new ViewNote();
@@ -198,15 +199,13 @@ public class ViewNote extends Fragment {
                 startNewSonNoteFragment();
             }
         });
-
-
     }
 
     public void initExpandableListView(){
         initialDataFold();
-        adapterExpandableListView = new InfoDetailsAdapter(getActivity(), this.group, this.child);
+        adapterExpandableListView = new ExpandableListAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
-        expandList.setFooterDividersEnabled(false);
+        expandList.setGroupIndicator(null);
     }
 
     public void initViewNoteById() {
