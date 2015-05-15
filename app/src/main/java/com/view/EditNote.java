@@ -76,14 +76,6 @@ public class EditNote extends Fragment {
         tagsSelect = new ArrayList<>();
         indexTagSelect = new ArrayList();
 
-        Button createNote = (Button) viewEditNote.findViewById(R.id.btnUpdateNote);
-        createNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateNote();
-            }
-        });
-
         Bundle bundle = getArguments();
         if(bundle != null){
             this.ID_NOTE = bundle.getInt("id");
@@ -349,6 +341,9 @@ public class EditNote extends Fragment {
         if (id == R.id.action_edit_fold) {
             hideKeyboard();
             showDialogNewFold();
+        }
+        if(id == R.id.action_save){
+            updateNote();
         }
 
         return super.onOptionsItemSelected(item);

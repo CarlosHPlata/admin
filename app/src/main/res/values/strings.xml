@@ -63,6 +63,7 @@
     <!-- Activity edit note -->
 
     <string name="bt_update">Actualizar</string>
+    <string name="lb_save">Actualizar</string>
     <!-- end activity edit note -->
 
     <string name="title_activity_index">index</string>
