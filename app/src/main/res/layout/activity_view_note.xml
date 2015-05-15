@@ -10,7 +10,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="185dp"
+        android:layout_height="126dp"
         android:id="@+id/scrollView2"
         android:layout_margin="10dp">
         <LinearLayout
@@ -80,7 +80,7 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="110dp"
+        android:layout_height="68dp"
         android:id="@+id/listViewLinks" />
 
     <ScrollView

@@ -1,15 +1,23 @@
 package com.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.controllers.LogInController;
@@ -37,6 +45,44 @@ public class Login extends ActionBarActivity implements SyncInterface {
         setContentView(R.layout.activity_login);
         this.logincontroller = new LogInController(getApplicationContext());
 
+        ediTextUsername = (EditText) findViewById(R.id.email);
+        editTextPassword = (EditText) findViewById(R.id.password);
+
+        ediTextUsername.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.e("Login","OnEditTorAction");
+                if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    Log.e("Login","ENTRO");
+                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(ediTextUsername.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return false;
+            }
+        });
+
+        /*ediTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.e("Login","Entro a onFocusChange");
+                if (!hasFocus) {
+                    Log.e("Login","Se perdio el focus");
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                }
+            }
+        });
+
+        editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                }
+            }
+        }); */
+
        if(this.logincontroller.isUserLogIn()){
           // AlertDialogService alert = new AlertDialogService();
           // alert.showAlertDialog(Login.this, "Entro1", "Email/Contraseña son incorrectos", false);
@@ -47,13 +93,12 @@ public class Login extends ActionBarActivity implements SyncInterface {
 
     }
 
-
     public void logIn(View view){
-      EditText txtUsername = (EditText) findViewById(R.id.email);
-      EditText  txtPassword = (EditText) findViewById(R.id.password);
+    //  EditText txtUsername = (EditText) findViewById(R.id.email);
+    //  EditText  txtPassword = (EditText) findViewById(R.id.password);
 
-      String email =   txtUsername.getText().toString();
-      String password = txtPassword.getText().toString();
+      String email =   ediTextUsername.getText().toString();
+      String password = editTextPassword.getText().toString();
 
         AlertDialogService alert = new AlertDialogService();
         if(email.trim().length() > 0 && password.trim().length() > 0){
@@ -73,8 +118,8 @@ public class Login extends ActionBarActivity implements SyncInterface {
                 Button register = (Button) findViewById(R.id.registerButton);
                 btnLogin.setEnabled(false);
                 register.setEnabled(false);
-                txtUsername.setEnabled(false);
-                txtPassword.setEnabled(false);
+                ediTextUsername.setEnabled(false);
+                editTextPassword.setEnabled(false);
                 //alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
             }
 
@@ -148,4 +193,7 @@ public class Login extends ActionBarActivity implements SyncInterface {
         startActivity(i);
         this.finish();
     }
+
+    private EditText ediTextUsername;
+    private EditText editTextPassword;
 }

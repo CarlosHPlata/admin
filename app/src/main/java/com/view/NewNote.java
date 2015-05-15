@@ -18,8 +18,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,6 +79,8 @@ public class NewNote extends Fragment {
 
     }
 
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -87,6 +91,16 @@ public class NewNote extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewNewNote = inflater.inflate(R.layout.activity_new_note, container, false);
+
+        viewNewNote.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    Log.e("Entro","ajjajaj");
+                }
+                return true;
+            }
+        });
 
         indexTagSelect = new ArrayList();
         controller = new NoteController(getActivity().getApplicationContext());
@@ -202,6 +216,7 @@ public class NewNote extends Fragment {
         newTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 listAllTags();
             }
         });
@@ -209,6 +224,7 @@ public class NewNote extends Fragment {
         checkList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 listAllCheckList();
             }
         });
@@ -216,6 +232,7 @@ public class NewNote extends Fragment {
         addFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 addFile();
             }
         });
@@ -223,10 +240,18 @@ public class NewNote extends Fragment {
         newFold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 showDialogNewFold();
             }
         });
 
+    }
+
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm.isAcceptingText()) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
     }
 
     public void initExpandableListView(){
@@ -294,6 +319,7 @@ public class NewNote extends Fragment {
             }else{
                 Toast.makeText(getActivity(), "Error!!", Toast.LENGTH_LONG).show();
             }
+            hideKeyboard();
             backView();
         }else{
             AlertDialogService alert = new AlertDialogService();

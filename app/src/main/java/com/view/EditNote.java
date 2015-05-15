@@ -1,5 +1,6 @@
 package com.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -280,6 +282,13 @@ public class EditNote extends Fragment {
         bodyEdit.setText(this.note.getBody());
     }
 
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm.isAcceptingText()) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
+    }
+
     public void updateNote(){
         EditText titleEdit = (EditText) viewEditNote.findViewById(R.id.titleEdit);
         EditText bodyEdit = (EditText) viewEditNote.findViewById(R.id.bodyEdit);
@@ -293,8 +302,10 @@ public class EditNote extends Fragment {
             this.note.setCheckLists(checkLists);
             this.note.setFolds(folds);
             controller.updateNote(this.note);
+            hideKeyboard();
             backView();
         }else{
+            hideKeyboard();
             AlertDialogService alert = new AlertDialogService();
             alert.showAlertDialog(getActivity(), "Error", "Agregue un titulo y un texto a la nota", false);
         }
@@ -323,12 +334,15 @@ public class EditNote extends Fragment {
             return true;
         }
         if (id == R.id.action_edit_tag) {
+            hideKeyboard();
             listAllTags();
         }
         if (id == R.id.action_task_list_edit) {
+            hideKeyboard();
             listAllCheckList();
         }
         if (id == R.id.action_edit_fold) {
+            hideKeyboard();
             showDialogNewFold();
         }
 

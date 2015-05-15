@@ -1,5 +1,6 @@
 package com.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -161,6 +163,7 @@ public class ViewNote extends Fragment {
         addLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 addLink();
             }
         });
@@ -168,6 +171,7 @@ public class ViewNote extends Fragment {
         deleteLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 deleteLink();
             }
         });
@@ -175,6 +179,7 @@ public class ViewNote extends Fragment {
         editNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 Bundle arguments = new Bundle();
                 arguments.putInt("id", ID_NOTE);
 
@@ -189,6 +194,7 @@ public class ViewNote extends Fragment {
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 startNewSonNoteFragment();
             }
         });
@@ -434,6 +440,15 @@ public class ViewNote extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+        if (imm.isAcceptingText()) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
+
     }
 
     public void listAllCheckList() {
