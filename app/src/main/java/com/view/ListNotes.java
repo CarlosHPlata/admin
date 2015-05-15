@@ -53,7 +53,6 @@ import java.util.ArrayList;
 
 public class   ListNotes extends Fragment {
     public ListView listview;
-    private MenuItem deletedItem;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -62,6 +61,9 @@ public class   ListNotes extends Fragment {
         MenuItem itemdeleted = menu.findItem(R.id.action_delete);
         itemdeleted.setVisible(false);
         this.deletedItem = itemdeleted;
+        moveItem = menu.findItem(R.id.action_move_note);
+        moveItem.setVisible(false);
+
 
       /*  MenuItem item = menu.findItem(R.id.action_newNote);
         item.setVisible(false);
@@ -181,7 +183,7 @@ public class   ListNotes extends Fragment {
         if (id == R.id.action_findByFilter) {
             listAllTags();
         }
-       /* if (id == R.id.action_move_note) {
+        if (id == R.id.action_move_note) {
             //Aqui se manejaria el mover las notas
             if (selection) {
                 ArrayList<Note> notesToMove = getSelectedNotes();
@@ -189,7 +191,7 @@ public class   ListNotes extends Fragment {
 
             }
 
-        }*/
+        }
         if (id == R.id.action_delete) {
             deleteSelectedNotes();
         }
@@ -233,6 +235,7 @@ public class   ListNotes extends Fragment {
     }
 
     protected void showNotes() {
+        loadNotes();
         final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
         // Log.e("ListNotes","Tamaño de list: "+list.size());
         //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
@@ -387,6 +390,7 @@ public class   ListNotes extends Fragment {
 
     private void setSelectionView() {
         deletedItem.setVisible(true);
+        moveItem.setVisible(true);
         StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), R.layout.item_note_checked, getNotesTitles());
         listview.setAdapter(adapter);
 
@@ -401,6 +405,7 @@ public class   ListNotes extends Fragment {
 
     private void removeSelectionView() {
         deletedItem.setVisible(false);
+        moveItem.setVisible(false);
         showNotes();
     }
 
@@ -433,6 +438,8 @@ public class   ListNotes extends Fragment {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 controller.setMultipleNotesFather(selectedNotes, notes.get(position));
+                //Se abre la nota que se selecciono como padre
+                passNote(notes.get(position));
 
                 //Se regresa el evento para que abra las notas al hacer clic
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -453,6 +460,8 @@ public class   ListNotes extends Fragment {
     protected NoteController controller;
     protected ArrayList<Note> notes;
     protected SearchView searchView;
+    private MenuItem deletedItem;
+    private MenuItem moveItem;
     private AlertDialog.Builder dialogNewTag;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags

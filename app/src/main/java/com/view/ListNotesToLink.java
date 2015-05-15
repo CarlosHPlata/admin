@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -17,6 +18,7 @@ import com.controllers.LinkController;
 import com.controllers.NoteController;
 import com.example.usuario.androidadmin.R;
 import com.models.Note;
+import com.view.items.NoteAdapter;
 
 import java.util.ArrayList;
 
@@ -74,6 +76,24 @@ public class ListNotesToLink extends ListNotes{
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        controller = new NoteController(getActivity().getApplicationContext());
+        linkController = new LinkController(getActivity().getApplicationContext());
+        View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
+        listview = (ListView) rootView.findViewById(R.id.listView);
+        searchView = (SearchView) rootView.findViewById(R.id.searchView);
+
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            this.noteId = bundle.getInt("noteId");
+        }
+        loadNotes();
+        showNotes();
+        setSearchEvents();
+        return rootView;
+    }
+
+    @Override
     protected void loadNotes() {
         NoteController noteController = new NoteController(getActivity().getApplicationContext());
         //Es necesario eliminar la nota que esta incrustando notas para que no se incruste a si misma
@@ -93,23 +113,23 @@ public class ListNotesToLink extends ListNotes{
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        controller = new NoteController(getActivity().getApplicationContext());
-        linkController = new LinkController(getActivity().getApplicationContext());
-        View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
-        listview = (ListView) rootView.findViewById(R.id.listView);
-        searchView = (SearchView) rootView.findViewById(R.id.searchView);
+    protected void showNotes() {
+        final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
+        listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note note = (Note) adapter.getItem(position);
+                passNote(note);
+            }
 
-        Bundle bundle = getArguments();
-        if(bundle != null){
-            this.noteId = bundle.getInt("noteId");
-        }
-        loadNotes();
-        showNotes();
-        setSearchEvents();
-        return rootView;
+        });
+
+        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
     }
+
+
 
     private void initViewListNotesToLink(){
         loadNotes();

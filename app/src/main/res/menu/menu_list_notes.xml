@@ -7,16 +7,19 @@
         android:icon="@drawable/ic_new_note"
         android:orderInCategory="100"
         app:showAsAction="always" />
-	<item android:id="@+id/action_move_note"
-        android:title="@string/lb_move_note"
-        android:icon="@drawable/ic_move"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
+
 	<item android:id="@+id/action_findByFilter"
         android:title="@string/lb_find_filter"
         android:icon="@drawable/ic_filter"
         android:orderInCategory="100"
         app:showAsAction="always" />-->
+
+    <item android:id="@+id/action_move_note"
+        android:title="@string/lb_move_note"
+        android:icon="@drawable/ic_move"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
     <item android:id="@+id/action_delete"
         android:title="@string/lb_delete"
         android:icon="@drawable/ic_trash"
