@@ -64,14 +64,14 @@ public class Note extends Entitie implements Serializable {
         setId(cursor.getInt(ID_POSITION));
         title = cursor.getString(TITLE_POSITION);
         body = cursor.getString(BODY_POSITION);
-        favorite = Boolean.parseBoolean(cursor.getString(FAVORITE_POSITION));
+        favorite = ((cursor.getInt(FAVORITE_POSITION)== 0)? false: true);
         status = ((cursor.getInt(STATUS_POSITION)== 0)? false: true);
         createdAt = new Date(cursor.getLong(CREATED_AT_POSITION));
         updatedAt = new Date(cursor.getLong(UPDATED_POSITION));
         idFather = cursor.getInt(ID_FATHER_POSITION);
         extId = cursor.getInt(EXT_ID_POSITION);
         tags = tagService.convertJsonToObjTags(cursor.getString(TAG_POSITION));
-        syncFlag = Boolean.parseBoolean(cursor.getString(SYNC_FLAG_POSITION));
+        syncFlag = ((cursor.getInt(SYNC_FLAG_POSITION)== 0)? false: true);
     }
 
     @Override
