@@ -83,6 +83,7 @@
     <!-- Nombres de los items -->
     <string-array name="nav_drawer_items">
         <item>Notas</item>
+        <item>Favoritas</item>
         <item>Notas eliminadas</item>
         <item>Tags</item>
         <item>Configuraciones</item>
@@ -92,6 +93,7 @@
     <!-- Iconos de los items -->
     <array name="nav_drawer_icons">
         <item>@drawable/ic_sections_notes</item>
+        <item>@drawable/ic_favorite</item>
         <item>@drawable/ic_trash</item>
         <item>@drawable/ic_new_tag</item>
         <item>@drawable/ic_sections_settings</item>

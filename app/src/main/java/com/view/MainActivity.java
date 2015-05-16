@@ -66,8 +66,10 @@ public class MainActivity extends ActionBarActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         // Seccion4
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Seccion4
+        // Seccion5
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        // Seccion6
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
 
 
         // Recycle the typed array
@@ -165,18 +167,21 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new ListNotes();
                 break;
             case 1:
+                fragment = new ListFavoriteNotes();
+                break;
+            case 2:
               //  Toast.makeText(this, "Esta 1", Toast.LENGTH_SHORT).show();
                 fragment = new ListDeletedNotes();
                 break;
-            case 2:
+            case 3:
                // Toast.makeText(this, "Esta 2", Toast.LENGTH_SHORT).show();
                 fragment = new ListTags();
                 break;
-            case 3:
+            case 4:
                 //Toast.makeText(this, "Esta 3", Toast.LENGTH_SHORT).show();
                 fragment = new Settings();
                 break;
-            case 4:
+            case 5:
                 controller.logOut();
                 this.finish();
                 break;

@@ -38,7 +38,6 @@ import com.models.ExpandableListAdapter;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.view.ExpandableLisView.InfoDetailsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -401,6 +400,10 @@ public class ViewNote extends Fragment {
         if (id == R.id.action_taskList) {
             listAllCheckList();
         }
+        if(id == R.id.action_favorite){
+            //cambia de nota favorita a no favorita y viceversa
+            toggleFavorite();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -671,6 +674,11 @@ public class ViewNote extends Fragment {
             item.add(c[i]);
         }
         child.add(item);
+    }
+
+    private void toggleFavorite(){
+        noteFather.setFavorite(!noteFather.isFavorite());
+        controller.updateNote(noteFather);
     }
 
     private int ID_NOTE;
