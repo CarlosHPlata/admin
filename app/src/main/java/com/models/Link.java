@@ -29,7 +29,7 @@ public class Link extends Entitie{
         setId(cursor.getInt(ID_POSITION));
         noteId = cursor.getInt(NOTE_ID_POSITION);
         linkedNoteId = cursor.getInt(LINKED_NOTE_POSITION);
-        syncFlag = Boolean.parseBoolean(cursor.getString(SYNC_FLAG_POSITION));
+        syncFlag =((cursor.getInt(SYNC_FLAG_POSITION)== 0)? false: true);
         extId = cursor.getInt(EXT_ID_POSITION);
     }
 
