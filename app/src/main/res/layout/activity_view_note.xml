@@ -79,7 +79,7 @@
         android:layout_marginLeft="10dp"/>
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="68dp"
         android:id="@+id/listViewLinks" />
 

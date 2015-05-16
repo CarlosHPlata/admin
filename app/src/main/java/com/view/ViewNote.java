@@ -136,9 +136,9 @@ public class ViewNote extends Fragment {
 
         itemIcon = new ImageView(getActivity());
         itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_link));
-        SubActionButton deleteLink = itemBuilder.setContentView(itemIcon).
+        /*SubActionButton deleteLink = itemBuilder.setContentView(itemIcon).
                 setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
-                .build();
+                .build();*/
 
         itemIcon = new ImageView(getActivity());
         itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_note));
@@ -154,7 +154,7 @@ public class ViewNote extends Fragment {
 
         ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(addLink)
-                .addSubActionView(deleteLink)
+                //.addSubActionView(deleteLink)
                 .addSubActionView(editNote)
                 .addSubActionView(addNote)
                 .attachTo(((MainActivity) getActivity()).actionButton)
@@ -168,13 +168,13 @@ public class ViewNote extends Fragment {
             }
         });
 
-        deleteLink.setOnClickListener(new View.OnClickListener() {
+        /*deleteLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
                 deleteLink();
             }
-        });
+        });*/
 
         editNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,11 +304,8 @@ public class ViewNote extends Fragment {
     //Carga el listview de links con los links que tenga la nota
     public void generateListViewLinks() {
         if (!noteFather.hasLinks()) {
-            Log.v("%%%%%%%%%%%%%%%%%%", "Noooo Tiene links");
             return;
         }
-        Log.v("%%%%%%%%%%%%%%%%%%", "Si Tiene links");
-     //   final ListView listviewLinks = (ListView) viewNote.findViewById(R.id.listViewLinks);
         listviewLinks.setFooterDividersEnabled(false);
         final ArrayList<String> list = getNotesTitlesFromLinks(noteFather.getLinks());
         final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
@@ -319,46 +316,39 @@ public class ViewNote extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
-                //Probablemente este metodo debe ser refactorizado a viewNote()
                 viewNote(controller.findOneById(noteFather.getLinks().get(position).getLinkedNoteId()));
             }
 
         });
-        /*
-        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        listviewLinks.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                selection = !selection;
-                if (selection) {
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
+                final int positionAux = position;
+                final long positionId = id;
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                            //Evento vacio para que no se abra la nota, en su lugar se debe de marcar
+                    //MENU FILA
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_eliminar:
+                                deleteLink(positionAux);
+                                generateListViewLinks();
+                                break;
+                            default:
+                                break;
                         }
-
-                    });
-
-                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
-                    listview.setAdapter(adapter);
-                } else {
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                            final String item = (String) parent.getItemAtPosition(position);
-                            viewNote(noteFather.getSons().get(position));
-                        }
-
-                    });
-
-                    final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-                    listview.setAdapter(adapter);
-                }
+                        return true;
+                    }
+                    //FIN MENU FILA
+                });
+                popup.show();
                 return true;
             }
-        });*/
-
+        });
     }
 
     public void viewNote(Note note) {
@@ -392,7 +382,6 @@ public class ViewNote extends Fragment {
             if (selection) {
                 deleteSelectedSons();
             } else {
-               // this.noteFather.setStatus(true);
                 controller.deleteNote(this.noteFather);
                 getActivity().onBackPressed();
             }
@@ -415,28 +404,9 @@ public class ViewNote extends Fragment {
         fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 
-    public void deleteLink(){
-       // final ListView listview = (ListView) viewNote.findViewById(R.id.listViewLinks);
-        //final ArrayList<String> list = getNotesTitles(noteFather.getSons());
-        //final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-        //listview.setAdapter(adapter);
-
-        listviewLinks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                //final String item = (String) parent.getItemAtPosition(position);
-                //viewNote(noteFather.getSons().get(position));
-                //Aqui se elimina el link a la nota clickeada
-                linkController.deleteLink(noteFather.getLinks().get(position));
-                //Regresa a listar las notas
-                Fragment fragment = new ListNotes();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-            }
-
-        });
-
+    public void deleteLink(int position){
+        linkController.deleteLink(noteFather.getLinks().get(position));
+        noteFather.getLinks().remove(noteFather.getLinks().get(position));
     }
 
     @Override
