@@ -54,6 +54,7 @@ public class SyncUserHandler extends SyncHandler{
         client.post(this.context, "http://104.131.189.224/api/user", headers , entity, "application/json",  new JsonHttpResponseHandler() {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                //{"user":{"id":3,"email":"plata@mail.com","auth_token":"dc45800fddee07cf9b300d2765283cb2"}}
                 listener.onResponse(1);
             }
 

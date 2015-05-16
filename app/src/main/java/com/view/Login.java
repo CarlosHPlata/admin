@@ -151,6 +151,7 @@ public class Login extends ActionBarActivity implements SyncInterface {
         Log.i("error", user.getPassword());
 
         UserMapper mapper = new UserMapper(getApplicationContext());
+        user.setId(-1);
         mapper.dropUsers();
         mapper.insertUser(user);
 
