@@ -187,7 +187,9 @@ public class   ListNotes extends Fragment {
             //Aqui se manejaria el mover las notas
             if (selection) {
                 ArrayList<Note> notesToMove = getSelectedNotes();
-                showPosibleFathers(notesToMove);
+                if(notesToMove != null) {
+                    showPosibleFathers(notesToMove);
+                }
 
             }
 
@@ -235,7 +237,6 @@ public class   ListNotes extends Fragment {
     }
 
     protected void showNotes() {
-        loadNotes();
         final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
         // Log.e("ListNotes","Tamaño de list: "+list.size());
         //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
@@ -297,16 +298,17 @@ public class   ListNotes extends Fragment {
     private void deleteSelectedNotes() {
 
         ArrayList<Note> notesToDelete = getSelectedNotes();
-        controller.deleteNotes(notesToDelete);
-        Fragment fragment = new ListNotes();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_container, fragment).commit();
+        if(notesToDelete != null) {
+            controller.deleteNotes(notesToDelete);
+            Fragment fragment = new ListNotes();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();
 
             /*Intent i = new Intent(this, ListNotes.class);
             startActivity(i);
             this.finish();*/
-
+        }
     }
 
     private void listAllTags() {
@@ -406,6 +408,7 @@ public class   ListNotes extends Fragment {
     private void removeSelectionView() {
         deletedItem.setVisible(false);
         moveItem.setVisible(false);
+        loadNotes();
         showNotes();
     }
 
@@ -455,6 +458,7 @@ public class   ListNotes extends Fragment {
             }
 
         });
+
     }
 
     protected NoteController controller;

@@ -631,8 +631,10 @@ public class ViewNote extends Fragment {
 
     private void deleteSelectedSons() {
         ArrayList<Note> notesToDelete = getSelectedNotes();
-        controller.deleteNotes(notesToDelete);
-        getActivity().onBackPressed();
+        if(notesToDelete != null) {
+            controller.deleteNotes(notesToDelete);
+            getActivity().onBackPressed();
+        }
     }
 
     private ArrayList<Note> getSelectedNotes() {
