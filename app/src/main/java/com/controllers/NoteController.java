@@ -7,6 +7,7 @@ import com.models.File;
 import com.models.Fold;
 import com.models.Note;
 import com.models.Tag;
+import com.models.mappers.NoteMapper;
 import com.models.services.LoginService;
 import com.models.services.NoteService;
 
@@ -27,6 +28,7 @@ public class NoteController {
     public NoteController(Context context){
         loginService = new LoginService(context);
         noteService = new NoteService(context);
+        noteMapper = new NoteMapper(context);
     }
 
     public ArrayList<Note> findNotes(String query){
@@ -57,6 +59,7 @@ public class NoteController {
     }
 
     public boolean logOut(){
+        noteMapper.dropNotes();
         return loginService.logOut();
     }
 
@@ -165,4 +168,5 @@ public class NoteController {
 
     private NoteService noteService;
     private LoginService loginService;
+    private NoteMapper noteMapper;
 }
