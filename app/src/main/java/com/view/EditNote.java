@@ -5,7 +5,11 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -22,20 +26,25 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.controllers.CheckListController;
+import com.controllers.FileOpen;
 import com.controllers.NoteController;
 import com.controllers.TagController;
 import com.example.usuario.androidadmin.R;
 import com.models.CheckList;
 import com.models.ExpandableListAdapter;
+import com.models.File;
 import com.models.Fold;
 import com.models.Note;
 import com.models.StableArrayAdapter;
 import com.models.Tag;
+import com.models.mappers.FileMapper;
 import com.models.services.AlertDialogService;
 import com.view.ExpandableLisView.InfoDetailsAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +84,52 @@ public class EditNote extends Fragment {
         viewTags = (TextView) viewEditNote.findViewById(R.id.editTags);
         tagsSelect = new ArrayList<>();
         indexTagSelect = new ArrayList();
+
+        FileMapper fileMapper = new FileMapper(getActivity().getApplicationContext());
+        files = fileMapper.findAllFIlesByNote(this.ID_NOTE);
+        filesList = (ListView) viewEditNote.findViewById(R.id.edit_nota_files);
+        fileOpen =  new FileOpen();
+
+        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getArrayStringFiles());
+        filesList.setAdapter(adapter);
+        filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        filesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+                // set title
+                alertDialogBuilder.setTitle("Eliminar archivo");
+
+                // set dialog message
+                alertDialogBuilder
+                        .setMessage("Que desea hacer con el archivo?")
+                        .setCancelable(true)
+                        .setPositiveButton("Eliminar archivo",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                deleteFileFromArray(position);
+                            }
+                        }).setNegativeButton("Cancelar",new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog,int id) {
+
+                    }
+                }).setNeutralButton("Abrir archivo", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        java.io.File myFile = new java.io.File(files.get(position).getPath());
+                        try {
+                            FileOpen.openFile(getActivity(), myFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.i("error", "eerror");
+                        }
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                alertDialog.show();
+            }
+        });
 
         Bundle bundle = getArguments();
         if(bundle != null){
@@ -633,6 +688,77 @@ public class EditNote extends Fragment {
         checkLists.add(checkList);
     }
 
+    private void addFile(){
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, fileOpen.RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == fileOpen.RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && data != null){
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int ColumnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(ColumnIndex);
+            cursor.close();
+
+            String filename=picturePath.substring(picturePath.lastIndexOf("/")+1);
+
+            File file = new File();
+            file.setId(0);
+            file.setNote_id(0);
+            file.setExt_id(0);
+            file.setSync_flag(false);
+            file.setPath(picturePath);
+            file.setName(filename);
+
+            files.add(file);
+
+            adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getArrayStringFiles());
+            filesList.setAdapter(adapter);
+            filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            adapter.notifyDataSetChanged();
+
+            Toast toast1 =
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "archivo agregado", Toast.LENGTH_SHORT);
+
+            toast1.show();
+        }
+    }
+
+    public ArrayList<String> getArrayStringFiles(){
+        ArrayList<String> strings = new ArrayList<String>();
+        for (int i =0; i < files.size(); i++){
+            strings.add(files.get(i).getName());
+        }
+
+        return strings;
+    }
+
+    public void deleteFileFromArray(int index){
+        ArrayList<File> tempFiles = new ArrayList<File>();
+
+        for (int i =0; i < files.size(); i++){
+            if (i != index){
+                tempFiles.add(files.get(i));
+            }
+        }
+
+        files = tempFiles;
+
+        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getArrayStringFiles());
+        filesList.setAdapter(adapter);
+        filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        adapter.notifyDataSetChanged();
+    }
+
+    private FileOpen fileOpen;
     private int positionToEditFlod = 0;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
@@ -645,6 +771,7 @@ public class EditNote extends Fragment {
     private NoteController controller;
     private TagController tagController;
     private Note note;
+    private ArrayList<File> files;
 
     private CheckListController checkListController;
     private AlertDialog.Builder dialogCheckLists;
@@ -652,4 +779,7 @@ public class EditNote extends Fragment {
     private ArrayList<Fold> folds;
     private ListView listViewItems;
     private AlertDialog dialogCheckList;
+    private StableArrayAdapter adapter;
+
+    private ListView filesList;
 }

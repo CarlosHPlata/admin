@@ -51,12 +51,26 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Archivos Adjuntos:"
+        android:id="@+id/textView2"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/bodyEdit" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:id="@+id/edit_nota_files"
+        android:layout_below="@+id/textView2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Pliegues:"
         android:id="@+id/textView3"
 
         android:layout_alignParentLeft="true"
 
-        android:layout_below="@+id/bodyEdit"/>
+        android:layout_below="@+id/edit_nota_files"/>
     <ExpandableListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
