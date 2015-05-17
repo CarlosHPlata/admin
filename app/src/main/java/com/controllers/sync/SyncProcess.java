@@ -97,6 +97,8 @@ public class SyncProcess implements SyncInterface{
                 } catch (Exception e) {}
             }
         });
+
+        notesHandler.getNotesFromuser(userToken);
         listener.onResponse(true);
     }
 

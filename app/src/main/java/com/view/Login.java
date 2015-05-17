@@ -153,7 +153,8 @@ public class Login extends ActionBarActivity implements SyncInterface {
         UserMapper mapper = new UserMapper(getApplicationContext());
         user.setId(-1);
         mapper.dropUsers();
-        mapper.insertUser(user);
+        int jo = (int) mapper.insertUser(user);
+        user.setId(jo);
 
         SyncNotesHandler notesHandler = new SyncNotesHandler(getApplicationContext(), new SyncInterface() {
             @Override

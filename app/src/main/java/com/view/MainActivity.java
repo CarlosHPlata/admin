@@ -3,9 +3,11 @@ package com.view;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -20,13 +22,18 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.controllers.NoteController;
+import com.controllers.sync.SyncProcess;
+import com.controllers.sync.interfaces.SyncInterface;
 import com.example.usuario.androidadmin.R;
+import com.models.services.LoginService;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.view.menu.NavDrawerItem;
 import com.view.menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Clase principal para mostrar todos los fragmentos de pantalla, como son
@@ -108,6 +115,40 @@ public class MainActivity extends ActionBarActivity {
             // on first time display view for first nav item
             displayView(0);
         }
+
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            final ProgressDialog progressRing = ProgressDialog.show(getApplicationContext(), "Please wait ...", "Sync data", true);
+                            progressRing.show();
+
+                            LoginService service = new LoginService(getApplicationContext());
+                            String token = service.getTokenFromSession();
+                            SyncProcess syncProcess = new SyncProcess(getApplicationContext(), token);
+                            syncProcess.startMidSync(new SyncInterface(){
+
+                                @Override
+                                public void onResponse(Object response) {
+                                    Log.i("Functiono", "aww yeah");
+                                }
+
+                                @Override
+                                public void onError(int StatusCode, String error) {
+
+                                }
+                            });
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 600000); //execute in every 10 ms
 
     }
 

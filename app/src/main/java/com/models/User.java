@@ -14,6 +14,11 @@ import android.database.Cursor;
  *
  * */
 public class User extends Entitie {
+
+    public User(){
+        super(tableName, columNames);
+    }
+
     @Override
     public ContentValues getContentValues() {
         ContentValues content = new ContentValues();
