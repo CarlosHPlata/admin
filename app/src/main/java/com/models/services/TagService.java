@@ -36,10 +36,6 @@ public class TagService {
         }
     }
 
-    public ArrayList findTagsOfUser(User user){
-        return tagMapper.findTagsOfUser(user);
-    }
-
     public void update(Tag tag){
         tagMapper.updateTag(tag);
     }

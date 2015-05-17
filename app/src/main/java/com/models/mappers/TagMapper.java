@@ -29,11 +29,6 @@ public class TagMapper {
         return tags;
     }
 
-    public ArrayList findTagsOfUser(User user){
-        Cursor cursor = db.rawQuery("SELECT * FROM tags WHERE user_id = " + user.getId(), null);
-        return getTagsFromCursor(cursor);
-    }
-
     public Tag findOneById(Tag tag){
         Tag tagAux = (Tag)dbManager.getById(tag);
         return tagAux;

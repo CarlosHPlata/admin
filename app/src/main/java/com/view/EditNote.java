@@ -204,7 +204,7 @@ public class EditNote extends Fragment {
     }
     public void generateTagSelected(){
         tagsSelect = note.getTags();
-        allTags = tagController.findTagsOfUser();
+        allTags = tagController.fingAll();
         String nameTags = "Tags:\n";
         for (int y=0; y<tagsSelect.size();y++) {
             Tag tagTwoAux = (Tag) tagsSelect.get(y);
@@ -225,7 +225,7 @@ public class EditNote extends Fragment {
         final ArrayList indexDeleteAux = new ArrayList();
         dialogAlert = new AlertDialog.Builder(getActivity());
         final EditText txtInput = new EditText(getActivity());
-        allTags = tagController.findTagsOfUser();
+        allTags = tagController.fingAll();
         labelTags = "Tags:\n";
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];

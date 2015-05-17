@@ -93,7 +93,7 @@ public class ListTags extends Fragment {
     }
 
     public void loadTags(){
-        tags = tagController.findTagsOfUser();
+        tags = tagController.fingAll();
     }
 
     public void showTags(){

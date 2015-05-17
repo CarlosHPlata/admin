@@ -338,7 +338,7 @@ public class NewNote extends Fragment {
         final ArrayList indexDeleteAux = new ArrayList();
         dialogAlert = new AlertDialog.Builder(getActivity());
         final EditText txtInput = new EditText(getActivity());
-        allTags = tagController.findTagsOfUser();
+        allTags = tagController.fingAll();
         labelTags = "Tags:\n";
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];
