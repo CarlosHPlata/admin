@@ -75,8 +75,10 @@ public class SyncProcess implements SyncInterface{
             temp = newNotes.get(i);
             notesHandler.createNote(userToken, temp);
             cheks = temp.getCheckLists();
-            for (int o=0; o<cheks.size(); o++){
-                syncChecks.createCheck(userToken, cheks.get(o));
+            if (cheks != null) {
+                for (int o=0; o<cheks.size(); o++){
+                    syncChecks.createCheck(userToken, cheks.get(o));
+                }
             }
         }
 
@@ -84,8 +86,10 @@ public class SyncProcess implements SyncInterface{
             temp = updatedNotes.get(i);
             notesHandler.updateNote(userToken, temp);
             cheks = temp.getCheckLists();
-            for (int o=0; o<cheks.size(); o++){
-                syncChecks.updateCheck(userToken, cheks.get(o));
+            if (cheks != null) {
+                for (int o = 0; o < cheks.size(); o++) {
+                    syncChecks.updateCheck(userToken, cheks.get(o));
+                }
             }
         }
 
