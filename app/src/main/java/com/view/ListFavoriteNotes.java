@@ -12,7 +12,7 @@ import com.view.items.NoteAdapter;
  * Created by JoseRamon.
  * Clase encargada de desplegar las notas favoritas
  */
-public class ListFavoriteNotes extends ListNotes{
+public class ListFavoriteNotes extends ListNotes {
     @Override
     protected void loadNotes() {
         NoteController noteController = new NoteController(getActivity().getApplicationContext());
@@ -22,9 +22,6 @@ public class ListFavoriteNotes extends ListNotes{
     protected void showNotes() {
         loadNotes();
         final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
-        // Log.e("ListNotes","Tamaño de list: "+list.size());
-        //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
-        //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

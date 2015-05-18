@@ -38,9 +38,9 @@ import java.util.TimerTask;
 /**
  * Clase principal para mostrar todos los fragmentos de pantalla, como son
  * el listar notas, listar notas borras, tags, etc.
+ *
  * @author Edgar
  * @version 0.1 21/03/2015.
- *
  */
 public class MainActivity extends ActionBarActivity {
 
@@ -103,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
+
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(mDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
@@ -130,7 +131,7 @@ public class MainActivity extends ActionBarActivity {
                             LoginService service = new LoginService(getApplicationContext());
                             String token = service.getTokenFromSession();
                             SyncProcess syncProcess = new SyncProcess(getApplicationContext(), token);
-                            syncProcess.startMidSync(new SyncInterface(){
+                            syncProcess.startMidSync(new SyncInterface() {
 
                                 @Override
                                 public void onResponse(Object response) {
@@ -155,7 +156,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Slide menu item click listener
-     * */
+     */
     private class SlideMenuClickListener implements
             ListView.OnItemClickListener {
         @Override
@@ -199,7 +200,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Diplaying fragment view for selected nav drawer list item
-     * */
+     */
     private void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
@@ -211,11 +212,11 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new ListFavoriteNotes();
                 break;
             case 2:
-              //  Toast.makeText(this, "Esta 1", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(this, "Esta 1", Toast.LENGTH_SHORT).show();
                 fragment = new ListDeletedNotes();
                 break;
             case 3:
-               // Toast.makeText(this, "Esta 2", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Esta 2", Toast.LENGTH_SHORT).show();
                 fragment = new ListTags();
                 break;
             case 4:
@@ -236,16 +237,8 @@ public class MainActivity extends ActionBarActivity {
             fragmentTransaction.replace(R.id.frame_container, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-
-            /*FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
-                    */
-
-            // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
-            //setTitle(navMenuTitles[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
@@ -266,7 +259,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        //getSupportActionBar().setTitle(mTitle);
     }
 
     /**
@@ -288,7 +280,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public FloatingActionButton getActionButton(){
+    public FloatingActionButton getActionButton() {
         return this.actionButton;
     }
 

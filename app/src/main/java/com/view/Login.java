@@ -33,9 +33,9 @@ import com.models.services.LoginService;
 
 /**
  * Clase que se encarga de mostar el login para acceder a la app.
+ *
  * @author Edgar
  * @version 0.1 13/02/2015.
- *
  */
 public class Login extends ActionBarActivity implements SyncInterface {
 
@@ -51,64 +51,36 @@ public class Login extends ActionBarActivity implements SyncInterface {
         ediTextUsername.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.e("Login","OnEditTorAction");
-                if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    Log.e("Login","ENTRO");
+                Log.e("Login", "OnEditTorAction");
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    Log.e("Login", "ENTRO");
                     InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    in.hideSoftInputFromWindow(ediTextUsername.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                    in.hideSoftInputFromWindow(ediTextUsername.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 return false;
             }
         });
 
-        /*ediTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.e("Login","Entro a onFocusChange");
-                if (!hasFocus) {
-                    Log.e("Login","Se perdio el focus");
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                }
-            }
-        });
-
-        editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                }
-            }
-        }); */
-
-       if(this.logincontroller.isUserLogIn()){
-          // AlertDialogService alert = new AlertDialogService();
-          // alert.showAlertDialog(Login.this, "Entro1", "Email/Contraseña son incorrectos", false);
-           Intent i = new Intent(this,MainActivity.class);
-           startActivity(i);
-           this.finish();
+        if (this.logincontroller.isUserLogIn()) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            this.finish();
         }
 
     }
 
-    public void logIn(View view){
-    //  EditText txtUsername = (EditText) findViewById(R.id.email);
-    //  EditText  txtPassword = (EditText) findViewById(R.id.password);
+    public void logIn(View view) {
 
-      String email =   ediTextUsername.getText().toString();
-      String password = editTextPassword.getText().toString();
+        String email = ediTextUsername.getText().toString();
+        String password = editTextPassword.getText().toString();
 
         AlertDialogService alert = new AlertDialogService();
-        if(email.trim().length() > 0 && password.trim().length() > 0){
-            if(this.logincontroller.logIn(email, password)){
-               // Intent i = new Intent(this,ListNotes.class);
-                Intent i = new Intent(this,MainActivity.class);
+        if (email.trim().length() > 0 && password.trim().length() > 0) {
+            if (this.logincontroller.logIn(email, password)) {
+                Intent i = new Intent(this, MainActivity.class);
                 startActivity(i);
                 this.finish();
-                //alert.showAlertDialog(Login.this, "Login Success..", "Username/Password is correct", true);
-            }else{
+            } else {
                 SyncUserHandler sync = new SyncUserHandler(getApplicationContext(), this);
                 User user = new User();
                 user.setEmail(email);
@@ -120,10 +92,9 @@ public class Login extends ActionBarActivity implements SyncInterface {
                 register.setEnabled(false);
                 ediTextUsername.setEnabled(false);
                 editTextPassword.setEnabled(false);
-                //alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
             }
 
-        }else{
+        } else {
             alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
         }
     }
@@ -140,7 +111,7 @@ public class Login extends ActionBarActivity implements SyncInterface {
     public void onResponse(Object response) {
 
         final EditText txtUsername = (EditText) findViewById(R.id.email);
-        final EditText  txtPassword = (EditText) findViewById(R.id.password);
+        final EditText txtPassword = (EditText) findViewById(R.id.password);
         final Button btnLogin = (Button) findViewById(R.id.button7);
         final Button register = (Button) findViewById(R.id.registerButton);
 
@@ -179,7 +150,7 @@ public class Login extends ActionBarActivity implements SyncInterface {
     @Override
     public void onError(int StatusCode, String error) {
         EditText txtUsername = (EditText) findViewById(R.id.email);
-        EditText  txtPassword = (EditText) findViewById(R.id.password);
+        EditText txtPassword = (EditText) findViewById(R.id.password);
         Button btnLogin = (Button) findViewById(R.id.button7);
         Button register = (Button) findViewById(R.id.registerButton);
         btnLogin.setEnabled(true);
@@ -190,8 +161,8 @@ public class Login extends ActionBarActivity implements SyncInterface {
         alert.showAlertDialog(Login.this, "Error", "Email/Contraseña son incorrectos", false);
     }
 
-    public void goToMain(){
-        Intent i = new Intent(this,MainActivity.class);
+    public void goToMain() {
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         this.finish();
     }

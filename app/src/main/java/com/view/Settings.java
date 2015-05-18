@@ -19,13 +19,11 @@ import com.example.usuario.androidadmin.R;
 import com.models.services.LoginService;
 
 /**
- * @(#)JceSecurity.java 1.50 04/04/14
- *
- * Esta clase seencarga de las opciones de configuracion del usuario
- *
  * @author Carlos Herrera
- *
  * @version 1.50, 014/04/15
+ * @(#)JceSecurity.java 1.50 04/04/14
+ * <p/>
+ * Esta clase seencarga de las opciones de configuracion del usuario
  * @since 1.4
  */
 public class Settings extends Fragment {
@@ -34,7 +32,7 @@ public class Settings extends Fragment {
 
     public static Settings newInstance(Bundle arguments) {
         Settings fragment = new Settings();
-        if(arguments != null){
+        if (arguments != null) {
             fragment.setArguments(arguments);
         }
         return fragment;
@@ -62,7 +60,7 @@ public class Settings extends Fragment {
                 LoginService service = new LoginService(getActivity().getApplicationContext());
                 String token = service.getTokenFromSession();
                 SyncProcess syncProcess = new SyncProcess(getActivity().getApplicationContext(), token);
-                syncProcess.startMidSync(new SyncInterface(){
+                syncProcess.startMidSync(new SyncInterface() {
 
                     @Override
                     public void onResponse(Object response) {
@@ -88,15 +86,12 @@ public class Settings extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
         inflater.inflate(R.menu.menu_settings, menu);
-        // return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
 
 
         return super.onOptionsItemSelected(item);

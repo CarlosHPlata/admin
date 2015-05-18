@@ -24,15 +24,15 @@ import com.view.items.NoteAdapter;
  * Created by Jose Ramon Diaz on 26/04/2015.
  * Clase encargada de desplegar las notas que el usuario ha buscado
  */
-public class ListFoundNotes extends ListNotes{
+public class ListFoundNotes extends ListNotes {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public static ListFoundNotes newInstance(Bundle arguments){
+    public static ListFoundNotes newInstance(Bundle arguments) {
         ListFoundNotes listFoundNotes = new ListFoundNotes();
-        if(arguments != null){
+        if (arguments != null) {
             listFoundNotes.setArguments(arguments);
         }
         return listFoundNotes;
@@ -72,7 +72,7 @@ public class ListFoundNotes extends ListNotes{
         searchView = (SearchView) rootView.findViewById(R.id.searchView);
 
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             this.query = bundle.getString("query");
         }
         loadNotes();
@@ -89,9 +89,6 @@ public class ListFoundNotes extends ListNotes{
 
     protected void showNotes() {
         final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
-        // Log.e("ListNotes","Tamaño de list: "+list.size());
-        //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
-        //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

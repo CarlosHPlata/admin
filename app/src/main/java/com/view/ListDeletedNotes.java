@@ -20,9 +20,9 @@ import com.view.items.NoteAdapter;
 
 /**
  * Clase que se encarga de listar las notas borradas
+ *
  * @author Ramón Díaz
  * @version 0.1 13/03/2015.
- *
  */
 
 public class ListDeletedNotes extends ListNotes {
@@ -38,13 +38,7 @@ public class ListDeletedNotes extends ListNotes {
         setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_deleted_notes, menu);
-        return true;
-	}*/
-	@Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list_deleted_notes, menu);
     }
@@ -72,9 +66,6 @@ public class ListDeletedNotes extends ListNotes {
 
     protected void showNotes() {
         final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
-        // Log.e("ListNotes","Tamaño de list: "+list.size());
-        //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
-        //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -92,7 +83,7 @@ public class ListDeletedNotes extends ListNotes {
     @Override
     protected void passNote(Note note) {
         Bundle arguments = new Bundle();
-        arguments.putInt("id",note.getId());
+        arguments.putInt("id", note.getId());
         Fragment fragment = ViewDeletedNote.newInstance(arguments);
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

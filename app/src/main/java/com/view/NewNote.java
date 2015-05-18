@@ -57,9 +57,9 @@ import java.util.List;
 /**
  * Clase que se encarga de crear nuevas notas en la app,
  * puede agregar y quitar nuevas etiquetas a la nota.
+ *
  * @author Edgar
  * @version 0.1 16/02/2015.
- *
  */
 public class NewNote extends Fragment {
     public View viewNewNote;
@@ -68,18 +68,17 @@ public class NewNote extends Fragment {
     public List<String> group;
     public List<List<String>> child;
 
-    public static NewNote newInstance(Bundle arguments){
+    public static NewNote newInstance(Bundle arguments) {
         NewNote newNote = new NewNote();
-        if(arguments != null){
+        if (arguments != null) {
             newNote.setArguments(arguments);
         }
         return newNote;
     }
 
-    public NewNote(){
+    public NewNote() {
 
     }
-
 
 
     @Override
@@ -96,8 +95,8 @@ public class NewNote extends Fragment {
         viewNewNote.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
-                    Log.e("Entro","ajjajaj");
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    Log.e("Entro", "ajjajaj");
                 }
                 return true;
             }
@@ -114,7 +113,7 @@ public class NewNote extends Fragment {
         files = new ArrayList<>();
         filesList = (ListView) viewNewNote.findViewById(R.id.nueva_nota_files);
         expandList = (ExpandableListView) viewNewNote.findViewById(R.id.expandableListView);
-        fileOpen =  new FileOpen();
+        fileOpen = new FileOpen();
 
         Button createNote = (Button) viewNewNote.findViewById(R.id.btnCreateNote);
         createNote.setOnClickListener(new View.OnClickListener() {
@@ -124,9 +123,8 @@ public class NewNote extends Fragment {
             }
         });
 
-       // Bundle bundle = getIntent().getExtras();
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             this.ID_FATHER = bundle.getInt("idFather");
         }
 
@@ -145,25 +143,25 @@ public class NewNote extends Fragment {
                 alertDialogBuilder
                         .setMessage("Que desea hacer con el archivo?")
                         .setCancelable(true)
-                        .setPositiveButton("Eliminar archivo",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                        .setPositiveButton("Eliminar archivo", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 deleteFileFromArray(position);
                             }
-                        }).setNegativeButton("Cancelar",new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog,int id) {
+                        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
 
-                            }
-                        }).setNeutralButton("Abrir archivo", new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int id){
-                                java.io.File myFile = new java.io.File(files.get(position).getPath());
-                                try {
-                                    FileOpen.openFile(getActivity(), myFile);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                    Log.i("error", "eerror");
-                                }
-                            }
-                        });
+                    }
+                }).setNeutralButton("Abrir archivo", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        java.io.File myFile = new java.io.File(files.get(position).getPath());
+                        try {
+                            FileOpen.openFile(getActivity(), myFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.i("error", "eerror");
+                        }
+                    }
+                });
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
 
@@ -177,13 +175,13 @@ public class NewNote extends Fragment {
         return viewNewNote;
     }
 
-    public void createLolipopMenu(){
+    public void createLolipopMenu() {
         //creating floating menu
-        ((MainActivity )getActivity()).actionMenu.close(true);
+        ((MainActivity) getActivity()).actionMenu.close(true);
         ImageView icon = new ImageView(getActivity()); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_new_note));
 
-        ((MainActivity )getActivity()).actionButton= new FloatingActionButton.Builder(getActivity())
+        ((MainActivity) getActivity()).actionButton = new FloatingActionButton.Builder(getActivity())
                 .setContentView(icon)
                 .setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
                 .build();
@@ -206,7 +204,7 @@ public class NewNote extends Fragment {
         itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_fold));
         SubActionButton newFold = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
 
-        ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
+        ((MainActivity) getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(newTag)
                 .addSubActionView(checkList)
                 .addSubActionView(addFile)
@@ -248,17 +246,17 @@ public class NewNote extends Fragment {
 
     }
 
-    public void hideKeyboard(){
+    public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm.isAcceptingText()) {
-            Log.e("New Note","Esta editado text");
-        }else{
+            Log.e("New Note", "Esta editado text");
+        } else {
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-            Log.e("New Note","NOO Esta editado text");
+            Log.e("New Note", "NOO Esta editado text");
         }
     }
 
-    public void initExpandableListView(){
+    public void initExpandableListView() {
         initialDataFold();
         adapterExpandableListView = new ExpandableListAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
@@ -287,10 +285,10 @@ public class NewNote extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_eliminar:
-                                if(positionId >= 0){
+                                if (positionId >= 0) {
                                     deleteFoldToGroup(positionAux);
-                                }else{
-                                    deleteFoldToGroup(positionAux -1);
+                                } else {
+                                    deleteFoldToGroup(positionAux - 1);
                                 }
                                 break;
                             default:
@@ -307,33 +305,33 @@ public class NewNote extends Fragment {
 
     }
 
-   @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public void addNote(){
+    public void addNote() {
         EditText textTitle = (EditText) viewNewNote.findViewById(R.id.titleEdit);
         EditText textBody = (EditText) viewNewNote.findViewById(R.id.body);
         String body = textBody.getText().toString();
         String title = textTitle.getText().toString();
 
-        if(body != "" && body.length() > 0 && title != "" && title.length() >0){
-            if(controller.addNote(title, body, this.ID_FATHER, tagsSelect, checkLists, files, folds)){
+        if (body != "" && body.length() > 0 && title != "" && title.length() > 0) {
+            if (controller.addNote(title, body, this.ID_FATHER, tagsSelect, checkLists, files, folds)) {
                 Toast.makeText(getActivity(), "Nota creada", Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 Toast.makeText(getActivity(), "Error!!", Toast.LENGTH_LONG).show();
             }
             hideKeyboard();
             backView();
-        }else{
+        } else {
             AlertDialogService alert = new AlertDialogService();
             alert.showAlertDialog(getActivity(), "Error", "Agregue un titulo y un texto a la nota", false);
         }
 
     }
 
-    public void listAllTags(){
+    public void listAllTags() {
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
         dialogAlert = new AlertDialog.Builder(getActivity());
@@ -343,23 +341,23 @@ public class NewNote extends Fragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];
         final boolean[] allSelected = new boolean[allTags.size()];
-        for (int i=0; i<allTags.size(); i++){
+        for (int i = 0; i < allTags.size(); i++) {
             Tag tagAux = (Tag) allTags.get(i);
-            if(tagsSelect.size() != 0){
+            if (tagsSelect.size() != 0) {
                 boolean isSelected = false;
-                for (int y=0; y<tagsSelect.size();y++){
+                for (int y = 0; y < tagsSelect.size(); y++) {
                     Tag tagTwoAux = (Tag) tagsSelect.get(y);
-                    if(tagAux.getId() == tagTwoAux.getId()){
+                    if (tagAux.getId() == tagTwoAux.getId()) {
                         isSelected = true;
                         break;
                     }
                 }
-                if(isSelected){
+                if (isSelected) {
                     allSelected[i] = true;
-                }else{
+                } else {
                     allSelected[i] = false;
                 }
-            }else{
+            } else {
                 allSelected[i] = false;
             }
             nameTags[i] = tagAux.getName();
@@ -375,7 +373,7 @@ public class NewNote extends Fragment {
                     indexAux.remove(Integer.valueOf(which));
                     indexDeleteAux.add(which);
                 }
-              //  Toast.makeText(getApplicationContext(), which+" Tamaño del array: "+tagsSelect.size(), Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getApplicationContext(), which+" Tamaño del array: "+tagsSelect.size(), Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
@@ -406,11 +404,11 @@ public class NewNote extends Fragment {
                 dialogAlert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       String nameTag = txtInput.getText().toString();
-                        if(nameTag != "" && nameTag.length() > 0){
+                        String nameTag = txtInput.getText().toString();
+                        if (nameTag != "" && nameTag.length() > 0) {
                             tagController.addTag(nameTag);
                             listAllTags();
-                        }else{
+                        } else {
                             AlertDialogService alert = new AlertDialogService();
                             alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                         }
@@ -425,7 +423,7 @@ public class NewNote extends Fragment {
         dialogT.show();
     }
 
-    public void backView(){
+    public void backView() {
         getActivity().onBackPressed();
     }
 
@@ -464,7 +462,7 @@ public class NewNote extends Fragment {
         child.add(item);
     }
 
-    public void showDialogNewFold(){
+    public void showDialogNewFold() {
         final EditText txtInput = new EditText(getActivity());
         dialogAlert = new AlertDialog.Builder(getActivity());
         dialogAlert.setTitle("Nueva pliegue");
@@ -476,7 +474,7 @@ public class NewNote extends Fragment {
                 String description = txtInput.getText().toString();
                 if (description != "" && description.length() > 0) {
                     addFoldToGroup(description);
-                }else{
+                } else {
                     AlertDialogService alert = new AlertDialogService();
                     alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                 }
@@ -493,11 +491,11 @@ public class NewNote extends Fragment {
         fold.setSyncFlag(false);
         fold.setExtId(0);
         folds.add(fold);
-        String[] data = { content };
+        String[] data = {content};
         String group = "";
-        if(content.length() > 8){
+        if (content.length() > 8) {
             group = content.substring(0, 8);
-        }else{
+        } else {
             group = content;
         }
         group += "...";
@@ -505,14 +503,14 @@ public class NewNote extends Fragment {
         adapterExpandableListView.notifyDataSetChanged();
     }
 
-    public void deleteFoldToGroup(int position){
+    public void deleteFoldToGroup(int position) {
         group.remove(position);
         child.remove(position);
         folds.remove(position);
         adapterExpandableListView.notifyDataSetChanged();
     }
 
-    public void editFold(int position){
+    public void editFold(int position) {
         positionToEditFlod = position;
         ArrayList<String> list = (ArrayList<String>) child.get(position);
         String content = list.get(0);
@@ -528,7 +526,7 @@ public class NewNote extends Fragment {
                 String description = txtInput.getText().toString();
                 if (description != "" && description.length() > 0) {
                     updateFold(positionToEditFlod, description);
-                }else{
+                } else {
                     AlertDialogService alert = new AlertDialogService();
                     alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                 }
@@ -539,21 +537,21 @@ public class NewNote extends Fragment {
         dialogTag.show();
     }
 
-    private void updateFold(int position, String content){
+    private void updateFold(int position, String content) {
         Fold fold = folds.get(position);
         fold.setContent(content);
         folds.set(position, fold);
-        String[] data = { content };
+        String[] data = {content};
 
         String groupAux = "";
-        if(content.length() > 8){
+        if (content.length() > 8) {
             groupAux = content.substring(0, 8);
-        }else{
+        } else {
             groupAux = content;
         }
         groupAux += "...";
 
-        group.set(position,groupAux);
+        group.set(position, groupAux);
         List<String> item = new ArrayList<String>();
         for (int i = 0; i < data.length; i++) {
             item.add(data[i]);
@@ -563,7 +561,7 @@ public class NewNote extends Fragment {
     }
 
 
-    public void listAllCheckList(){
+    public void listAllCheckList() {
         dialogCheckLists = new AlertDialog.Builder(getActivity());
         final EditText txtInput = new EditText(getActivity());
 
@@ -601,13 +599,13 @@ public class NewNote extends Fragment {
 
         ArrayList<String> list = getDescriptionOfCheckList();
 
-        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
         listViewItems.setAdapter(adapter);
-        for (int i=0; i<checkLists.size(); i++){
+        for (int i = 0; i < checkLists.size(); i++) {
             CheckList checkListAux = checkLists.get(i);
-            if(checkListAux.isChecked()){
+            if (checkListAux.isChecked()) {
                 listViewItems.setItemChecked(i, true);
-            }else{
+            } else {
                 listViewItems.setItemChecked(i, false);
             }
         }
@@ -620,21 +618,21 @@ public class NewNote extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 //tagsSelect.clear();
                 SparseBooleanArray sparse = listViewItems.getCheckedItemPositions();
-                for (int x=0; x<checkLists.size();x++){
+                for (int x = 0; x < checkLists.size(); x++) {
                     CheckList checkList = checkLists.get(x);
                     boolean isCheck = false;
-                    for(int i=0; i<sparse.size();i++){
-                        if(sparse.valueAt(i)){
+                    for (int i = 0; i < sparse.size(); i++) {
+                        if (sparse.valueAt(i)) {
                             CheckList checkList1 = checkLists.get(sparse.keyAt(i));
-                            if(x == sparse.keyAt(i)){
+                            if (x == sparse.keyAt(i)) {
                                 isCheck = true;
                                 break;
                             }
                         }
                     }
-                    if(isCheck){
+                    if (isCheck) {
                         checkList.setChecked(true);
-                    }else{
+                    } else {
                         checkList.setChecked(false);
                     }
                     checkLists.set(x, checkList);
@@ -654,10 +652,10 @@ public class NewNote extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String description = txtInput.getText().toString();
-                        if(description != "" && description.length() >0){
+                        if (description != "" && description.length() > 0) {
                             newCheckList(description);
                             listAllCheckList();
-                        }else{
+                        } else {
                             AlertDialogService alert = new AlertDialogService();
                             alert.showAlertDialog(getActivity(), "Error", "Insertar un texto", false);
                         }
@@ -673,46 +671,46 @@ public class NewNote extends Fragment {
     }
 
 
-    private void updateListView(){
+    private void updateListView() {
         ArrayList<String> list = getDescriptionOfCheckList();
-        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_multiple_choice, list);
+        StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_multiple_choice, list);
         listViewItems.setAdapter(adapter);
-        for (int i=0; i<checkLists.size(); i++){
+        for (int i = 0; i < checkLists.size(); i++) {
             CheckList checkListAux = checkLists.get(i);
-            if(checkListAux.isChecked()){
+            if (checkListAux.isChecked()) {
                 listViewItems.setItemChecked(i, true);
-            }else{
+            } else {
                 listViewItems.setItemChecked(i, false);
             }
         }
 
     }
 
-    private ArrayList<String> getDescriptionOfCheckList(){
+    private ArrayList<String> getDescriptionOfCheckList() {
         ArrayList<String> list = new ArrayList<>();
-        for (int i=0; i<checkLists.size(); i++){
+        for (int i = 0; i < checkLists.size(); i++) {
             CheckList checkListAux = checkLists.get(i);
             list.add(checkListAux.getDescription());
         }
         return list;
     }
 
-    private void deleteCheckList(int position){
+    private void deleteCheckList(int position) {
         checkLists.remove(position);
     }
 
-    private void newCheckList(String description){
-       CheckList checkList = new CheckList();
-       checkList.setDescription(description);
-       checkList.setExtId(0);
-       checkList.setChecked(false);
-       checkList.setSyncFlag(false);
-       checkList.setNoteId(0);
+    private void newCheckList(String description) {
+        CheckList checkList = new CheckList();
+        checkList.setDescription(description);
+        checkList.setExtId(0);
+        checkList.setChecked(false);
+        checkList.setSyncFlag(false);
+        checkList.setNoteId(0);
 
-       checkLists.add(checkList);
+        checkLists.add(checkList);
     }
 
-    private void addFile(){
+    private void addFile() {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, fileOpen.RESULT_LOAD_IMAGE);
     }
@@ -720,9 +718,9 @@ public class NewNote extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == fileOpen.RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && data != null){
+        if (requestCode == fileOpen.RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
@@ -731,7 +729,7 @@ public class NewNote extends Fragment {
             String picturePath = cursor.getString(ColumnIndex);
             cursor.close();
 
-            String filename=picturePath.substring(picturePath.lastIndexOf("/")+1);
+            String filename = picturePath.substring(picturePath.lastIndexOf("/") + 1);
 
             File file = new File();
             file.setId(0);
@@ -756,20 +754,20 @@ public class NewNote extends Fragment {
         }
     }
 
-    public ArrayList<String> getArrayStringFiles(){
+    public ArrayList<String> getArrayStringFiles() {
         ArrayList<String> strings = new ArrayList<String>();
-        for (int i =0; i < files.size(); i++){
+        for (int i = 0; i < files.size(); i++) {
             strings.add(files.get(i).getName());
         }
 
         return strings;
     }
 
-    public void deleteFileFromArray(int index){
+    public void deleteFileFromArray(int index) {
         ArrayList<File> tempFiles = new ArrayList<File>();
 
-        for (int i =0; i < files.size(); i++){
-            if (i != index){
+        for (int i = 0; i < files.size(); i++) {
+            if (i != index) {
                 tempFiles.add(files.get(i));
             }
         }
@@ -787,8 +785,8 @@ public class NewNote extends Fragment {
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
     private TextView viewTags; // es el elemento de la vista para colocar el label de tags
-    private  String  labelTags; // es el label de todos los tags separados por comas
-  //  private AlertDialog.Builder dialogBuilder;
+    private String labelTags; // es el label de todos los tags separados por comas
+    //  private AlertDialog.Builder dialogBuilder;
     private AlertDialog.Builder dialogAlert;
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
     private TagController tagController;

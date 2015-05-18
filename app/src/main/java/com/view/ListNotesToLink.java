@@ -27,7 +27,6 @@ import java.util.ArrayList;
  * Clase encargada de mostrar las notas que son posibles de linkear o incrustar en otra nota
  */
 public class ListNotesToLink extends ListNotes{
-    public View listNotesToLink;
 
     public static ListNotesToLink newInstance(Bundle arguments){
         ListNotesToLink listNotesToLink = new ListNotesToLink();
@@ -48,12 +47,6 @@ public class ListNotesToLink extends ListNotes{
         setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_deleted_notes, menu);
-        return true;
-	}*/
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //Colocamos el menu que no tiene botones en la parte de arriba
@@ -127,12 +120,6 @@ public class ListNotesToLink extends ListNotes{
 
         listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-    }
-
-
-
-    private void initViewListNotesToLink(){
-        loadNotes();
     }
 
     private int noteId;

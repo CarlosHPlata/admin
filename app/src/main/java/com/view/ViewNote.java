@@ -42,14 +42,12 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-/** *
- *
+/**
  * Esta clase se encarga de visualizar una nota seleccionada, puede borrar, editar, marcar
  * como favorito, y ver lista de tareas o los checkList.
  *
  * @author Edgar 28/02/2015
- *
- * */
+ */
 public class ViewNote extends Fragment {
     public View viewNote;
     public List<String> group;
@@ -78,10 +76,10 @@ public class ViewNote extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(listviewLinks.getHeaderViewsCount() > 0){
+        if (listviewLinks.getHeaderViewsCount() > 0) {
             listviewLinks.removeAllViews();
         }
-        if(listNoteSon.getHeaderViewsCount() > 0){
+        if (listNoteSon.getHeaderViewsCount() > 0) {
             listNoteSon.removeAllViews();
         }
     }
@@ -114,13 +112,13 @@ public class ViewNote extends Fragment {
         return viewNote;
     }
 
-    public void createLolipopMenu(){
+    public void createLolipopMenu() {
         //creating floating menu
-        ((MainActivity )getActivity()).actionMenu.close(true);
+        ((MainActivity) getActivity()).actionMenu.close(true);
         ImageView icon = new ImageView(getActivity()); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_note));
 
-        ((MainActivity )getActivity()).actionButton= new FloatingActionButton.Builder(getActivity())
+        ((MainActivity) getActivity()).actionButton = new FloatingActionButton.Builder(getActivity())
                 .setContentView(icon)
                 .setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
                 .build();
@@ -136,9 +134,6 @@ public class ViewNote extends Fragment {
 
         itemIcon = new ImageView(getActivity());
         itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_link));
-        /*SubActionButton deleteLink = itemBuilder.setContentView(itemIcon).
-                setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
-                .build();*/
 
         itemIcon = new ImageView(getActivity());
         itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_note));
@@ -152,9 +147,8 @@ public class ViewNote extends Fragment {
                 setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
                 .build();
 
-        ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
+        ((MainActivity) getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(addLink)
-                //.addSubActionView(deleteLink)
                 .addSubActionView(editNote)
                 .addSubActionView(addNote)
                 .attachTo(((MainActivity) getActivity()).actionButton)
@@ -167,14 +161,6 @@ public class ViewNote extends Fragment {
                 addLink();
             }
         });
-
-        /*deleteLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard();
-                deleteLink();
-            }
-        });*/
 
         editNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +186,7 @@ public class ViewNote extends Fragment {
         });
     }
 
-    public void initExpandableListView(){
+    public void initExpandableListView() {
         initialDataFold();
         adapterExpandableListView = new ExpandableListAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
@@ -389,14 +375,14 @@ public class ViewNote extends Fragment {
         if (id == R.id.action_taskList) {
             listAllCheckList();
         }
-        if(id == R.id.action_favorite){
+        if (id == R.id.action_favorite) {
             //cambia de nota favorita a no favorita y viceversa
             toggleFavorite();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void addLink(){
+    public void addLink() {
         Bundle arguments = new Bundle();
         arguments.putInt("noteId", noteFather.getId());
         Fragment fragment = ListNotesToLink.newInstance(arguments);
@@ -404,7 +390,7 @@ public class ViewNote extends Fragment {
         fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
     }
 
-    public void deleteLink(int position){
+    public void deleteLink(int position) {
         linkController.deleteLink(noteFather.getLinks().get(position));
         noteFather.getLinks().remove(noteFather.getLinks().get(position));
     }
@@ -414,7 +400,7 @@ public class ViewNote extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void hideKeyboard(){
+    public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
 
         if (imm.isAcceptingText()) {
@@ -576,7 +562,7 @@ public class ViewNote extends Fragment {
         return titles;
     }
 
-    private ArrayList<String> getNotesTitlesFromLinks(ArrayList<Link> links){
+    private ArrayList<String> getNotesTitlesFromLinks(ArrayList<Link> links) {
         ArrayList<String> titles = new ArrayList<>();
         for (Link link : links) {
             titles.add(controller.findOneById(link.getLinkedNoteId()).getTitle());
@@ -594,14 +580,11 @@ public class ViewNote extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-        /*
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit(); */
     }
 
     private void deleteSelectedSons() {
         ArrayList<Note> notesToDelete = getSelectedNotes();
-        if(notesToDelete != null) {
+        if (notesToDelete != null) {
             controller.deleteNotes(notesToDelete);
             getActivity().onBackPressed();
         }
@@ -625,17 +608,17 @@ public class ViewNote extends Fragment {
     private void initialDataFold() {
         group = new ArrayList<String>();
         child = new ArrayList<List<String>>();
-        for(int x =0; x<folds.size(); x++){
+        for (int x = 0; x < folds.size(); x++) {
             Fold fold = folds.get(x);
             String content = fold.getContent();
             String groupAux = "";
-            if(content.length() > 8){
+            if (content.length() > 8) {
                 groupAux = content.substring(0, 8);
-            }else{
+            } else {
                 groupAux = content;
             }
             groupAux += "...";
-            addInfoFold(groupAux, new String[] { content });
+            addInfoFold(groupAux, new String[]{content});
         }
     }
 
@@ -648,7 +631,7 @@ public class ViewNote extends Fragment {
         child.add(item);
     }
 
-    private void toggleFavorite(){
+    private void toggleFavorite() {
         noteFather.setFavorite(!noteFather.isFavorite());
         controller.updateNote(noteFather);
     }

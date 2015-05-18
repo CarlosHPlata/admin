@@ -61,7 +61,6 @@ public class ListTags extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
         inflater.inflate(R.menu.menu_list_tags, menu);
-        // return true;
     }
 
     @Override
@@ -155,7 +154,6 @@ public class ListTags extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String nameTag = txtInput.getText().toString();
                 if(nameTag != "" && nameTag.length()>0){
-                   // Log.e("POP_MENU", "ID update "+positionToEdit+" newText "+nameTag);
                     updateTag(positionToEdit, nameTag);
                 }
                 initViewListTag();

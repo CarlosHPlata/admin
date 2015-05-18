@@ -30,9 +30,9 @@ import java.util.List;
 
 /**
  * Clase que se encarga de mostrar los datos de una nota que ha sido borrada
+ *
  * @author Ramón Díaz
  * @version 0.1 13/03/2015.
- *
  */
 
 public class ViewDeletedNote extends Fragment {
@@ -41,45 +41,16 @@ public class ViewDeletedNote extends Fragment {
     public List<List<String>> child;
     public ExpandableListView expandList;
     public ExpandableListAdapter adapterExpandableListView;
-    /*Metrodos originales, no los borre por si mas adelante los necesito
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_deleted_note);
-    }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_deleted_note, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    public static ViewDeletedNote newInstance(Bundle arguments){
+    public static ViewDeletedNote newInstance(Bundle arguments) {
         ViewDeletedNote viewDeletedNote = new ViewDeletedNote();
-        if(arguments != null){
+        if (arguments != null) {
             viewDeletedNote.setArguments(arguments);
         }
         return viewDeletedNote;
     }
 
-    public ViewDeletedNote(){
+    public ViewDeletedNote() {
 
     }
 
@@ -89,7 +60,7 @@ public class ViewDeletedNote extends Fragment {
         setHasOptionsMenu(true); //Indicamos que este Fragment tiene su propio menu de opciones
     }
 
-    public void initViewNoteById(){
+    public void initViewNoteById() {
         findNoteById();
         findNotesSon();
         generateListViewNotesSon();
@@ -108,16 +79,16 @@ public class ViewDeletedNote extends Fragment {
         viewTags.setText(nameTags);
     }
 
-    public void findNotesSon(){
+    public void findNotesSon() {
         notesSon = controller.findAllNotesSonByIdFather(this.ID_NOTE);
     }
 
-    public void findNoteById(){
+    public void findNoteById() {
         this.noteFather = controller.findOneById(this.ID_NOTE);
         folds = this.noteFather.getFolds();
     }
 
-    public void generateNoteFather(){
+    public void generateNoteFather() {
         TextView titleView = (TextView) viewDeletedNote.findViewById(R.id.titleView);
         titleView.setText(this.noteFather.getTitle());
 
@@ -125,12 +96,12 @@ public class ViewDeletedNote extends Fragment {
         bodyView.setText(this.noteFather.getBody());
     }
 
-    public void generateListViewNotesSon(){
-        if(!noteFather.hasSons())
+    public void generateListViewNotesSon() {
+        if (!noteFather.hasSons())
             return;
         final ListView listview = (ListView) viewDeletedNote.findViewById(R.id.listViewnoteSon);
         final ArrayList<String> list = getNotesTitles(noteFather.getSons());
-        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, list);
+        final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,7 +116,7 @@ public class ViewDeletedNote extends Fragment {
 
     }
 
-    public void viewNoteSon(Note note){
+    public void viewNoteSon(Note note) {
         Intent intent = new Intent(ViewNote.class.getName());
         intent.putExtra("id", note.getId());
         startActivity(intent);
@@ -155,9 +126,9 @@ public class ViewDeletedNote extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-      //  getMenuInflater().inflate(R.menu.menu_view_deleted_note, menu);
+        //  getMenuInflater().inflate(R.menu.menu_view_deleted_note, menu);
         inflater.inflate(R.menu.menu_view_deleted_note, menu);
-      //  return true;
+        //  return true;
     }
 
     @Override
@@ -171,7 +142,7 @@ public class ViewDeletedNote extends Fragment {
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id == R.id.action_delete){
+        if (id == R.id.action_delete) {
             controller.deleteNotePermanently(noteFather);
             getActivity().onBackPressed();
         }
@@ -193,7 +164,7 @@ public class ViewDeletedNote extends Fragment {
         listNoteSon.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         expandList = (ExpandableListView) viewDeletedNote.findViewById(R.id.expandableListView1);
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             this.ID_NOTE = bundle.getInt("id");
             initViewNoteById();
             initExpandableListView();
@@ -201,7 +172,7 @@ public class ViewDeletedNote extends Fragment {
         return viewDeletedNote;
     }
 
-    public void initExpandableListView(){
+    public void initExpandableListView() {
         initialDataFold();
         adapterExpandableListView = new ExpandableListAdapter(getActivity(), this.group, this.child);
         expandList.setAdapter(adapterExpandableListView);
@@ -213,27 +184,16 @@ public class ViewDeletedNote extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-/*
-    @Override
-    protected void onResume() {
-        super.onResume();
-        findNoteById();
-        findNotesSon();
-        generateListViewNotesSon();
-        generateNoteFather();
-    }
-*/
-
     private void initialDataFold() {
         group = new ArrayList<String>();
         child = new ArrayList<List<String>>();
-        for(int x =0; x<folds.size(); x++){
+        for (int x = 0; x < folds.size(); x++) {
             Fold fold = folds.get(x);
             String content = fold.getContent();
             String groupAux = "";
-            if(content.length() > 8){
+            if (content.length() > 8) {
                 groupAux = content.substring(0, 8);
-            }else{
+            } else {
                 groupAux = content;
             }
             groupAux += "...";
@@ -250,9 +210,9 @@ public class ViewDeletedNote extends Fragment {
         child.add(item);
     }
 
-    private ArrayList<String> getNotesTitles(ArrayList<Note> notes){
+    private ArrayList<String> getNotesTitles(ArrayList<Note> notes) {
         ArrayList<String> titles = new ArrayList<>();
-        for(Note note: notes){
+        for (Note note : notes) {
             titles.add(note.getTitle());
         }
         return titles;

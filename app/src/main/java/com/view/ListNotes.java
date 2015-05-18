@@ -51,29 +51,17 @@ import java.util.ArrayList;
  * Vista que permite mostrar una lista de notas ActionBarActivity
  */
 
-public class   ListNotes extends Fragment {
+public class ListNotes extends Fragment {
     public ListView listview;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // getMenuInflater().inflate(R.menu.menu_list_notes, menu);
         inflater.inflate(R.menu.menu_list_notes, menu);
         MenuItem itemdeleted = menu.findItem(R.id.action_delete);
         itemdeleted.setVisible(false);
         this.deletedItem = itemdeleted;
         moveItem = menu.findItem(R.id.action_move_note);
         moveItem.setVisible(false);
-
-
-      /*  MenuItem item = menu.findItem(R.id.action_newNote);
-        item.setVisible(false);
-
-        item = menu.findItem(R.id.action_findByFilter);
-        item.setVisible(false);
-
-        item = menu.findItem(R.id.action_move_note);
-        item.setVisible(false); */
-        // return true;
     }
 
     @Override
@@ -86,7 +74,6 @@ public class   ListNotes extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_notes, container, false);
-        //rootView.findViewById();
         listview = (ListView) rootView.findViewById(R.id.listView);
         searchView = (SearchView) rootView.findViewById(R.id.searchView);
 
@@ -94,7 +81,6 @@ public class   ListNotes extends Fragment {
         tagController = new TagController(getActivity().getApplicationContext());
         indexTagSelect = new ArrayList();
         tagsSelect = new ArrayList<>();
-        //  setContentView(R.layout.activity_list_notes);
         loadNotes();
         showNotes();
         setSearchEvents();
@@ -104,17 +90,17 @@ public class   ListNotes extends Fragment {
         return rootView;
     }
 
-    public void createLolipopMenu(){
+    public void createLolipopMenu() {
         //creating floating menu
 
-        if (((MainActivity )getActivity()).actionMenu != null){
-            ((MainActivity )getActivity()).actionMenu.close(true);
+        if (((MainActivity) getActivity()).actionMenu != null) {
+            ((MainActivity) getActivity()).actionMenu.close(true);
         }
 
         ImageView icon = new ImageView(getActivity()); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_app));
 
-        ((MainActivity )getActivity()).actionButton= new FloatingActionButton.Builder(getActivity())
+        ((MainActivity) getActivity()).actionButton = new FloatingActionButton.Builder(getActivity())
                 .setContentView(icon)
                 .setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom))
                 .build();
@@ -130,7 +116,7 @@ public class   ListNotes extends Fragment {
         SubActionButton button2 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.lolipop_floating_buttom)).build();
 
 
-        ((MainActivity )getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
+        ((MainActivity) getActivity()).actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
                 .addSubActionView(button2)
                 .attachTo(((MainActivity) getActivity()).actionButton)
@@ -158,7 +144,7 @@ public class   ListNotes extends Fragment {
         });
     }
 
-    public void hideKeyboard(){
+    public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
     }
@@ -187,7 +173,7 @@ public class   ListNotes extends Fragment {
             //Aqui se manejaria el mover las notas
             if (selection) {
                 ArrayList<Note> notesToMove = getSelectedNotes();
-                if(notesToMove != null) {
+                if (notesToMove != null) {
                     showPosibleFathers(notesToMove);
                 }
 
@@ -216,14 +202,6 @@ public class   ListNotes extends Fragment {
         fragmentTransaction.commit();
     }
 
-    /*
-        @Override
-        protected void onResume() {
-            super.onResume();
-            loadNotes();
-            showNotes();
-        }
-    */
     protected void loadNotes() {
         notes = controller.getFatherNotes();
     }
@@ -238,9 +216,6 @@ public class   ListNotes extends Fragment {
 
     protected void showNotes() {
         final NoteAdapter adapter = new NoteAdapter(notes, getActivity().getApplicationContext());
-        // Log.e("ListNotes","Tamaño de list: "+list.size());
-        //**  ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1, list);
-        //  final StableArrayAdapter adapter = new StableArrayAdapter( getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -268,7 +243,7 @@ public class   ListNotes extends Fragment {
     }
 
     //Setea los eventos para la busqueda de notas
-    protected void setSearchEvents(){
+    protected void setSearchEvents() {
 
         //*** setOnQueryTextListener ***
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -276,8 +251,6 @@ public class   ListNotes extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // TODO Auto-generated method stub
-
-                //Toast.makeText(getActivity().getApplicationContext(), query,Toast.LENGTH_SHORT).show();
                 //Se llama a un fragment para que haga la busqueda y despliegue el resultado
                 Bundle arguments = new Bundle();
                 arguments.putString("query", query);
@@ -298,16 +271,12 @@ public class   ListNotes extends Fragment {
     private void deleteSelectedNotes() {
 
         ArrayList<Note> notesToDelete = getSelectedNotes();
-        if(notesToDelete != null) {
+        if (notesToDelete != null) {
             controller.deleteNotes(notesToDelete);
             Fragment fragment = new ListNotes();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
-
-            /*Intent i = new Intent(this, ListNotes.class);
-            startActivity(i);
-            this.finish();*/
         }
     }
 
@@ -315,9 +284,7 @@ public class   ListNotes extends Fragment {
         final ArrayList indexAux = new ArrayList();
         final ArrayList indexDeleteAux = new ArrayList();
         dialogNewTag = new AlertDialog.Builder(getActivity());
-        // final EditText txtInput = new EditText(getActivity());
         allTags = tagController.fingAll();
-        // labelTags = "Tags:\n";
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final String[] nameTags = new String[allTags.size()];
         final boolean[] allSelected = new boolean[allTags.size()];
@@ -353,7 +320,6 @@ public class   ListNotes extends Fragment {
                     indexAux.remove(Integer.valueOf(which));
                     indexDeleteAux.add(which);
                 }
-                //  Toast.makeText(getApplicationContext(), which+" Tamaño del array: "+tagsSelect.size(), Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setPositiveButton("Buscar", new DialogInterface.OnClickListener() {
@@ -368,7 +334,6 @@ public class   ListNotes extends Fragment {
                     indexTagSelect.remove(Integer.valueOf((int) indexDeleteAux.get(x)));
                 }
                 for (int x = 0; x < indexTagSelect.size(); x++) {
-                    // labelTags += nameTags[(Integer) indexTagSelect.get(x)] + ", ";
                     tagsSelect.add((Tag) allTags.get((Integer) indexTagSelect.get(x)));
                 }
                 if (tagsSelect.size() == 0) {
@@ -378,7 +343,6 @@ public class   ListNotes extends Fragment {
                     findNotesByTags();
                     showNotes();
                 }
-                //   viewTags.setText(labelTags);
             }
         });
         AlertDialog dialogT = dialogBuilder.create();
@@ -469,8 +433,6 @@ public class   ListNotes extends Fragment {
     private AlertDialog.Builder dialogNewTag;
     private ArrayList allTags; //son todos los tags de la BD
     private ArrayList indexTagSelect; //son todos los index de los tags
-    // private TextView viewTags; // es el elemento de la vista para colocar el label de tags
-    // private  String  labelTags; // es el label de todos los tags separados por comas
     private ArrayList tagsSelect; // son todos los objectos de tagsSeleccionados
     private TagController tagController;
     private boolean selection = false;
